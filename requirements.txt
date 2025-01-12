@@ -1,0 +1,12 @@
+Flask==2.2.5
+opencv-python
+torch>=2.0.0
+torchvision
+pillow==9.5.0
+ultralytics>=8.0.47
+pytesseract==0.3.10
+easyocr==1.6.2
+ultralytics==8.0.47
+
+
+
