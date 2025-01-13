@@ -8,3 +8,4 @@ pytesseract==0.3.10
 easyocr==1.7.2
 numpy==2.2.1
 torchtext==0.18.0
+Flask-Cors==5.0.0
