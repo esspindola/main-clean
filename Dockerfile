@@ -1,17 +1,23 @@
-# Usa una imagen base de Python
-FROM python:3.11
+# Usa una imagen base de Python estable y ligera
+FROM python:3.10-slim
 
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos necesarios
+# Copia los archivos necesarios al contenedor
 COPY . /app
 
-# Instala las dependencias del sistema necesarias para OpenCV
+# Instala las dependencias necesarias para OpenCV
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
     libglib2.0-0 \
-    && apt-get clean
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Actualiza pip a la última versión
+RUN pip install --upgrade pip
 
 # Instala las dependencias del proyecto
 RUN pip install --no-cache-dir -r requirements.txt
