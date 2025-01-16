@@ -1,6 +1,6 @@
 Flask==2.2.5
 Flask-Cors==5.0.0
-opencv-python-headless<=4.5.4.60
+opencv-python-headless==4.5.4.60
 torch==2.0.1
 torchvision==0.15.2
 pillow==9.5.0
