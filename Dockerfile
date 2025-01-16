@@ -7,8 +7,9 @@ WORKDIR /app
 # Copia los archivos necesarios al contenedor
 COPY . /app
 
-# Instala las dependencias necesarias para OpenCV
+# Instala las dependencias necesarias para OpenCV y otras bibliotecas del sistema
 RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
