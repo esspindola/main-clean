@@ -7,7 +7,7 @@ WORKDIR /app
 # Copia los archivos necesarios al contenedor
 COPY . /app
 
-# Instala las dependencias necesarias del sistema
+# Instala las dependencias necesarias del sistema para OpenCV y GStreamer
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Asegúrate de usar la versión compatible de pip
 RUN pip install --upgrade pip
 
-# Instala versiones específicas de NumPy y OpenCV
+# Instala NumPy y OpenCV en versiones compatibles
 RUN pip install --no-cache-dir "numpy<2.0" "opencv-python-headless==4.5.4.60"
 
 # Instala las dependencias del proyecto
