@@ -10,6 +10,11 @@ import torch
 import traceback
 from pathlib import Path
 
+
+# Ejemplo básico para verificar si OpenCV funciona
+print(cv2.__version__)
+
+
 app = Flask(__name__)
 
 
