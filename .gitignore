@@ -1,0 +1,17 @@
+# Ignorar el entorno virtual
+venv/
+
+# Ignorar caché de Python
+__pycache__/
+*.pyc
+
+# Ignorar archivos temporales
+temp/
+
+# Ignorar todo en yolov5 excepto el modelo
+yolov5/*
+!yolov5/runs/
+!yolov5/runs/train/
+!yolov5/runs/train/exp15/
+!yolov5/runs/train/exp15/weights/
+!yolov5/runs/train/exp15/weights/best.pt
