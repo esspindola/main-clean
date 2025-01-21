@@ -1,7 +1,7 @@
 import torch
 
 # Ruta al modelo
-model_path = 'yolov5/runs/train/exp15/weights/best.pt'
+model_path = 'yolov5/runs/train/exp4/weights/best.pt'
 
 # Cargar el modelo
 try:
