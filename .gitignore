@@ -1,17 +1,48 @@
-# Ignorar el entorno virtual
-venv/
-
 # Ignorar caché de Python
 __pycache__/
 *.pyc
+*.pyo
 
 # Ignorar archivos temporales
 temp/
+*.tmp
+*.bak
 
 # Ignorar todo en yolov5 excepto el modelo
 yolov5/*
 !yolov5/runs/
 !yolov5/runs/train/
-!yolov5/runs/train/exp15/
-!yolov5/runs/train/exp15/weights/
-!yolov5/runs/train/exp15/weights/best.pt
+!yolov5/runs/train/exp4/
+!yolov5/runs/train/exp4/weights/
+!yolov5/runs/train/exp4/weights/best.pt
+
+# Ignorar entornos virtuales y dependencias
+venv/
+labelimg_env/
+node_modules/
+
+# Ignorar datos de entrenamiento y validación
+datasets/coco128/
+datasets/train/
+datasets/val/
+
+# Ignorar archivos temporales y logs
+*.log
+*.out
+*.dat
+
+# Ignorar modelos y configuraciones no deseadas
+*.h5
+*.pt
+
+# Ignorar configuraciones específicas del sistema
+*.swp
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración de entornos
+*.env
+.env.local
+.env.development
+.env.test
+.env.production
