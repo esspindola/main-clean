@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 10000
 
 # Comando para correr la aplicación
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "backend:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT backend:app
+
