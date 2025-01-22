@@ -167,4 +167,6 @@ def process_document():
         return jsonify({'error': 'Tipo de archivo no soportado'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000, debug=True)
+     port = int(os.environ.get("PORT", 10000))
+     app.run(host="0.0.0.0", port=port, debug=True)
+
