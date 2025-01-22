@@ -8,8 +8,13 @@ temp/
 *.tmp
 *.bak
 
-# Ignorar todo en yolov5 excepto el modelo
+# Ignorar contenido extenso en yolov5, pero no el código necesario
 yolov5/*
+!yolov5/hubconf.py
+!yolov5/models/
+!yolov5/utils/
+!yolov5/data/
+!yolov5/requirements.txt
 !yolov5/runs/
 !yolov5/runs/train/
 !yolov5/runs/train/exp4/
@@ -31,7 +36,7 @@ datasets/val/
 *.out
 *.dat
 
-# Ignorar modelos y configuraciones no deseadas
+# Ignorar otros modelos (excepto best.pt)
 *.h5
 *.pt
 
