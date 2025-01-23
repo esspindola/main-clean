@@ -28,6 +28,8 @@ os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 # Cargar modelo YOLOv5
 try:
     model = torch.hub.load(str(BASE_DIR / 'yolov5'), 'custom', path=str(MODEL_PATH), source='local', force_reload=True)
+    # 2) Activar autoshape para que devuelva Results con .pandas()
+    
 except Exception as e:
     print(f"Error cargando el modelo YOLOv5: {e}")
     exit(1)
@@ -36,32 +38,33 @@ def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'tiff', 'bmp', 'pdf'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
-def preprocess_image(image):
-    """Preprocesar la imagen para mejorar OCR"""
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    return cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+# def preprocess_image(image):
+#     """Preprocesar la imagen para mejorar OCR"""
+#     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+#     return cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
 def detect_sections(image_bgr):
-    """Recibe una imagen en formato BGR (OpenCV) y la convierte a PIL (RGB)
-    antes de pasarla al modelo YOLOv5."""
-    # 1) Convertir de BGR a RGB
+    """
+    Recibe imagen BGR (OpenCV) y produce detecciones con YOLOv5.
+    Usamos PIL + autoshape para obtener .pandas().
+    """
+    # BGR -> RGB
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-    # 2) Convertir a Tensor float32 con forma [C, H, W]
-    #    y luego agregar dimensión batch => [1, C, H, W]
-    #    Permute(2,0,1) pasa de (H,W,C) => (C,H,W)
-    image_tensor = torch.from_numpy(image_rgb).float().permute(2, 0, 1).unsqueeze(0)
-    # Opcional: Normalizar / escalar [0..1]. 
-    # Se puede hacer image_tensor /= 255.0 si YOLOv5 lo requiere.
+    # Redimensionar a 640x640 para evitar “size mismatch”
+    image_rgb = cv2.resize(image_rgb, (640, 640), interpolation=cv2.INTER_LINEAR)
 
-    # 3) Pasar al modelo
-    results = model(image_tensor)
+    # Crear PIL a partir del array
+    pil_img = Image.fromarray(image_rgb)
 
-    # 4) Obtener detecciones
+    # Llamar al modelo con size=640
+    # (autoshape aceptará PIL y retornará un objeto con .pandas())
+    results = model(pil_img, size=640)
+
+    # Extraer detecciones
     detections = results.pandas().xyxy[0]
     print(f"Detecciones YOLOv5: {detections}")
     return detections
-
 
 
 def mark_detections(image, detections):
