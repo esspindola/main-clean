@@ -47,17 +47,22 @@ def detect_sections(image_bgr):
     antes de pasarla al modelo YOLOv5."""
     # 1) Convertir de BGR a RGB
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-
-    # 2) Crear una PIL Image a partir del array
-    pil_img = Image.fromarray(image_rgb)
+    # 2) Convertir a Tensor float32 con forma [C, H, W]
+    #    y luego agregar dimensión batch => [1, C, H, W]
+    #    Permute(2,0,1) pasa de (H,W,C) => (C,H,W)
+    image_tensor = torch.from_numpy(image_rgb).float().permute(2, 0, 1).unsqueeze(0)
+    # Opcional: Normalizar / escalar [0..1]. 
+    # Se puede hacer image_tensor /= 255.0 si YOLOv5 lo requiere.
 
     # 3) Pasar al modelo
-    results = model(pil_img)
+    results = model(image_tensor)
 
     # 4) Obtener detecciones
     detections = results.pandas().xyxy[0]
     print(f"Detecciones YOLOv5: {detections}")
     return detections
+
+
 
 def mark_detections(image, detections):
     """Marcar detecciones en la imagen con cuadros delimitadores"""
