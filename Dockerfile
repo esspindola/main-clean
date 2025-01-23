@@ -26,4 +26,5 @@ COPY . .
 EXPOSE 10000
 
 # 7) Usar la forma shell para expandir $PORT
-CMD gunicorn --bind 0.0.0.0:$PORT backend:app
+CMD gunicorn backend:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 2
+
