@@ -15,14 +15,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
-
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-
-
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
-
 
 # Configurar pytesseract
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
@@ -32,11 +28,9 @@ os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 # Cargar modelo YOLOv5
 try:
     model = torch.hub.load(str(BASE_DIR / 'yolov5'), 'custom', path=str(MODEL_PATH), source='local', force_reload=True)
-
 except Exception as e:
     print(f"Error cargando el modelo YOLOv5: {e}")
     exit(1)
-    
 
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'tiff', 'bmp', 'pdf'}
@@ -51,7 +45,7 @@ def preprocess_image(image):
 def detect_sections(image_bgr):
     """Recibe una imagen en formato BGR (OpenCV) y la convierte a PIL (RGB)
     antes de pasarla al modelo YOLOv5."""
-     # 1) Convertir de BGR a RGB
+    # 1) Convertir de BGR a RGB
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
     # 2) Crear una PIL Image a partir del array
@@ -64,11 +58,6 @@ def detect_sections(image_bgr):
     detections = results.pandas().xyxy[0]
     print(f"Detecciones YOLOv5: {detections}")
     return detections
-
-    # results = model(pil_img)
-    # detections = results.pandas().xyxy[0]
-    # print(f"Detecciones YOLOv5: {detections}")  
-    # return detections
 
 def mark_detections(image, detections):
     """Marcar detecciones en la imagen con cuadros delimitadores"""
@@ -94,7 +83,6 @@ def process_detected_regions(image, detections):
         # Aplicar OCR a la región
         try:
             text = pytesseract.image_to_string(roi, config='--psm 6', lang='spa').strip()
-            
             
             if cls_name == "numero_factura":
                 factura_match = re.search(r'\d{3}-\d{3}-\d{6}', text)
@@ -145,15 +133,12 @@ def process_document():
                 base64_image = None
 
                 for page in pages:
-                     # 'page' es un PIL Image en RGB
+                    # 'page' es un PIL Image en RGB
                     # Lo convertimos a array BGR para las funciones de OpenCV
                     image_bgr = np.array(page)
                     image_bgr = cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
                    
-                    # Detectar regiones
                     detections = detect_sections(image_bgr)
-
-                    # Procesar las regiones detectadas
                     data = process_detected_regions(image_bgr, detections)
                     results.extend(data)
 
@@ -161,25 +146,16 @@ def process_document():
                     marked_image = mark_detections(image_bgr, detections)
                     base64_image = image_to_base64(marked_image)
                 return jsonify({'data': results, 'image': base64_image}), 200
-
             else:
                 # Procesar imágenes
                 pil_img = Image.open(file.stream).convert('RGB')
-                
                 image_bgr = np.array(pil_img)
-               
                 image_bgr = cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
-                   # c) Detectar regiones (usa PIL internamente)
+
+                # Detectar regiones (usa PIL internamente)
                 detections = detect_sections(image_bgr)
                 # Detectar regiones
-               
-
-                # d) Procesar OCR en cada región
                 data = process_detected_regions(image_bgr, detections)
-
-                # Procesar las regiones detectadas
-              
-                # Marcar detecciones y convertir la imagen a Base64
                 marked_image = mark_detections(image_bgr, detections)
                 base64_image = image_to_base64(marked_image)
 
@@ -191,6 +167,5 @@ def process_document():
         return jsonify({'error': 'Tipo de archivo no soportado'}), 400
 
 if __name__ == '__main__':
-     port = int(os.environ.get("PORT", 5000))
-     app.run(host="0.0.0.0", port=port, debug=True)
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
