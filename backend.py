@@ -48,12 +48,27 @@ def preprocess_image(image):
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     return cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
-def detect_sections(image):
-    """Detectar regiones usando YOLOv5"""
-    results = model(image)
+def detect_sections(image_bgr):
+    """Recibe una imagen en formato BGR (OpenCV) y la convierte a PIL (RGB)
+    antes de pasarla al modelo YOLOv5."""
+     # 1) Convertir de BGR a RGB
+    image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+
+    # 2) Crear una PIL Image a partir del array
+    pil_img = Image.fromarray(image_rgb)
+
+    # 3) Pasar al modelo
+    results = model(pil_img)
+
+    # 4) Obtener detecciones
     detections = results.pandas().xyxy[0]
-    print(f"Detecciones YOLOv5: {detections}")  
+    print(f"Detecciones YOLOv5: {detections}")
     return detections
+
+    # results = model(pil_img)
+    # detections = results.pandas().xyxy[0]
+    # print(f"Detecciones YOLOv5: {detections}")  
+    # return detections
 
 def mark_detections(image, detections):
     """Marcar detecciones en la imagen con cuadros delimitadores"""
@@ -127,36 +142,45 @@ def process_document():
                 # Convertir PDF a imágenes
                 pages = convert_from_bytes(file.read())
                 results = []
-                for page in pages:
-                    image = np.array(page)
-                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                base64_image = None
 
+                for page in pages:
+                     # 'page' es un PIL Image en RGB
+                    # Lo convertimos a array BGR para las funciones de OpenCV
+                    image_bgr = np.array(page)
+                    image_bgr = cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
+                   
                     # Detectar regiones
-                    detections = detect_sections(image)
+                    detections = detect_sections(image_bgr)
 
                     # Procesar las regiones detectadas
-                    data = process_detected_regions(image, detections)
+                    data = process_detected_regions(image_bgr, detections)
                     results.extend(data)
 
                     # Marcar detecciones y convertir la imagen a Base64
-                    marked_image = mark_detections(image, detections)
+                    marked_image = mark_detections(image_bgr, detections)
                     base64_image = image_to_base64(marked_image)
                 return jsonify({'data': results, 'image': base64_image}), 200
 
             else:
                 # Procesar imágenes
-                image = Image.open(file.stream).convert('RGB')
-                image = np.array(image)
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
+                pil_img = Image.open(file.stream).convert('RGB')
+                
+                image_bgr = np.array(pil_img)
+               
+                image_bgr = cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
+                   # c) Detectar regiones (usa PIL internamente)
+                detections = detect_sections(image_bgr)
                 # Detectar regiones
-                detections = detect_sections(image)
+               
+
+                # d) Procesar OCR en cada región
+                data = process_detected_regions(image_bgr, detections)
 
                 # Procesar las regiones detectadas
-                data = process_detected_regions(image, detections)
-
+              
                 # Marcar detecciones y convertir la imagen a Base64
-                marked_image = mark_detections(image, detections)
+                marked_image = mark_detections(image_bgr, detections)
                 base64_image = image_to_base64(marked_image)
 
                 return jsonify({'data': data, 'image': base64_image}), 200
