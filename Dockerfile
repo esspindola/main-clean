@@ -19,9 +19,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
     # ENV TESSDATA_PREFIX en Docker
 ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
+ENV FLASK_ENV=production
+
 
 # 3) Copia los archivos de requisitos
 COPY requirements.txt requirements.txt
+
 
 # 4) Instala las dependencias Python (incluye pytesseract, pandas, etc.)
 RUN pip install --no-cache-dir -r requirements.txt

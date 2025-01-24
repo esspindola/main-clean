@@ -13,9 +13,9 @@ import base64
 import io
 from pathlib import Path
 import pandas as pd  # Ojo: Asegúrate de tenerlo en requirements.txt
-
-# (Opcional) Para Non-Max Suppression
+from dotenv import load_dotenv
 import sys
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR / 'yolov5'))  # Ajusta si tu yolov5 está en esa carpeta
 try:
@@ -24,7 +24,15 @@ except ImportError:
     non_max_suppression = None  # Si no existe, daremos error
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+ENV = os.getenv("FLASK_ENV", "production")
+
+if ENV == "development":
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    print("CORS configurado para desarrollo (orígenes: *)")
+else:
+    # Permitir solo el dominio de producción
+    CORS(app, resources={r"/*": {"origins": "https://web-navy-nine.vercel.app"}})
+    print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app)")
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
 
