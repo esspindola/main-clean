@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # 1) Establece el directorio de trabajo
 WORKDIR /app
 
-# 2) Instala librerías del sistema necesarias para OpenCV
+# 2) Instala librerías del sistema necesarias para OpenCV, PDF y Tesseract
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
@@ -12,12 +12,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxext6 \
     libxrender-dev \
     poppler-utils \
+    tesseract-ocr \
+    libtesseract-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 3) Copia los archivos de requisitos
 COPY requirements.txt requirements.txt
 
-# 4) Instala las dependencias Python
+# 4) Instala las dependencias Python (incluye pytesseract, pandas, etc.)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 5) Copia el resto de los archivos de la aplicación
@@ -26,6 +28,5 @@ COPY . .
 # 6) Expone el puerto en el que la aplicación correrá
 EXPOSE 10000
 
-# 7) Usar la forma shell para expandir $PORT
+# 7) Comando final para arrancar Gunicorn (con mayor timeout si necesitas)
 CMD gunicorn backend:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 2
-
