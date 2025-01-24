@@ -59,7 +59,8 @@ def detect_sections(image_bgr):
 
     # Llamar al modelo con size=640
     # (autoshape aceptará PIL y retornará un objeto con .pandas())
-    results = model(pil_img, size=640)
+    results = model(pil_img)
+
 
     # Extraer detecciones
     detections = results.pandas().xyxy[0]
