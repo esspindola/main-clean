@@ -32,7 +32,7 @@ if ENV == "development":
 else:
     # Permitir solo el dominio de producción
     CORS(app, resources={r"/*": {"origins": "https://web-navy-nine.vercel.app"}})
-    print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app)")
+    print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app/ocr)")
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
 
