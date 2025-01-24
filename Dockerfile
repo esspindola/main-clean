@@ -14,7 +14,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     poppler-utils \
     tesseract-ocr \
     libtesseract-dev \
+    tesseract-ocr-spa \
     && rm -rf /var/lib/apt/lists/*
+
+    # ENV TESSDATA_PREFIX en Docker
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
 
 # 3) Copia los archivos de requisitos
 COPY requirements.txt requirements.txt
