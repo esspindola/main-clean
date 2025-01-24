@@ -17,3 +17,5 @@ gunicorn==20.1.0
 # Lo nuevo para evitar AutoUpdate
 gitpython>=3.1.30
 setuptools>=70.0.0
+# Agregamos Pandas
+pandas>=1.0.0
