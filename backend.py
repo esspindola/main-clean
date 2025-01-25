@@ -35,11 +35,19 @@ else:
     print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app/ocr)")
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
+if not MODEL_PATH.exists():
+    print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
+    exit(1)
+
 
 # Configurar pytesseract
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 TESSDATA_DIR = '/usr/share/tesseract-ocr/5/tessdata/'
 os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
+
+print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
+print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
+
 
 # Cargar modelo YOLOv5 (versión local con 'custom' + force_reload)
 try:
@@ -226,7 +234,9 @@ def process_document():
                 base64_image=None
                 for page in pages:
                     image_bgr=np.array(page)
+                    cv2.imwrite("pdf_page_debug.jpg", image_bgr)  # Guardar página como imagen
                     image_bgr=cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
+                    cv2.imwrite("bgr_image_debug.jpg", image_bgr)  # Guardar imagen convertida
 
                     detections=detect_sections(image_bgr)
                     data=process_detected_regions(image_bgr,detections)

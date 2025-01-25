@@ -29,6 +29,9 @@ COPY requirements.txt requirements.txt
 # 4) Instala las dependencias Python (incluye pytesseract, pandas, etc.)
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Verificar datos de Tesseract
+RUN ls -la /usr/share/tesseract-ocr/5/tessdata/ && echo "TESSDATA cargado correctamente"
+
 # 5) Copia el resto de los archivos de la aplicación
 COPY . .
 
