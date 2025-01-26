@@ -105,63 +105,55 @@ def detect_sections(image):
         print("**Fallo con 'model(image)'; intentando Plan B**:", ex)
         return detect_sections_plan_b(image)
 
-# def detect_sections_plan_b(image_bgr):
-   
-#     if non_max_suppression is None:
-#         # Si no tenemos la función importada, no podemos proseguir
-#         print("No se pudo importar non_max_suppression. Actualiza tu 'yolov5'.")
-#         # Retorna un DF vacío
-#         return pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
-
-#     if len(image_bgr.shape) == 3 and image_bgr.shape[2] == 3:
-#         # BGR -> RGB
-#         image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-#     else:
-#         # imagen de 1 canal o 2 => no debería pasar
-#         image_rgb = image_bgr
-
-#     # Redimensionar a 640x640 (opcional)
-#     image_rgb = cv2.resize(image_rgb, (640,640), interpolation=cv2.INTER_LINEAR)
-
-#     # [1,3,640,640], float, normalizado
-#     image_tensor = torch.from_numpy(image_rgb).float().permute(2,0,1).unsqueeze(0)/255.0
-
-#     # forward
-#     with torch.no_grad():
-#         raw_preds = model(image_tensor)  # shape [1, #Anchors, #Datos]
-
-#     # NMS
-#     # conf_thres=0.25, iou_thres=0.45 se suelen usar por defecto
-#     nms = non_max_suppression(raw_preds, conf_thres=0.25, iou_thres=0.45)
-#     if not nms or nms[0] is None or len(nms[0])==0:
-#         print("Detecciones YOLOv5 (Plan B): vacio")
-#         df = pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
-#         return df
-
-
 def detect_sections_plan_b(image_bgr):
+    """
+    PLAN B: Se llama cuando 'model(image)' falla en producción.
+    1) Convertir BGR a Tensor
+    2) Llamar al modelo => salida bruta
+    3) Non-Max-Suppression => Nx6
+    4) Convertir a DataFrame => columns=[xmin,ymin,xmax,ymax,confidence,class]
+       + name
+    """
     if non_max_suppression is None:
+        # Si no tenemos la función importada, no podemos proseguir
         print("No se pudo importar non_max_suppression. Actualiza tu 'yolov5'.")
-        return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
+        # Retorna un DF vacío
+        return pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
 
-    # Procesamiento de la imagen...
-    image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-    image_tensor = torch.from_numpy(image_rgb).float().permute(2, 0, 1).unsqueeze(0) / 255.0
+    if len(image_bgr.shape) == 3 and image_bgr.shape[2] == 3:
+        # BGR -> RGB
+        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+    else:
+        # imagen de 1 canal o 2 => no debería pasar
+        image_rgb = image_bgr
 
+    # Redimensionar a 640x640 (opcional)
+    image_rgb = cv2.resize(image_rgb, (640,640), interpolation=cv2.INTER_LINEAR)
+
+    # [1,3,640,640], float, normalizado
+    image_tensor = torch.from_numpy(image_rgb).float().permute(2,0,1).unsqueeze(0)/255.0
+
+    # forward
     with torch.no_grad():
-        raw_preds = model(image_tensor)
+        raw_preds = model(image_tensor)  # shape [1, #Anchors, #Datos]
 
+    # NMS
+    # conf_thres=0.25, iou_thres=0.45 se suelen usar por defecto
     nms = non_max_suppression(raw_preds, conf_thres=0.25, iou_thres=0.45)
-    if not nms or nms[0] is None or len(nms[0]) == 0:
-        print("Detecciones YOLOv5 (Plan B): vacío")
-        return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
+    if not nms or nms[0] is None or len(nms[0])==0:
+        print("Detecciones YOLOv5 (Plan B): vacio")
+        df = pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
+        return df
 
-    pred = nms[0].cpu().numpy()
-    df = pd.DataFrame(pred, columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class'])
-    df['name'] = df['class'].apply(lambda c: classes.get(int(c), f'class_{int(c)}'))  # Asignar nombres
+    # Tomar la primera
+    pred = nms[0].cpu().numpy()  # Nx6
+    df = pd.DataFrame(
+        pred, 
+        columns=['xmin','ymin','xmax','ymax','confidence','class']
+    )
+    df['name'] = df['class'].apply(lambda c: classes.get(int(c), f'class_{int(c)}'))
+    print("Detecciones YOLOv5 (Plan B) => DF:\n", df)
     return df
-    
-    
 
 def mark_detections(image, detections):
     """Igual que siempre"""
