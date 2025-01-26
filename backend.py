@@ -15,9 +15,12 @@ from pathlib import Path
 import pandas as pd  
 from dotenv import load_dotenv
 import sys
+import yaml
+
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR / 'yolov5'))  
+
 try:
     from utils.general import non_max_suppression
 except ImportError:
@@ -48,6 +51,8 @@ os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
 print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
 
+CLASSES_PATH = BASE_DIR / 'yolov5/runs/train/exp4/classes.yaml'
+
 
 # Cargar modelo YOLOv5 (versión local con 'custom' + force_reload)
 try:
@@ -58,9 +63,22 @@ try:
         source='local',
         force_reload=True
     )
+    print(f"Clases del modelo (por defecto): {model.names}")
 except Exception as e:
     print(f"Error cargando el modelo YOLOv5: {e}")
     exit(1)
+
+
+
+    if CLASSES_PATH.exists():
+     with open(CLASSES_PATH, 'r') as file:
+        classes = yaml.safe_load(file).get('names', {})
+    print(f"Clases cargadas desde YAML: {classes}")
+else:
+    print(f"ERROR: No se encontró el archivo de clases en {CLASSES_PATH}")
+    classes = {int(k): f'class_{k}' for k in range(100)}  # Fallback genérico
+
+
 
 def allowed_file(filename):
     return ('.' in filename and 
@@ -135,9 +153,7 @@ def detect_sections_plan_b(image_bgr):
         pred, 
         columns=['xmin','ymin','xmax','ymax','confidence','class']
     )
-    # Generar 'name' asumiendo que no tenemos un mapeo exacto
-    df['name'] = df['class'].apply(lambda c: f"class_{int(c)}")
-
+    df['name'] = df['class'].apply(lambda c: classes.get(int(c), f'class_{int(c)}'))
     print("Detecciones YOLOv5 (Plan B) => DF:\n", df)
     return df
 
