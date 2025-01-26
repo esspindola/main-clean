@@ -12,12 +12,12 @@ import re
 import base64
 import io
 from pathlib import Path
-import pandas as pd  # Ojo: Asegúrate de tenerlo en requirements.txt
+import pandas as pd  
 from dotenv import load_dotenv
 import sys
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
-sys.path.append(str(BASE_DIR / 'yolov5'))  # Ajusta si tu yolov5 está en esa carpeta
+sys.path.append(str(BASE_DIR / 'yolov5'))  
 try:
     from utils.general import non_max_suppression
 except ImportError:
@@ -31,7 +31,7 @@ if ENV == "development":
     print("CORS configurado para desarrollo (orígenes: *)")
 else:
     # Permitir solo el dominio de producción
-    CORS(app, resources={r"/*": {"origins": "https://web-navy-nine.vercel.app"}})
+    CORS(app, resources={r"/*": {"origins": "https://web-navy-nine.vercel.app/ocr"}})
     print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app/ocr)")
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
@@ -162,10 +162,7 @@ def image_to_base64(image):
     return base64.b64encode(buffer).decode('utf-8')
 
 def process_detected_regions(image, detections):
-    """
-    Igual a tu lógica antigua, con bounding boxes y OCR.
-    + Clamping para tile outside.
-    """
+   
     extracted_data = []
     h, w = image.shape[:2]
 

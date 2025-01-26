@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
     # ENV TESSDATA_PREFIX en Docker
 ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
-ENV FLASK_ENV=production
+ENV FLASK_DEBUG=production
 
 
 # 3) Copia los archivos de requisitos
@@ -39,4 +39,6 @@ COPY . .
 EXPOSE 10000
 
 # 7) Comando final para arrancar Gunicorn (con mayor timeout si necesitas)
-CMD gunicorn backend:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 2
+
+CMD gunicorn backend:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 1
+
