@@ -51,7 +51,7 @@ os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
 print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
 
-CLASSES_PATH = BASE_DIR / 'yolov5/runs/train/exp4/classes.yaml'
+CLASSES_PATH = BASE_DIR / 'yolov5/runs/train/exp4/data.yaml'
 
 
 # Cargar modelo YOLOv5 (versión local con 'custom' + force_reload)
