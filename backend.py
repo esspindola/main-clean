@@ -68,24 +68,17 @@ def allowed_file(filename):
             {'png','jpg','jpeg','tiff','bmp','pdf'})
 
 def detect_sections(image):
-    """
-    Unifica ambos métodos:
-    1) Intenta 'model(image)' + 'results.pandas().xyxy[0]' (modo local).
-    2) Si falla en producción, pasamos a 'Plan B':
-       - Convertir 'image' a tensor
-       - Llamar al modelo
-       - Hacer NMS manual
-       - Armar DataFrame con [xmin,ymin,xmax,ymax,confidence,class,name]
-    """
+    
     try:
-        # ----- PLAN A: Lógica vieja -----
-        results = model(image)  # si local lo soporta
+        results = model(image)  
         df = results.pandas().xyxy[0]
         print("Detecciones YOLOv5 (Plan A):\n", df)
         return df
+    except Exception as e:
+        print(f"Error en YOLOv5: {e}")
+        return detect_sections_plan_b(image)
 
     except TypeError as ex:
-        # Aparece en producción: conv2d(...) invalid arguments
         print("**Fallo con 'model(image)'; intentando Plan B**:", ex)
         return detect_sections_plan_b(image)
 
@@ -171,6 +164,10 @@ def process_detected_regions(image, detections):
         x_min, y_min = int(row['xmin']), int(row['ymin'])
         x_max, y_max = int(row['xmax']), int(row['ymax'])
 
+          # Guardar la imagen ROI para depuración
+        roi = image[y_min:y_max, x_min:x_max]
+        cv2.imwrite(f"debug_roi_{cls_name}.jpg", roi)
+
         # Clamping
         x_min = max(0, min(x_min, w))
         x_max = max(0, min(x_max, w))
@@ -203,6 +200,8 @@ def process_detected_regions(image, detections):
             "text": text,
             "confidence": conf
         })
+
+   
 
     # Quitar duplicados
     processed_classes=set()
