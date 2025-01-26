@@ -178,10 +178,7 @@ def process_detected_regions(image, detections):
         x_min, y_min = int(row['xmin']), int(row['ymin'])
         x_max, y_max = int(row['xmax']), int(row['ymax'])
 
-          # Guardar la imagen ROI para depuración
-        roi = image[y_min:y_max, x_min:x_max]
-        cv2.imwrite(f"debug_roi_{cls_name}.jpg", roi)
-
+         
         # Clamping
         x_min = max(0, min(x_min, w))
         x_max = max(0, min(x_max, w))
@@ -193,6 +190,13 @@ def process_detected_regions(image, detections):
             print(f"ROI fuera de límites para {cls_name}.")
         else:
             roi = image[y_min:y_max, x_min:x_max]
+
+             # Verificar si el ROI no está vacío antes de guardar
+            if roi is not None and roi.size > 0:
+                cv2.imwrite(f"debug_roi_{cls_name}.jpg", roi)  # Guardar solo si el ROI no está vacío
+            else:
+                print(f"ROI vacío para {cls_name}, no se guardará.")
+
             try:
                 text = pytesseract.image_to_string(roi, config='--psm 6', lang='spa').strip()
                 if cls_name=="numero_factura":
@@ -244,6 +248,9 @@ def process_document():
                 base64_image=None
                 for page in pages:
                     image_bgr=np.array(page)
+                    if image_bgr is None or image_bgr.size == 0:
+                         return jsonify({'error': 'Error al cargar la imagen desde el PDF.'}), 500
+
                     cv2.imwrite("pdf_page_debug.jpg", image_bgr)  # Guardar página como imagen
                     image_bgr=cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
                     cv2.imwrite("bgr_image_debug.jpg", image_bgr)  # Guardar imagen convertida
@@ -260,8 +267,9 @@ def process_document():
             else:
                 pil_img=Image.open(file.stream).convert('RGB')
                 image_bgr=np.array(pil_img)
+                if image_bgr is None or image_bgr.size == 0:
+                    return jsonify({'error':'Error al cargar la imagen'}),500
                 image_bgr=cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
-
                 detections=detect_sections(image_bgr)
                 data=process_detected_regions(image_bgr,detections)
                 marked_image=mark_detections(image_bgr,detections)
