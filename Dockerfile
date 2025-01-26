@@ -17,16 +17,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr-spa \
     && rm -rf /var/lib/apt/lists/*
 
-    # ENV TESSDATA_PREFIX en Docker
+# Configurar las variables de entorno
+ENV FLASK_DEBUG=0
 ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
-ENV FLASK_ENV=production
-
 
 # 3) Copia los archivos de requisitos
 COPY requirements.txt requirements.txt
 
-
-# 4) Instala las dependencias Python (incluye pytesseract, pandas, etc.)
+# 4) Instala las dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Verificar datos de Tesseract
@@ -38,7 +36,5 @@ COPY . .
 # 6) Expone el puerto en el que la aplicación correrá
 EXPOSE 10000
 
-# 7) Comando final para arrancar Gunicorn (con mayor timeout si necesitas)
-
+# 7) Comando final para arrancar Gunicorn
 CMD gunicorn backend:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 1
-
