@@ -27,15 +27,43 @@ except ImportError:
     non_max_suppression = None  # Si no existe, daremos error
 
 app = Flask(__name__)
+
+NGROK_URL = os.getenv("NEXT_PUBLIC_API_URL", "")
+print(f"NGROK_URL configurado: {NGROK_URL}")
 ENV = os.getenv("FLASK_ENV", "production")
 
 if ENV == "development":
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
     print("CORS configurado para desarrollo (orígenes: *)")
 else:
-    # Permitir solo el dominio de producción
-    CORS(app, resources={r"/*": {"origins": ["https://web-navy-nine.vercel.app","https://50d9-186-61-148-188.ngrok-free.app"]}})
-    print("CORS configurado para producción (orígenes permitidos: Vercel, Ngrok)")
+    # Orígenes permitidos en producción
+    allowed_origins = [
+        "https://web-navy-nine.vercel.app"  # URL de producción
+    ]
+    if NGROK_URL:
+        allowed_origins.append(NGROK_URL)  # Agregar URL dinámica de ngrok
+    else:
+        print("Advertencia: NGROK_URL no está definido")
+
+    # Configurar CORS con los orígenes permitidos
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+   
+    
+    
+# Para agregar encabezados adicionales (opcional)
+@app.after_request
+def add_cors_headers(response):
+    """
+    Agregar encabezados CORS adicionales para garantizar compatibilidad.
+    """
+    origin = request.headers.get('Origin')
+    if origin:
+        response.headers.add('Access-Control-Allow-Origin', origin)
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
 
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
@@ -249,17 +277,20 @@ def process_detected_regions(image, detections):
 
 @app.route('/process-document', methods=['POST'])
 def process_document():
+    print("Ruta '/process-document' fue alcanzada")
     if 'file' not in request.files:
         return jsonify({'error':'No se envió ningún archivo'}),400
 
     file=request.files['file']
     if file.filename=='':
+        print("Error: El nombre del archivo está vacío")
         return jsonify({'error':'El nombre del archivo está vacío'}),400
 
     if file and allowed_file(file.filename):
         try:
             # Si es PDF
             if file.filename.lower().endswith('.pdf'):
+                print(f"Archivo recibido: {file.filename}")
                 pages=convert_from_bytes(file.read())
                 results=[]
                 base64_image=None
