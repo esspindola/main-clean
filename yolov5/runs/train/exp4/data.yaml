@@ -1,0 +1,19 @@
+train: ../datasets/train/images
+val: ../datasets/val/images
+
+# Número de clases (cuenta las líneas en classes.txt)
+nc: 11
+
+# Lista de clases (debe coincidir exactamente con las del archivo classes.txt)
+names:
+  - logo
+  - R.U.C
+  - numero_factura
+  - fecha_hora
+  - razon_social
+  - cantidad
+  - descripcion
+  - precio_unitario
+  - precio_total
+  - subtotal
+  - iva
