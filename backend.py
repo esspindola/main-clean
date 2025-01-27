@@ -51,7 +51,14 @@ os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
 print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
 
+
 DATA_PATH = BASE_DIR / 'yolov5/runs/train/exp4/data.yaml'
+if not DATA_PATH.exists():
+    print(f"ERROR: No se encontró el archivo en la ruta: {DATA_PATH}")
+    print(f"Ruta absoluta esperada: {DATA_PATH.resolve()}")
+    exit(1)
+
+
 
 
 # Cargar modelo YOLOv5 (versión local con 'custom' + force_reload)
