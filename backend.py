@@ -33,34 +33,33 @@ ENV = os.getenv("FLASK_ENV", "production")
 
 # Declarar allowed_origins globalmente
 allowed_origins = [
-    "http://127.0.0.1:3000",
-    "https://web-navy-nine.vercel.app",
-    "https://*.ngrok-free.app",
-    "https://d124-2802-8010-d540-9700-ae68-8a96-61da-8b00.ngrok-free.app"
+    "http://127.0.0.1:3000",  # Localhost para desarrollo
+    "https://web-navy-nine.vercel.app",  # App en Vercel
+    "https://*.ngrok-free.app"  # Dominios de ngrok
 ]
-
 
 if NGROK_URL:
     allowed_origins.append(NGROK_URL)  # Agregar URL dinámica de ngrok
 
 if ENV == "development":
-     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-     print("CORS configurado para desarrollo (orígenes: *)") 
+    CORS(app, resources={r"/*": {"origins": ["https://*.ngrok-free.app", "https://web-navy-nine.vercel.app/ocr"]}}, supports_credentials=True)
+
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    print("CORS configurado para desarrollo (orígenes: *)")
 else:
     # Orígenes permitidos en producción
-    CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
-    print(f"CORS configurado para producción (orígenes permitidos: {allowed_origins})")
    
     
     
     
-#@app.after_request
-def add_cors_headers(response):
+# Para agregar encabezados adicionales (opcional)
+ @app.after_request
+ def add_cors_headers(response):
     """
     Agregar encabezados CORS adicionales para asegurar compatibilidad.
     """
     origin = request.headers.get("Origin")
-    if origin in allowed_origins:
+    if origin and origin in allowed_origins:
         response.headers["Access-Control-Allow-Origin"] = origin
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
