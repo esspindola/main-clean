@@ -29,41 +29,43 @@ except ImportError:
 app = Flask(__name__)
 
 NGROK_URL = os.getenv("NEXT_PUBLIC_API_URL", "")
-print(f"NGROK_URL configurado: {NGROK_URL}")
 ENV = os.getenv("FLASK_ENV", "production")
 
+# Declarar allowed_origins globalmente
+allowed_origins = [
+    "http://127.0.0.1:3000",
+    "https://web-navy-nine.vercel.app",
+    "https://*.ngrok-free.app",
+    "https://d124-2802-8010-d540-9700-ae68-8a96-61da-8b00.ngrok-free.app"
+]
+
+
+if NGROK_URL:
+    allowed_origins.append(NGROK_URL)  # Agregar URL dinámica de ngrok
+
 if ENV == "development":
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-    print("CORS configurado para desarrollo (orígenes: *)")
+     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+     print("CORS configurado para desarrollo (orígenes: *)") 
 else:
     # Orígenes permitidos en producción
-    allowed_origins = [
-        "https://web-navy-nine.vercel.app"  # URL de producción
-    ]
-    if NGROK_URL:
-        allowed_origins.append(NGROK_URL)  # Agregar URL dinámica de ngrok
-    else:
-        print("Advertencia: NGROK_URL no está definido")
-
-    # Configurar CORS con los orígenes permitidos
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
+    print(f"CORS configurado para producción (orígenes permitidos: {allowed_origins})")
    
     
     
-# Para agregar encabezados adicionales (opcional)
-@app.after_request
+    
+#@app.after_request
 def add_cors_headers(response):
     """
-    Agregar encabezados CORS adicionales para garantizar compatibilidad.
+    Agregar encabezados CORS adicionales para asegurar compatibilidad.
     """
-    origin = request.headers.get('Origin')
-    if origin:
-        response.headers.add('Access-Control-Allow-Origin', origin)
-    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    origin = request.headers.get("Origin")
+    if origin in allowed_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
-
 
 
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
