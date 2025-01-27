@@ -37,6 +37,9 @@ else:
     CORS(app, resources={r"/*": {"origins": "https://web-navy-nine.vercel.app"}})
     print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app)")
 
+
+
+
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
 if not MODEL_PATH.exists():
     print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
@@ -53,10 +56,19 @@ print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
 
 
 DATA_PATH = BASE_DIR / 'yolov5/runs/train/exp4/data.yaml'
+
 if not DATA_PATH.exists():
-    print(f"ERROR: No se encontró el archivo en la ruta: {DATA_PATH}")
-    print(f"Ruta absoluta esperada: {DATA_PATH.resolve()}")
-    exit(1)
+    print("Usando fallback de clases en código.")
+    classes = {0: 'logo', 1: 'R.U.C', 2: 'numero_factura', 3: 'fecha_hora',
+               4: 'razon_social', 5: 'cantidad', 6: 'descripcion', 7: 'precio_unitario',
+               8: 'precio_total', 9: 'subtotal', 10: 'iva'}
+    print(f"Clases por defecto: {classes}")
+    print(f"Clases cargadas desde YAML: {classes}")
+    print(f"Ruta esperada de data.yaml: {DATA_PATH}")
+
+else:
+    print(f"ERROR: No se encontró el archivo de clases en {DATA_PATH}")
+    classes = {int(k): f'class_{k}' for k in range(100)}  # Fallback genérico
 
 
 
