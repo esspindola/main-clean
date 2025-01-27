@@ -38,8 +38,6 @@ else:
     print("CORS configurado para producción (orígenes: https://web-navy-nine.vercel.app)")
 
 
-
-
 MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
 if not MODEL_PATH.exists():
     print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
