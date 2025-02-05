@@ -24,14 +24,12 @@ sys.path.append(str(BASE_DIR / 'yolov5'))
 try:
     from utils.general import non_max_suppression
 except ImportError:
-    non_max_suppression = None  # Si no existe, daremos error
-
+    non_max_suppression = None  
 app = Flask(__name__)
 
 NGROK_URL = os.getenv("NEXT_PUBLIC_API_URL", "")
 ENV = os.getenv("FLASK_ENV", "production")
 
-# Declarar allowed_origins globalmente
 allowed_origins = [
     "http://127.0.0.1:3000",  # Localhost para desarrollo
     "https://web-navy-nine.vercel.app",  # App en Vercel
@@ -39,7 +37,7 @@ allowed_origins = [
 ]
 
 if NGROK_URL:
-    allowed_origins.append(NGROK_URL)  # Agregar URL dinámica de ngrok
+    allowed_origins.append(NGROK_URL)  # URL dinámica de ngrok
 
 if ENV == "development":
     CORS(app, resources={r"/*": {"origins": ["https://*.ngrok-free.app", "https://web-navy-nine.vercel.app/ocr"]}}, supports_credentials=True)
@@ -47,12 +45,7 @@ if ENV == "development":
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
     print("CORS configurado para desarrollo (orígenes: *)")
 else:
-    # Orígenes permitidos en producción
    
-    
-    
-    
-# Para agregar encabezados adicionales (opcional)
  @app.after_request
  def add_cors_headers(response):
     """
@@ -67,12 +60,32 @@ else:
     return response
 
 
-MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp4/weights/best.pt'
+# MODEL_PATH = BASE_DIR / 'yolov5/runs/train/exp_retrain/weights/best.pt' #este era el primer entrenamiento que se hizo :)
+MODEL_PATH = Path('/home/yesenia/Escritorio/react/Alcolab/Web/backend/backup-backend-ocr.git/yolov5/runs/train/exp_retrain/weights/best.pt')
+DATA_PATH = BASE_DIR / '/datasets/data.yaml'
+
 if not MODEL_PATH.exists():
     print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
     exit(1)
 
+    if not MODEL_PATH.exists():
+        print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
+    exit(1)
 
+    if not DATA_PATH.exists():
+        print(f"ERROR: No se encontro el archivo de configuracion: {DATA_PATH}")
+        exit(1)
+
+
+    if DATA_PATH.exists():
+     with open(DATA_PATH, 'r') as file:
+        classes = yaml.safe_load(file).get('names', {})
+    print(f"Clases cargadas desde YAML: {classes}")
+else:
+    print(f"ERROR: No se encontró el archivo de clases en {DATA_PATH}")
+    classes = {int(k): f'class_{k}' for k in range(100)}  # Fallback genérico    
+
+    
 # Configurar pytesseract
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 TESSDATA_DIR = '/usr/share/tesseract-ocr/5/tessdata/'
@@ -82,13 +95,13 @@ print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
 print(f"TESSDATA_PREFIX: {os.environ.get('TESSDATA_PREFIX')}")
 
 
-DATA_PATH = BASE_DIR / 'yolov5/runs/train/exp4/data.yaml'
+DATA_PATH = BASE_DIR / '/datasets/data.yaml'
 
 if not DATA_PATH.exists():
     print("Usando fallback de clases en código.")
     classes = {0: 'logo', 1: 'R.U.C', 2: 'numero_factura', 3: 'fecha_hora',
                4: 'razon_social', 5: 'cantidad', 6: 'descripcion', 7: 'precio_unitario',
-               8: 'precio_total', 9: 'subtotal', 10: 'iva'}
+               8: 'precio_total', 9: 'subtotal', 10: 'iva',11: 'Descripcion', 12: 'Cantidad', 13: 'unidades', 14: 'unidad', 15: 'Cajas_cantidad', 16: 'Articulo', 17: 'Nombre_del_producto'}
     print(f"Clases por defecto: {classes}")
     print(f"Clases cargadas desde YAML: {classes}")
     print(f"Ruta esperada de data.yaml: {DATA_PATH}")
@@ -97,10 +110,6 @@ else:
     print(f"ERROR: No se encontró el archivo de clases en {DATA_PATH}")
     classes = {int(k): f'class_{k}' for k in range(100)}  # Fallback genérico
 
-
-
-
-# Cargar modelo YOLOv5 (versión local con 'custom' + force_reload)
 try:
     model = torch.hub.load(
         str(BASE_DIR / 'yolov5'),
@@ -115,41 +124,26 @@ except Exception as e:
     exit(1)
 
 
-
-    if DATA_PATH.exists():
-     with open(DATA_PATH, 'r') as file:
-        classes = yaml.safe_load(file).get('names', {})
-    print(f"Clases cargadas desde YAML: {classes}")
-else:
-    print(f"ERROR: No se encontró el archivo de clases en {DATA_PATH}")
-    classes = {int(k): f'class_{k}' for k in range(100)}  # Fallback genérico
-
-
-
 def allowed_file(filename):
     return ('.' in filename and 
             filename.rsplit('.', 1)[1].lower() in 
             {'png','jpg','jpeg','tiff','bmp','pdf'})
 
 def detect_sections(image):
-    
+    """Realiza la detección de secciones en la factura usando YOLOv5"""
     try:
-        results = model(image)  
+        results = model(image)
         df = results.pandas().xyxy[0]
-        print("Detecciones YOLOv5 (Plan A):\n", df)
+        if hasattr(model, 'names'):
+            class_map = model.names
+        else:
+            class_map = classes
+        df['name'] = df['class'].apply(lambda c: class_map.get(int(c), f'Clase_desconocida_{int(c)}'))
+        print("Detecciones YOLOv5:", df)
         return df
     except Exception as e:
         print(f"Error en YOLOv5: {e}")
-        return detect_sections_plan_b(image)
-
-    except TypeError as ex:
-        print("**Fallo con 'model(image)'; intentando Plan B**:", ex)
-        return detect_sections_plan_b(image)
-
-    except RuntimeError as ex:
-        # A veces da un RuntimeError similar
-        print("**Fallo con 'model(image)'; intentando Plan B**:", ex)
-        return detect_sections_plan_b(image)
+        return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
 
 def detect_sections_plan_b(image_bgr):
     """
@@ -161,38 +155,28 @@ def detect_sections_plan_b(image_bgr):
        + name
     """
     if non_max_suppression is None:
-        # Si no tenemos la función importada, no podemos proseguir
         print("No se pudo importar non_max_suppression. Actualiza tu 'yolov5'.")
         # Retorna un DF vacío
         return pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
 
     if len(image_bgr.shape) == 3 and image_bgr.shape[2] == 3:
-        # BGR -> RGB
         image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
     else:
-        # imagen de 1 canal o 2 => no debería pasar
         image_rgb = image_bgr
-
-    # Redimensionar a 640x640 (opcional)
     image_rgb = cv2.resize(image_rgb, (640,640), interpolation=cv2.INTER_LINEAR)
 
-    # [1,3,640,640], float, normalizado
     image_tensor = torch.from_numpy(image_rgb).float().permute(2,0,1).unsqueeze(0)/255.0
 
-    # forward
     with torch.no_grad():
-        raw_preds = model(image_tensor)  # shape [1, #Anchors, #Datos]
+        raw_preds = model(image_tensor) 
 
-    # NMS
-    # conf_thres=0.25, iou_thres=0.45 se suelen usar por defecto
     nms = non_max_suppression(raw_preds, conf_thres=0.25, iou_thres=0.45)
     if not nms or nms[0] is None or len(nms[0])==0:
         print("Detecciones YOLOv5 (Plan B): vacio")
         df = pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
         return df
 
-    # Tomar la primera
-    pred = nms[0].cpu().numpy()  # Nx6
+    pred = nms[0].cpu().numpy()  
     df = pd.DataFrame(
         pred, 
         columns=['xmin','ymin','xmax','ymax','confidence','class']
@@ -201,137 +185,133 @@ def detect_sections_plan_b(image_bgr):
     print("Detecciones YOLOv5 (Plan B) => DF:\n", df)
     return df
 
-def mark_detections(image, detections):
-    """Igual que siempre"""
+
+def extract_text_from_roi(image, detections):
+    """Extrae texto de las regiones detectadas usando OCR"""
+    extracted_data = []
     for _, row in detections.iterrows():
-        x_min, y_min = int(row['xmin']), int(row['ymin'])
-        x_max, y_max = int(row['xmax']), int(row['ymax'])
-        cv2.rectangle(image, (x_min, y_min),(x_max, y_max),(0,255,0),2)
-        cv2.putText(image,str(row['name']),(x_min,y_min-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0),1)
+        cls_name = row['name']
+        x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
+        roi = image[y_min:y_max, x_min:x_max]
+        text = pytesseract.image_to_string(roi, config='--psm 6', lang='spa').strip()
+        extracted_data.append({"class": cls_name, "text": text or "Texto no encontrado.", "bbox": f"{x_min},{y_min},{x_max},{y_max}"})   
+    return extracted_data
+
+def mark_detections(image, detections):
+    """Dibuja los cuadros delimitadores de detección en la imagen"""
+    if image is None or image.size == 0:
+        print("⚠ La imagen está vacía, no se pueden marcar detecciones.")
+        return None  # Devolvemos None para evitar fallos en `image_to_base64
+    
+    for _, row in detections.iterrows():
+
+        x_min, y_min, x_max, y_max = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
+        cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+        cv2.putText(image, str(row['name']), (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+
     return image
+        
 
 def image_to_base64(image):
+
+    """Convierte la imagen a formato Base64 solo si es válida."""
+    if image is None or image.size == 0:
+        print("⚠ Advertencia: La imagen está vacía, se devuelve un valor por defecto.")
+        return None  
     _, buffer = cv2.imencode('.jpg', image)
     return base64.b64encode(buffer).decode('utf-8')
 
+
+
+
+def preprocess_image(image):
+    """Preprocesa la imagen para mejorar la detección del OCR"""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Convertir a escala de grises
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)  # Reducir ruido con desenfoque
+    thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                   cv2.THRESH_BINARY, 11, 2)  
+    return thresh
+
+
+def normalize_text(text):
+    """Corrige errores del OCR, eliminando caracteres no válidos"""
+    text = text.replace("|", "").replace("[", "").replace("]", "").replace("*", "")  
+    text = re.sub(r'\s+', ' ', text).strip() 
+    return text
+
 def process_detected_regions(image, detections):
-   
     extracted_data = []
-    h, w = image.shape[:2]
-
+    detected_values = {
+        "cantidad": [],
+        "descripcion": []
+    }
     for _, row in detections.iterrows():
-        cls_name = row['name']
-        x_min, y_min = int(row['xmin']), int(row['ymin'])
-        x_max, y_max = int(row['xmax']), int(row['ymax'])
+        cls_id = int(row['class'])
+        cls_name = classes.get(cls_id, f'class_{cls_id}')
+        x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
+        roi = image[y_min:y_max, x_min:x_max]
+        preprocessed_roi = preprocess_image(roi)
+        try:
+            text = pytesseract.image_to_string(preprocessed_roi, config='--psm 6', lang='spa').strip()
+            text = normalize_text(text)
+            if cls_name in ["logo", "R.U.C"] and len(text.split()) > 3:
+                cls_name = "descripcion"
+                detected_values["descripcion"].append(text)
+            if text.upper() in ["CANT.", "CANT", "CANTIDAD"]:
+                cls_name = "cantidad"
+            if cls_name in ["cantidad", "Cantidad", "unidades", "Cajas_cantidad"]:
+                text = re.sub(r'[^\d.,]', '', text)  
+                detected_values["cantidad"].append(text)
 
-         
-        # Clamping
-        x_min = max(0, min(x_min, w))
-        x_max = max(0, min(x_max, w))
-        y_min = max(0, min(y_min, h))
-        y_max = max(0, min(y_max, h))
-
-        if x_max<=x_min or y_max<=y_min:
-            text="Texto no encontrado."
-            print(f"ROI fuera de límites para {cls_name}.")
-        else:
-            roi = image[y_min:y_max, x_min:x_max]
-
-             # Verificar si el ROI no está vacío antes de guardar
-            if roi is not None and roi.size > 0:
-                cv2.imwrite(f"debug_roi_{cls_name}.jpg", roi)  # Guardar solo si el ROI no está vacío
-            else:
-                print(f"ROI vacío para {cls_name}, no se guardará.")
-
-            try:
-                text = pytesseract.image_to_string(roi, config='--psm 6', lang='spa').strip()
-                if cls_name=="numero_factura":
-                    factura_match = re.search(r'\d{3}-\d{3}-\d{6}', text)
-                    if factura_match:
-                        text = factura_match.group(0)
-                    else:
-                        text="No encontrado"
-                if not text: text="Texto no encontrado."
-                print(f"Texto extraído para {cls_name}: {text}")
-            except Exception as e:
-                text = f"Error al procesar texto: {e}"
-                print(f"Error para {cls_name}: {text}")
-
-        conf = row['confidence'] if 'confidence' in row else None
-        extracted_data.append({
-            "class": cls_name,
-            "bbox": f"{x_min},{y_min},{x_max},{y_max}",
-            "text": text,
-            "confidence": conf
-        })
-
-   
-
-    # Quitar duplicados
-    processed_classes=set()
-    filtered_data=[]
-    for item in extracted_data:
-        if item["class"] not in processed_classes:
-            filtered_data.append(item)
-            processed_classes.add(item["class"])
-    return filtered_data
+            extracted_data.append({"class": cls_name, "text": text})
+        except Exception as e:
+            extracted_data.append({"class": cls_name, "text": "Error OCR"})
+    return extracted_data
 
 @app.route('/process-document', methods=['POST'])
 def process_document():
     print("Ruta '/process-document' fue alcanzada")
+    
     if 'file' not in request.files:
-        return jsonify({'error':'No se envió ningún archivo'}),400
+        return jsonify({'error': 'No se envió ningún archivo'}), 400
 
-    file=request.files['file']
-    if file.filename=='':
+    file = request.files['file']
+    
+    if file.filename == '':
         print("Error: El nombre del archivo está vacío")
-        return jsonify({'error':'El nombre del archivo está vacío'}),400
+        return jsonify({'error': 'El nombre del archivo está vacío'}), 400
 
-    if file and allowed_file(file.filename):
+    image_bgr = None
+
+    if file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')): 
         try:
-            # Si es PDF
-            if file.filename.lower().endswith('.pdf'):
-                print(f"Archivo recibido: {file.filename}")
-                pages=convert_from_bytes(file.read())
-                results=[]
-                base64_image=None
-                for page in pages:
-                    image_bgr=np.array(page)
-                    if image_bgr is None or image_bgr.size == 0:
-                         return jsonify({'error': 'Error al cargar la imagen desde el PDF.'}), 500
-
-                    cv2.imwrite("pdf_page_debug.jpg", image_bgr)  # Guardar página como imagen
-                    image_bgr=cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
-                    cv2.imwrite("bgr_image_debug.jpg", image_bgr)  # Guardar imagen convertida
-
-                    detections=detect_sections(image_bgr)
-                    data=process_detected_regions(image_bgr,detections)
-                    results.extend(data)
-
-                    marked_image=mark_detections(image_bgr,detections)
-                    base64_image=image_to_base64(marked_image)
-                return jsonify({'data':results,'image':base64_image}),200
-
-            # Imagen normal
-            else:
-                pil_img=Image.open(file.stream).convert('RGB')
-                image_bgr=np.array(pil_img)
-                if image_bgr is None or image_bgr.size == 0:
-                    return jsonify({'error':'Error al cargar la imagen'}),500
-                image_bgr=cv2.cvtColor(image_bgr, cv2.COLOR_RGB2BGR)
-                detections=detect_sections(image_bgr)
-                data=process_detected_regions(image_bgr,detections)
-                marked_image=mark_detections(image_bgr,detections)
-                base64_image=image_to_base64(marked_image)
-
-                return jsonify({'data':data,'image':base64_image}),200
-
+            image_bgr = cv2.cvtColor(np.array(Image.open(file.stream).convert('RGB')), cv2.COLOR_RGB2BGR)
         except Exception as e:
-            traceback.print_exc()
-            return jsonify({'error':f'Error procesando el archivo: {e}'}),500
-    else:
-        return jsonify({'error':'Tipo de archivo no soportado'}),400
+            return jsonify({'error': f'Error procesando la imagen: {e}'}), 500
 
-if __name__=='__main__':
-    port=int(os.environ.get("PORT",5000))
+    elif file.filename.lower().endswith('.pdf'):
+        try:
+            images = convert_from_bytes(file.read())  
+            if not images:
+                return jsonify({'error': 'No se pudo convertir el PDF en imágenes'}), 400
+            image_bgr = cv2.cvtColor(np.array(images[0]), cv2.COLOR_RGB2BGR)  
+        except Exception as e:
+            return jsonify({'error': f'Error procesando el PDF: {e}'}), 500
+
+    else:
+        return jsonify({'error': 'Tipo de archivo no soportado'}), 400
+
+    if image_bgr is None:
+        return jsonify({'error': 'No se pudo procesar la imagen correctamente'}), 500
+
+    detections = detect_sections(image_bgr)
+    data = process_detected_regions(image_bgr, detections)
+
+    _, buffer = cv2.imencode('.jpg', image_bgr)
+    image_base64 = base64.b64encode(buffer).decode('utf-8')
+
+    return jsonify({'data': data, 'image': image_base64}), 200
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)

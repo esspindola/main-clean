@@ -2,9 +2,9 @@ train: ../datasets/train/images
 val: ../datasets/val/images
 
 # Número de clases (cuenta las líneas en classes.txt)
-nc: 11
+nc: 18   # Número total de clases (11 anteriores + 7 nuevas)
 
-# Lista de clases (debe coincidir exactamente con las del archivo classes.txt)
+
 names:
   - logo
   - R.U.C
@@ -17,3 +17,13 @@ names:
   - precio_total
   - subtotal
   - iva
+  - 'Descripcion'
+  - 'Cantidad'
+  - unidades
+  - unidad
+  - Cajas_cantidad
+  - Articulo
+  - Nombre_del_producto
+
+
+# Clases nuevas
