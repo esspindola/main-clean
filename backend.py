@@ -187,30 +187,56 @@ def detect_sections_plan_b(image_bgr):
 
 
 def extract_text_from_roi(image, detections):
-    """Extrae texto de las regiones detectadas usando OCR"""
     extracted_data = []
+    
     for _, row in detections.iterrows():
         cls_name = row['name']
         x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
         roi = image[y_min:y_max, x_min:x_max]
         text = pytesseract.image_to_string(roi, config='--psm 6', lang='spa').strip()
-        extracted_data.append({"class": cls_name, "text": text or "Texto no encontrado.", "bbox": f"{x_min},{y_min},{x_max},{y_max}"})   
+        text = normalize_text(text)
+
+        # Corregir clasificación de descripción
+        if cls_name == "logo" and len(text.split()) > 3:
+            cls_name = "descripcion"
+
+        # Detectar correctamente cantidad
+        if re.search(r'\b(Cant\.?|Cantidad)\b', text, re.IGNORECASE):
+            cls_name = "cantidad"
+
+        # Diferenciar precios de cantidad
+        if re.match(r'^\d+(\.\d+)?$', text): 
+            if "precio" not in cls_name.lower():
+                cls_name = "cantidad"
+
+        extracted_data.append({
+            "class": cls_name,
+            "text": text,
+            "confidence": row['confidence'],
+            "bbox": [x_min, y_min, x_max, y_max]
+        })
+    
     return extracted_data
 
-def mark_detections(image, detections):
-    """Dibuja los cuadros delimitadores de detección en la imagen"""
-    if image is None or image.size == 0:
-        print("⚠ La imagen está vacía, no se pueden marcar detecciones.")
-        return None  # Devolvemos None para evitar fallos en `image_to_base64
-    
-    for _, row in detections.iterrows():
 
-        x_min, y_min, x_max, y_max = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
+
+def mark_detections(image, detections):
+    """Dibuja las cajas de detección en la imagen y las devuelve para el frontend"""
+    if image is None or image.size == 0:
+        return None
+
+    for _, row in detections.iterrows():
+        x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
+        class_name = row['name']
+        confidence = row['confidence']
+
         cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-        cv2.putText(image, str(row['name']), (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        cv2.putText(image, f"{class_name} ({confidence:.2f})", (x_min, y_min - 10), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
     return image
-        
+
+
 
 def image_to_base64(image):
 
@@ -234,84 +260,92 @@ def preprocess_image(image):
 
 
 def normalize_text(text):
-    """Corrige errores del OCR, eliminando caracteres no válidos"""
-    text = text.replace("|", "").replace("[", "").replace("]", "").replace("*", "")  
-    text = re.sub(r'\s+', ' ', text).strip() 
+    text = re.sub(r'[^\w\d\s.,-]', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
     return text
 
 def process_detected_regions(image, detections):
+    """Procesa las regiones detectadas, extrayendo texto y clasificando correctamente las cantidades"""
     extracted_data = []
     detected_values = {
         "cantidad": [],
         "descripcion": []
     }
+
     for _, row in detections.iterrows():
         cls_id = int(row['class'])
         cls_name = classes.get(cls_id, f'class_{cls_id}')
+        
         x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
         roi = image[y_min:y_max, x_min:x_max]
         preprocessed_roi = preprocess_image(roi)
+
         try:
             text = pytesseract.image_to_string(preprocessed_roi, config='--psm 6', lang='spa').strip()
             text = normalize_text(text)
-            if cls_name in ["logo", "R.U.C"] and len(text.split()) > 3:
-                cls_name = "descripcion"
-                detected_values["descripcion"].append(text)
-            if text.upper() in ["CANT.", "CANT", "CANTIDAD"]:
+
+            if re.search(r'\b(Cant\.?|Cantidad)\b', text, re.IGNORECASE):
                 cls_name = "cantidad"
-            if cls_name in ["cantidad", "Cantidad", "unidades", "Cajas_cantidad"]:
-                text = re.sub(r'[^\d.,]', '', text)  
+
+            # Diferenciar cantidades de precios
+            if re.match(r'^\d+(\.\d+)?$', text):  
+                if "precio" in cls_name.lower():  
+                    continue  # Saltar este valor si es un precio
+                cls_name = "cantidad"
                 detected_values["cantidad"].append(text)
 
-            extracted_data.append({"class": cls_name, "text": text})
+            # Asegurar que el precio tenga formato correcto con $
+            if re.match(r'^\$\d+(\.\d+)?$', text):  
+                cls_name = "precio_unitario"
+
+            extracted_data.append({
+                "class": cls_name,
+                "text": text,
+                "confidence": row['confidence'],  # Agregar confianza
+                "bbox": [x_min, y_min, x_max, y_max]
+            })
+
         except Exception as e:
-            extracted_data.append({"class": cls_name, "text": "Error OCR"})
+            extracted_data.append({"class": cls_name, "text": "Error OCR", "confidence": 0.0})
+
     return extracted_data
 
 @app.route('/process-document', methods=['POST'])
 def process_document():
-    print("Ruta '/process-document' fue alcanzada")
-    
     if 'file' not in request.files:
         return jsonify({'error': 'No se envió ningún archivo'}), 400
 
     file = request.files['file']
     
     if file.filename == '':
-        print("Error: El nombre del archivo está vacío")
         return jsonify({'error': 'El nombre del archivo está vacío'}), 400
-
+    
     image_bgr = None
-
-    if file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')): 
+    
+    if file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')):
         try:
             image_bgr = cv2.cvtColor(np.array(Image.open(file.stream).convert('RGB')), cv2.COLOR_RGB2BGR)
         except Exception as e:
             return jsonify({'error': f'Error procesando la imagen: {e}'}), 500
-
+    
     elif file.filename.lower().endswith('.pdf'):
         try:
-            images = convert_from_bytes(file.read())  
+            images = convert_from_bytes(file.read())
             if not images:
                 return jsonify({'error': 'No se pudo convertir el PDF en imágenes'}), 400
-            image_bgr = cv2.cvtColor(np.array(images[0]), cv2.COLOR_RGB2BGR)  
+            image_bgr = cv2.cvtColor(np.array(images[0]), cv2.COLOR_RGB2BGR)
         except Exception as e:
             return jsonify({'error': f'Error procesando el PDF: {e}'}), 500
-
     else:
         return jsonify({'error': 'Tipo de archivo no soportado'}), 400
 
-    if image_bgr is None:
-        return jsonify({'error': 'No se pudo procesar la imagen correctamente'}), 500
-
     detections = detect_sections(image_bgr)
-    data = process_detected_regions(image_bgr, detections)
+    data = extract_text_from_roi(image_bgr, detections)
 
-    _, buffer = cv2.imencode('.jpg', image_bgr)
-    image_base64 = base64.b64encode(buffer).decode('utf-8')
+    marked_image = mark_detections(image_bgr, detections)
+    image_base64 = image_to_base64(marked_image)
 
     return jsonify({'data': data, 'image': image_base64}), 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
