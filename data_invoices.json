@@ -1,9 +1,30 @@
 {
   "": [
     {
-      "description": "Oxigeno liquido en cilindro de 10,5 kg.\nMarca Cobol",
-      "quantity": "500",
-      "price": "4400",
+      "description": "diesel premium",
+      "quantity": "2",
+      "price": "25.5",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No detectado",
+      "price": "1",
       "confidence": 1,
       "class": ""
     }

@@ -1,0 +1,446 @@
+[
+  {
+    "id": "b7168bd2-0d48-47ea-aead-a7090e1cc9eb",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": null,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "COMPLEJO B TAB-RECx10102050MGx250LGENF",
+        "quantity": "10.0",
+        "price": "2",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ACIDO FOLICO TABx5MGx100ECU",
+        "quantity": "10.0",
+        "price": "2",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "__\n0.00\n0.01\n0.00\n0.00\n0.01",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "4db6588d-1b84-4171-bc92-1761733df630",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 346,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "TUBO CORRUGADO HDPE 160 MM - 5.8 ",
+        "quantity": "16.02",
+        "price": "16",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "MTSCODO BANARIEGO 50 X 90WELD ON 705 ",
+        "quantity": "01",
+        "price": "230",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": " 1 LITROREDUCTOR BANARIEGO ",
+        "quantity": "01",
+        "price": "20",
+        "confidence": 0,
+        "class": ""
+      },
+      {
+        "description": "TUBO CORRUGADO HDPE 160 MM - 5.8 MTSCODO BANARIEGO 50 X 90WELD ON 705 - 1 LITROREDUCTOR BANARIEGO 63 X 50REDUCTBANARIEGO 110 X 0,5 EC PTEE BANARIEGO 110 X 63",
+        "quantity": "01",
+        "price": "30",
+        "confidence": 0,
+        "class": ""
+      },
+      {
+        "description": "TUBO CORRUGADO HDPE 160 MM - 5.8 MTSCODO BANARIEGO 50 X 90WELD ON 705 - 1 LITROREDUCTOR BANARIEGO 63 X 50REDUCTOR BANARIEGO BUJE 63 X 50REDUCTOR BANARIEGO 110 X 63TUBO AGRO 50 X 0.8 EICTUBO BANARIEGO 110 X 0,5 EC PTEE BANARIEGO 110 X 63",
+        "quantity": "04",
+        "price": "50",
+        "confidence": 0,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "bfa6473a-6a84-4db7-9413-ad8c5d0aced6",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 3000,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "TUBO ROSO. .\no17exemT s20Ps \nPLASTIG.\noNEPLO FR m\nCTUERCA 12 PERD L\nSIFON FREGADERO 1 \no172 GON REJILLA  L\nEDESA\noJuxion Pr ruR 112 \nCAJETIN .\nO RECTANGULAR \nPLASTIGAMA\noREbucToR AR PP \n3492 \no ree Pr ma 112 n\no copo PP RR m\n12908 \no UNION UNIVERSAL L\nPP RIA 112 \nLLAVE PASO .\nOPALANCA- VALVULA \nESF.12 FV\nCINTA TEFLON .\nOGRANDE AMARILLA \nS4X15MTS\n1\nocasteaDo 4108R \n1\nENCHUFES .\noPOLARIZADOS \nAMARILLOS 2 PATAS",
+        "quantity": "3.00\n1.00\n1.00\n3.00\n1.00\n2.00\n2.00\n10.00\n2.00\n2.00\n2.00\n1.00\n1.00",
+        "price": "3000",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "0.00",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "90a6584c-9532-4502-ab03-e72c11c622af",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 850,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "cemento",
+        "quantity": "35",
+        "price": "100",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ceramica",
+        "quantity": "09",
+        "price": "200",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "tubos pvc",
+        "quantity": "1",
+        "price": "500",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "clavos",
+        "quantity": "2",
+        "price": "50",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "f0612701-ff8c-4300-859a-83adf4975d8b",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 115.79000000000002,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "cemento 45 kg",
+        "quantity": "35",
+        "price": "35.09",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "tubos pvc ",
+        "quantity": "25",
+        "price": "35.09\n0.00\n0.00\n\n35.09",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "clavos 10 pulgadas",
+        "quantity": "2",
+        "price": "5.26\n0.00\n5.26",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "tornillos 10",
+        "quantity": "8",
+        "price": "40.35",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "d15def76-e9f5-45a0-bf66-d6880f093105",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 2232.5,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "DIESEL PREMIUM",
+        "quantity": "14,189",
+        "price": "2,174",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "0.00",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "33",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "25.50",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "9c9bf660-dda0-44af-af00-b5edfee9616a",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 22174,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "DIESEL PREMIUM",
+        "quantity": "14,188",
+        "price": "22,174",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "0.00",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "10d4843b-04d1-4225-9657-55989efea195",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 4110.44,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "SUELDA 7018 B-10 X 5/32 AGA",
+        "quantity": "1.00",
+        "price": "35.09",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "",
+        "price": "40.35",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": ".\n.\ns",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "4035",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "ea2c6cb6-9f36-4562-ba05-517446cdf984",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 18910,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "PLAN IDEAL MAX",
+        "quantity": "1",
+        "price": "16960",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "1950",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "c30ab598-db46-4b14-9786-191128cc64e7",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 120,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "dhfdvudfnvvufednv",
+        "quantity": "1",
+        "price": "22",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "dufnhuwdvfidviu",
+        "quantity": "1",
+        "price": "5",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "fndovnofdnvfnvf",
+        "quantity": "2",
+        "price": "33",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "uhfiugvfivifvifdvhuaodf",
+        "quantity": "4",
+        "price": "60",
+        "confidence": 0,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "e622fdf2-6cb0-47fe-9578-e70de5a45242",
+    "fecha": "2025-02-23",
+    "proveedor": "Proveedor Desconocido",
+    "total": 26.5,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "diesel premium",
+        "quantity": "2",
+        "price": "25.5",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "1",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  }
+]

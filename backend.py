@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 import sys
 import yaml
 import json
+import uuid
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
@@ -490,7 +491,7 @@ def process_document():
 def save_document_changes():
     try:
         req_data = request.get_json()
-        print("DEBUG => req_data:", req_data)  # imprime lo que llega
+        print("DEBUG => req_data:", req_data)  
         rows = req_data.get("rows", [])
         invoice_number = req_data.get("invoiceNumber", "SIN_NRO")
         
@@ -511,6 +512,92 @@ def save_document_changes():
     except Exception as e:
         print("Error guardando cambios:", e)
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/get-orders', methods=['GET'])
+def get_orders():
+    try:
+        file_path = "orders.json"
+        if not os.path.exists(file_path):
+         
+            return jsonify([]), 200
+
+        with open(file_path, "r") as f:
+            data = json.load(f)
+        return jsonify(data), 200
+    except Exception as e:
+        print("Error al leer orders.json:", e)
+        return jsonify({"error": "No se pudo cargar las órdenes"}), 500
+    
+
+@app.route("/archive-invoice", methods=["POST"])
+def archive_invoice():
+    try:
+        raw_data = request.get_data(as_text=True)
+        print("DEBUG => raw_data:", repr(raw_data))
+        data = request.json
+        print("DEBUG => data:", data)
+
+        file_path = "orders.json"
+      
+        if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+            with open(file_path, "w") as f:
+                json.dump([], f)
+
+      
+        val_total = data.get("total", 999.99)
+        if val_total is None:
+            val_total = 999.99  
+
+        with open(file_path, "r+") as f:
+            orders = json.load(f)
+            new_id = str(uuid.uuid4())
+
+            new_order = {
+                "id": new_id,
+                "fecha": data.get("fecha", "Fecha Desconocida"),
+                "proveedor": data.get("proveedor", "Proveedor Desconocido"),
+                "total": val_total,
+                "estado": data.get("estado", "Pendiente"),
+                "acciones": ["Ver Factura", "Ver Recepción"],
+                "lineas": data.get("lineas", [])
+            }
+
+            orders.append(new_order)
+            f.seek(0)
+            json.dump(orders, f, indent=2)
+            f.truncate()
+
+        return jsonify({"message": "Factura archivada con éxito"}), 200
+
+    except Exception as e:
+        print("Error archivando factura:", e)
+        return jsonify({"error": str(e)}), 500   
+
+
+@app.route('/get-order/<string:order_id>', methods=['GET'])
+def get_order(order_id):
+    try:
+        file_path = "orders.json"
+        if not os.path.exists(file_path):
+            return jsonify({"error": "No hay órdenes"}), 404
+
+        with open(file_path, "r") as f:
+            orders = json.load(f) 
+
+       
+        order = next((o for o in orders if o["id"] == order_id), None)
+        if not order:
+            return jsonify({"error": "Orden no encontrada"}), 404
+
+        return jsonify(order), 200
+    except Exception as e:
+        print("Error al leer orders.json:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+    
+        
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
