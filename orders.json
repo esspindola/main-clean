@@ -442,5 +442,1141 @@
         "class": ""
       }
     ]
+  },
+  {
+    "id": "f45340de-1a69-4218-91a7-0fddf1986a0d",
+    "fecha": "2025-02-27",
+    "proveedor": "Proveedor Desconocido",
+    "total": 4075.35,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "SUELDA 718 B-10 X 5/32",
+        "quantity": "1",
+        "price": "40.35",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "208\ne\ne\n\n35.09",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": ".\n.\ns",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "4035",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "f21946c6-605b-4d7a-b698-b99be12efc2e",
+    "fecha": "2025-03-02",
+    "proveedor": "Proveedor Desconocido",
+    "total": 135.99909999999997,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "RU.C.",
+        "quantity": "0992256230001",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Ferremundo",
+        "quantity": "FACTURA No",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "010-306-000378075",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No DE AUTORIZACI\u00d3N:",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "06062024010992256230001201030600037807512345",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "67819",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "FERREMUNDO S.AS",
+        "quantity": "FECHA Y HORA DE AUTORIZACI\u00d3N:",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Dir. Matriz:",
+        "quantity": "06/06/2024 17:10.28",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "VIA A DAULE KM 16,5 MANZANA C-3 SOLAR 28",
+        "quantity": "AMBIENTE: Producci\u00f3n",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "GUAYAQUIL Guayas ECUADOR EMISI\u00d3N:",
+        "quantity": "Normal",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Dir. Sucursal:",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "KM. 16,5 VIA A DAULE",
+        "quantity": "CLAVE DE ACCESO:",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "0393 Contribuyente especial Nro.",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "OBLIGADO A LLEVAR CONTABILDDAD: SI",
+        "quantity": "606202401099225623000120103060003780751234567819",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Raz\u00f3n Social Nombres y Apellidos: LEON PARDO LUIS",
+        "quantity": "RUC / CI: 0705030278001",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Fecha Emisi\u00f3n: 06/06/2024",
+        "quantity": "Gu\u00eda de Remisi\u00f3n: 010-306-000394880",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "DESCRIPCI\u00d3N SKU CANI_ UND.",
+        "quantity": "PRECIO DESCUEYIO SUBIOIAL UND",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "00014647 UNIDAD UNION UNTTERSAL PP 3/4-PL 10.00",
+        "quantity": "5 1.74",
+        "price": "$ 5.59 $ 11.82",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "POLIETILENO ACCESORIOS NEPLO FLEX 1/2 -PL 00022871 UNIDAD 50.00",
+        "quantity": "0.42 56.74",
+        "price": "$ 14.26",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "IAPON 00028118 20.00 UNIDAD H POLIPROPILENO 3/4-PLASTIGAMA",
+        "quantity": "0.49 5 6.65",
+        "price": "$ 3.15",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CODO 00032086 25.00 UNIDAD HPOLIPROPILENO 1/2- X45G PLASTIGAMA",
+        "quantity": "0.70 5 5.62",
+        "price": "$ 11.88",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "UNIDAD CODO CACHBA MH POLIPROPILENO 1/2- PLASTIGAMA 00032110 20.00",
+        "quantity": "5 5.52 0.86",
+        "price": "$ 11.68",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "25.00 00267377 UNIDAD NEPLO POLPROPILENO 1/2XIOCM-PLASTIGAMA",
+        "quantity": "S 5.60 5 0.33",
+        "price": "$ 2.65",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "00280388 25.00 UNIDAD IAPON M POLIPROPILENO 3/4-PLASTIGAMA",
+        "quantity": "0.49",
+        "price": "$ 3.93 $ 8.32",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "POLIPROPILENO I2XISCM-PLASTIGAMA 00299271 20.00 UNIDAD NEPLO",
+        "quantity": "5 5.30 0.39",
+        "price": "$ 2.50",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CON IUERCA PP 1/l2 -PLASIIGAMA 00299289 UNIDAD NEPLO 50.00",
+        "quantity": "0.32 5 5.14",
+        "price": "$ 10.87",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "DISCO CIMEIAL PLANO 4.5-X116X7/8 BNAl 2 66252843680 NORTON 00411785 50.00 UNIDAD",
+        "quantity": "1.46 5 24.42 48.58",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CAJAXZOK CLAVO P IECHO 2 1/2-X9 (20 KG) IDEAL 00580456",
+        "quantity": "106.71 72.46",
+        "price": "$ 34.25",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "DISCO DIAM SEGMENIADO CLASSIC 7- 70184647068 NORTON 00626318 10.00 UNIDAD",
+        "quantity": "6.39 43.39",
+        "price": "$ 20.51",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "PINTURA SPRAY CELESIE 227G 4OOML PN32 ABRO 00635898 UNIDAD",
+        "quantity": "5 5.13",
+        "price": "$ 1.89 $ 2.43",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CINIA ACRILICA DOBLE CARA ROJA USO EXTERNO INTERNO 12MM 00635929 12.00 UNIDAD XIMMX 2M TEKBOND",
+        "quantity": "No detectado",
+        "price": "$ 1.99 $ 7.67 $ 16.21",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CAJAEMPALME ELECT RECIANG PLASTICA 2-X4- BLANCA UNIDAD 0063656 50.00 CINSERTO METAL CTN=S6OUN INDUMA",
+        "quantity": "5 0.22 5 3.53 5 747",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "PINTURA SPRAY NARANJA 227G 00637274 UNIDAD 4OOML 065 ABRO",
+        "quantity": "5 1.55 5 1.99 54.21",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "00637277 UNIDAD PINTURA SPRAY PURPURA 227G 4OOML 039 ABRO",
+        "quantity": "54.21",
+        "price": "$ 1.55 $ 1.99",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "00637286 UNIDAD PINTURA SPRAY DORADO MEIALICO 227G 4OOML 027 ABRO",
+        "quantity": "No detectado",
+        "price": "$ 4.73  ",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "LA MERCADERIA VIAJA POR CUENTA RIESGO DEL COMPRADOR. UNA VEZ RECIBIDA NO SE ACEPTAN DEVOLUCIONES, CUALQUIER RECLAMO SE DEBE EFECTUAR MAXIMO EN LAS 24 HORAS SIGUIENTES DE LA RECEPCION DE LA MISMA. ES IMPRESCINDIBLE CONSERVAR LOS EMPAQUES ORIGINALES COMO REQUISITO PARA TRAMITAR",
+        "quantity": "No detectado",
+        "price": "$ 2.32",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SU RECLAMO.",
+        "quantity": "No detectado",
+        "price": "$ 2.23",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Ofoende FERREMUNDO 5.A. seme Qu2 Debo fecha pagare incondicionalmente Iugar reconvenga, mora autorizado Por Banco Central del Ecuador desde esta fecha.",
+        "quantity": "valor total expresado en este documento m\u00e1s m\u00e1ximo inter\u00e9s legal por",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Sin protesto ex\u00edmese de presentaci\u00f3n para Ipago as\u00ed como de aviso por falta de este hecho. Renuncio domicilio me someto tramite ejecutivo verba los jueces competentes de la ciudad de Guayaquil",
+        "quantity": "sumano de acuerdo a",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Acepto de FERREMUNDO S.A_ transfiera en cualquier momento bs derechos que ceda Darte",
+        "quantity": "emanen del presente documento sin que sea necesaria notificaci\u00f3n aluna nueva aceptaci\u00f3n de mi",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Suscribo presente pagar\u00e9 de conformidad con tcdos sus t\u00e9minos.",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "wwwferremundo com eclcomprobantes Para descargar sU comprobante lectr\u00f3nico acceder porta identidad RUC",
+        "quantity": "nuestro portal contrase\u00f1a ser\u00e1n Su c\u00e9dula de Primera vez que ingrese Usuario",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Art. 50 LORTI. Las retenciones factura entregaran dentro de dias posterores entrega de Retenciones electr\u00f3nicas remitiras facturacion credito @ferremundo com ec",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Gurusoft doc",
+        "quantity": "P\u00e1gina de 2",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "c79b6cec-aef5-43ad-baf5-f1544edaedd9",
+    "fecha": "2025-03-02",
+    "proveedor": "Proveedor Desconocido",
+    "total": 62053.19,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "RUC.- LZaREOURIER",
+        "quantity": "1791705726001",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "FaCivke Enttegaios (7is:",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No : 001-019-000003315",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Nulerg Auorizacioe",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "170320240117917057200120010190500033152017018416",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "FECHO HORAOE 1c62d24 AUIORZACKN: hacovaierexpaesssn",
+        "quantity": "08",
+        "price": "29.19",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Cohitedel ati PueHL Moiseipkesesag AYBIENTE FRouccioN MisVELANis",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Evis On Nophei Cohiteoelpueelooeloscipreses Sucurai TeLasAVElns Clyede Kcceso",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Ccrribuycrtc Esceoai",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "OBLIGADOLLEVAR CONIRBILIDAD",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Lconelgd9 Fzon Scoal / Marbros Y Apdidcs RUIcI Focha EMtka Cua Reme",
+        "quantity": "0705030278 17",
+        "price": "06,2024",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Drccoo Jotte Lma",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Poo aroooTou Doscnooon Pngcidy Unlnc",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "201200-0C Scldooe Campn 21200-0C  odorenciniemagona Cojcas Envint",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "uocT",
+        "quantity": "701077",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Vordaddc Fcia SUBTOTAL ueneo",
+        "quantity": "00 029",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ORocoN Euetotal Utilzacick 72l5 57Eue Subtoial Mo Jufolya FINaNCIERC",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Kuitonanirio co",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ToTaloeesvenig",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ERvEg",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Yalor ToTAL",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Iolomagniagions",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Eulil Idoon",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Idcloo",
+        "quantity": "0257819262",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ncear",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "IciPec",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ncPcrz",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Vavonia",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Manachuregovalfon Oocunento Denetudo Pagi",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "56786af0-4596-4531-926e-60ed160d89ea",
+    "fecha": "2025-03-02",
+    "proveedor": "Proveedor Desconocido",
+    "total": 1010000001441.0643,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "No detectado",
+        "quantity": "0102668456001 R.U.C.",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "FACTUR A",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "6",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No.",
+        "price": "001-010-000000716",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "N\u00daMERO DE AUTORIZACI\u00d3N",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "2409202401010266845600120010100000007162304201911",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "FECHA Y HORA DE",
+        "price": "2.24.50 2024-09-24",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "AUTORIZACION",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ILLESCAS LIMA ORLANDO QUERUBIN",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "AMBIENTE: PRODUCCION",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Direcci\u00f3n PADRE AGUIRRE Y JUAN JARAMILLO",
+        "quantity": "EMISI\u00d3N: NORMAL 611",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "CLAVE DE ACCESO",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Email: orlandoillescas@hotmail.com",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Telefono:",
+        "quantity": "0994078419 072838315 240920240101026684560012001010000000716230420191",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CONTRIBUYENTE R\u00c9GIMEN RIMPE",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "OBLIGADO A LLEVAR CONTABILIDAD NO",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Contribuyente Especial: NO",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Raz\u00f3n Social MALLA FAREZ VICTOR JOHAO Nombres y Apellidos:",
+        "quantity": "0706690708",
+        "price": "Identificaci\u00f3n:",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Direcci\u00f3n: SANTA ROSA; EL ORO",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "24/09/2024 Fecha Emisi\u00f3n:",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "Precio",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Cod. Principal Cant",
+        "quantity": "Descripci\u00f3n",
+        "price": "Descuento Precio Total",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "Unitario",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CUCHILLA OSTER ORIGINAL ASPAS COO4A",
+        "quantity": "4",
+        "price": "3.478 27.82 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CUCHILLA OSTER ORIGINAL ASPAS COO6A",
+        "quantity": "6",
+        "price": "5.652 0.00 33.91",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SUICH OSTER CON DIODO SOCD",
+        "quantity": "No detectado",
+        "price": "3.04 0.00 18.26",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SO3V SUICH OSTER VELOCIDADES",
+        "quantity": "3",
+        "price": "1.913 0.00 7.65",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "VASO OSTER ECONOMICO CUADRADO",
+        "quantity": "No detectado",
+        "price": "2.348 0.00 9.39",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "VASO OSTER ORIGINAL CUADRADO VOOC",
+        "quantity": "No detectado",
+        "price": "7.391 0.00 14.78",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "COOB CUADRO OSTER ORIGINAL BLISTER",
+        "quantity": "10",
+        "price": "0.696 0.00 6.96",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CUADRO OSTER ORIGINAL SUELTO COOS",
+        "quantity": "40",
+        "price": "17.40 0.435 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SUICH OSTER PALANCA SOP",
+        "quantity": "No detectado",
+        "price": "3.913 0.00 7.83",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "RCBRZKGIH REGULADOR CONTINENTAL BAJA PRESION TIPO RECA",
+        "quantity": "No detectado",
+        "price": "3.653 0.00 7.31",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Informaci\u00f3n Adicional",
+        "quantity": "159",
+        "price": "$ 151.31 SUBTOTAL IVA",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Telefono:",
+        "quantity": "0997408927",
+        "price": "SUBTOTAL NO OBJETO IVA $ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "victorjohao2019@outlook.es Correo Electronico:",
+        "quantity": "No detectado",
+        "price": "SUBTOTAL EXENTO IVA $ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "SUBTOTAL SIN IMPUESTOS $ 151.31",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "DESCUENTO $ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "ICE",
+        "price": "$ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "IVA 159",
+        "price": "$ 22.70",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "IRBPNR",
+        "price": "$ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "PROPINA",
+        "price": "$ 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Forma de Pago",
+        "quantity": "Valor",
+        "price": "VALOR TOTAL 174.01",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SIN UTILIZACION DEL SISTEMA FINANCIERO",
+        "quantity": "No detectado",
+        "price": "$ 174.01",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "VALOR TOTAL SIN SUBSIDIO 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "AHORRO POR SUBSIDIO 0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No detectado",
+        "price": "(Incluye IVA cuando corresponda)",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
+  },
+  {
+    "id": "02dd044e-46ab-4e78-a1d4-728a45e34d5a",
+    "fecha": "2025-03-02",
+    "proveedor": "Proveedor Desconocido",
+    "total": 521.67828136,
+    "estado": "Archivada",
+    "acciones": [
+      "Ver Factura",
+      "Ver Recepci\u00f3n"
+    ],
+    "lineas": [
+      {
+        "description": "",
+        "quantity": "RU.G.: 0925520496001",
+        "price": "",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "NO LOGO",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "FACTURA",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "No. 001-031-000000084",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "N\u00daMERO DE AUTORIZACI\u00d3N",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "ZENG WEIJU",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "YHORA DE AUTORIZACI\u00d3N FECHA",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Dir Matriz:",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
+        "quantity": "407",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "PRODUCCI\u00d3N AMBIENTE:",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Dir Sucursal:",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
+        "quantity": "EMISION: NORMAL 407",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "CLAVE DE ACCESO",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "OBLIGADO A LLEVAR CONTABILIDAD NO",
+        "quantity": "No detectado",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "1709202401092552049600120010310000000840010008411",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "VICTOR JOHAO MALLA FAREZ Raz\u00f3n Social Nombres y Apellidos:",
+        "quantity": "0706690708",
+        "price": "Identificaci\u00f3n:",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Fecha Emisi\u00f3n: 17/09/2024",
+        "quantity": "No detectado",
+        "price": "Gu\u00eda de Remisi\u00f3n:",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Cant Cod. Principal Descripci\u00f3n",
+        "quantity": "Precio Unitario",
+        "price": "Descuento Precio Total",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CANDADO BARI CAJAI2OUIB L40-BARI",
+        "quantity": "40",
+        "price": "36.0000 1.956522 0.00 34.43",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "LSO-BARI CANDADO BARI CAJAI2OUIB",
+        "quantity": "50 00",
+        "price": "36.0000 1.173913 42.26",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "L6O-BARI CANDADO BARI CAJA7ZUIB",
+        "quantity": "60",
+        "price": "1.478261 36.0000 0.00 53.22",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "SUBTOTAL 159",
+        "price": "129.91",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "No detectado",
+        "quantity": "DESCUENTO",
+        "price": "0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Informaci\u00f3n Adicional",
+        "quantity": "ICE",
+        "price": "0.00",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "CorreoReceptor victorjohao2019@outlook.es",
+        "quantity": "IVA",
+        "price": "19.49",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Direcci\u00e3?n CDLA.SANTA TERESITA",
+        "quantity": "VALOR TOTAL",
+        "price": "149.40",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Tel\u00f1@fono",
+        "quantity": "0997408927",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "Forma de Valor Pago",
+        "quantity": "Plazo Tiempo",
+        "price": "No detectado",
+        "confidence": 1,
+        "class": ""
+      },
+      {
+        "description": "SIN UTILIZACION DEL SISTEMA FINANCIERO",
+        "quantity": "dias",
+        "price": "149.40",
+        "confidence": 1,
+        "class": ""
+      }
+    ]
   }
 ]

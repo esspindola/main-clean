@@ -1,10 +1,8 @@
-
-
 Flask==2.2.5
 Flask-Cors==5.0.0
 opencv-python-headless==4.7.0.72
-pillow>=10.3.0          # O pillow==11.1.0
-ultralytics==8.3.62
+pillow>=10.3.0
+ultralytics==8.3.76
 pytesseract==0.3.10
 numpy==1.24.3
 easyocr==1.7.0
@@ -14,10 +12,7 @@ torchtext==0.18.0
 pdf2image==1.16.3
 gunicorn==20.1.0
 
-# Lo nuevo para evitar AutoUpdate
 gitpython>=3.1.30
 setuptools>=70.0.0
-# Agregamos Pandas
 pandas>=1.0.0
 python-dotenv
-

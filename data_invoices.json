@@ -1,14 +1,14 @@
 {
   "": [
     {
-      "description": "diesel premium",
-      "quantity": "2",
-      "price": "25.5",
-      "confidence": 1,
-      "class": ""
-    },
-    {
       "description": "",
+      "quantity": "RU.G.: 0925520496001",
+      "price": "",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "NO LOGO",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -16,6 +16,27 @@
     },
     {
       "description": "No detectado",
+      "quantity": "FACTURA",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No. 001-031-000000084",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "N\u00daMERO DE AUTORIZACI\u00d3N",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "ZENG WEIJU",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -23,8 +44,162 @@
     },
     {
       "description": "No detectado",
+      "quantity": "YHORA DE AUTORIZACI\u00d3N FECHA",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Dir Matriz:",
       "quantity": "No detectado",
-      "price": "1",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
+      "quantity": "407",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "PRODUCCI\u00d3N AMBIENTE:",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Dir Sucursal:",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
+      "quantity": "EMISION: NORMAL 407",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "CLAVE DE ACCESO",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "OBLIGADO A LLEVAR CONTABILIDAD NO",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "1709202401092552049600120010310000000840010008411",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "VICTOR JOHAO MALLA FAREZ Raz\u00f3n Social Nombres y Apellidos:",
+      "quantity": "0706690708",
+      "price": "Identificaci\u00f3n:",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Fecha Emisi\u00f3n: 17/09/2024",
+      "quantity": "No detectado",
+      "price": "Gu\u00eda de Remisi\u00f3n:",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Cant Cod. Principal Descripci\u00f3n",
+      "quantity": "Precio Unitario",
+      "price": "Descuento Precio Total",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "CANDADO BARI CAJAI2OUIB L40-BARI",
+      "quantity": "40",
+      "price": "36.0000 1.956522 0.00 34.43",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "LSO-BARI CANDADO BARI CAJAI2OUIB",
+      "quantity": "50 00",
+      "price": "36.0000 1.173913 42.26",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "L6O-BARI CANDADO BARI CAJA7ZUIB",
+      "quantity": "60",
+      "price": "1.478261 36.0000 0.00 53.22",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "SUBTOTAL 159",
+      "price": "129.91",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "DESCUENTO",
+      "price": "0.00",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Informaci\u00f3n Adicional",
+      "quantity": "ICE",
+      "price": "0.00",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "CorreoReceptor victorjohao2019@outlook.es",
+      "quantity": "IVA",
+      "price": "19.49",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Direcci\u00e3?n CDLA.SANTA TERESITA",
+      "quantity": "VALOR TOTAL",
+      "price": "149.40",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Tel\u00f1@fono",
+      "quantity": "0997408927",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Forma de Valor Pago",
+      "quantity": "Plazo Tiempo",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "SIN UTILIZACION DEL SISTEMA FINANCIERO",
+      "quantity": "dias",
+      "price": "149.40",
       "confidence": 1,
       "class": ""
     }
