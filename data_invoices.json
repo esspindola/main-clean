@@ -1,29 +1,29 @@
 {
   "": [
     {
-      "description": "",
-      "quantity": "RU.G.: 0925520496001",
-      "price": "",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "NO LOGO",
-      "quantity": "No detectado",
+      "description": "No detectado",
+      "quantity": "RU.C.: 0190343928001",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "No detectado",
-      "quantity": "FACTURA",
+      "description": "ital",
+      "quantity": "FACTU RA",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "No detectado",
-      "quantity": "No. 001-031-000000084",
+      "description": "DELI",
+      "quantity": "No. 008-512-000102612",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "0= L1 | = = 5(4",
+      "quantity": "2 2",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
@@ -36,7 +36,28 @@
       "class": ""
     },
     {
-      "description": "ZENG WEIJU",
+      "description": "ITALDELI DELICATESSEN CIA. LTDA.",
+      "quantity": "2402202401019034392800120085120001026121234567816",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "Y HORA DE FECHA",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "AUTORIZACI\u00d3N:",
+      "price": "24/2/2024 20.08:54",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Dir Matriz: Fray Vicente Solano 7-98 y Alfonso Moreno Mora",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -44,42 +65,21 @@
     },
     {
       "description": "No detectado",
-      "quantity": "YHORA DE AUTORIZACI\u00d3N FECHA",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Dir Matriz:",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
-      "quantity": "407",
+      "quantity": "Producci\u00f3n AMBIENTE:",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "PRODUCCI\u00d3N AMBIENTE:",
+      "quantity": "EMISI\u00d3N: Normal",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "Dir Sucursal:",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "AV. OLMEDO Y CHIMBORAZO - C. ALVAREZ",
-      "quantity": "EMISION: NORMAL 407",
+      "description": "Av Dir Sucursal: de Junio S-N, via a Pasaje",
+      "quantity": "25",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
@@ -92,7 +92,14 @@
       "class": ""
     },
     {
-      "description": "OBLIGADO A LLEVAR CONTABILIDAD NO",
+      "description": "Contribuyente Especial No.:",
+      "quantity": "287",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "OBLIGADO A LLEVAR CONTABILIDAD: SI",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -100,106 +107,246 @@
     },
     {
       "description": "No detectado",
-      "quantity": "1709202401092552049600120010310000000840010008411",
+      "quantity": "2402202401019034392800120085120001026121234567816",
       "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "VICTOR JOHAO MALLA FAREZ Raz\u00f3n Social Nombres y Apellidos:",
-      "quantity": "0706690708",
+      "description": "LEON PARDO LUIS Raz\u00f3n Social / Nombres Y Apellidos:",
+      "quantity": "0705030278",
       "price": "Identificaci\u00f3n:",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "Fecha Emisi\u00f3n: 17/09/2024",
+      "description": "Direcci\u00f3n:",
       "quantity": "No detectado",
-      "price": "Gu\u00eda de Remisi\u00f3n:",
+      "price": "Tel\u00e9fono:",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "Cant Cod. Principal Descripci\u00f3n",
-      "quantity": "Precio Unitario",
-      "price": "Descuento Precio Total",
+      "description": "Fecha Emisi\u00f3n: 24/02/2024",
+      "quantity": "Gu\u00eda Remisi\u00f3n:",
+      "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "CANDADO BARI CAJAI2OUIB L40-BARI",
-      "quantity": "40",
-      "price": "36.0000 1.956522 0.00 34.43",
+      "description": "OrdenCompra",
+      "quantity": "PreEntrada",
+      "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "LSO-BARI CANDADO BARI CAJAI2OUIB",
-      "quantity": "50 00",
-      "price": "36.0000 1.173913 42.26",
+      "description": "Cod. Cod. Cant. Descripci\u00f3n",
+      "quantity": "Detalle Detalle Detalle",
+      "price": "Precio Precio Descuento",
       "confidence": 1,
       "class": ""
     },
     {
-      "description": "L6O-BARI CANDADO BARI CAJA7ZUIB",
-      "quantity": "60",
-      "price": "1.478261 36.0000 0.00 53.22",
+      "description": "Auxiliar Principal",
+      "quantity": "Adicional Adicional Adicional",
+      "price": "Unitario Total",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "GUITIG AGUA CON",
+      "quantity": "000174 000174",
+      "price": "1.000000 0.5300 0.0000 0.5300",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "GAS PET 5OOML",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "LA ITALIANA",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "MORTADELA",
+      "quantity": "000577 000577",
+      "price": "0.490000 5.2500 0.0000 2.5700",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "BOLOGNA KG",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "CARNE MOLIDA DE",
+      "quantity": "000214 000214",
+      "price": "0.920000 9.4000 0.0000 8.6500",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "RES KG",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "PECHUGA DE POLLO",
+      "quantity": "4",
+      "price": "0.515000 7.4900 0.0000 3.8600",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "FILETE KG",
+      "quantity": "4",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "EL POZO CHORIZO",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "SARTA PICANTE",
+      "quantity": "000513 000513",
+      "price": "1.000000 4.8900 0.0000 4.8900",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "200G",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "LA ITALIANA JAMON",
+      "quantity": "000559 000559",
+      "price": "2.000000 3.1900 1.2800 5.1000",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "YORK 200G",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "LOMO FINO DE RES",
+      "quantity": "000339 000339",
+      "price": "1.190000 19.8800 0.0000 23.6600",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "KG",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "LA ITALIANA",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "CHORIZO DE FREIR",
+      "quantity": "000614 000614",
+      "price": "0.525000 7.9500 0.0000 4.1700",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "KG",
+      "quantity": "No detectado",
+      "price": "No detectado",
       "confidence": 1,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "SUBTOTAL 159",
-      "price": "129.91",
+      "quantity": "SUBTOTAL 12%",
+      "price": "0.53",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "Valor Plazo Forma de Pago",
+      "quantity": "Tiempo",
+      "price": "No detectado",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "SIN UTILIZACION DEL SISTEMA",
+      "quantity": "SUBTOTAL 0%",
+      "price": "52.90",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "FINANCIERO",
+      "quantity": "dias 0",
+      "price": "53.49",
       "confidence": 1,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "DESCUENTO",
-      "price": "0.00",
+      "quantity": "SUB TOTAL SIN IMPUESTOS",
+      "price": "53.43",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "TOTAL Descuento",
+      "price": "1.28",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "IVA 12%",
+      "price": "0.06",
+      "confidence": 1,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "VALOR TOTAL",
+      "price": "53.49",
       "confidence": 1,
       "class": ""
     },
     {
       "description": "Informaci\u00f3n Adicional",
-      "quantity": "ICE",
-      "price": "0.00",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "CorreoReceptor victorjohao2019@outlook.es",
-      "quantity": "IVA",
-      "price": "19.49",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Direcci\u00e3?n CDLA.SANTA TERESITA",
-      "quantity": "VALOR TOTAL",
-      "price": "149.40",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Tel\u00f1@fono",
-      "quantity": "0997408927",
+      "quantity": "No detectado",
       "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Forma de Valor Pago",
-      "quantity": "Plazo Tiempo",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "SIN UTILIZACION DEL SISTEMA FINANCIERO",
-      "quantity": "dias",
-      "price": "149.40",
       "confidence": 1,
       "class": ""
     }

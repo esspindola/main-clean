@@ -672,5 +672,31 @@ def get_order(order_id):
     except Exception as e:
         print("Error al leer orders.json:", e)
         return jsonify({"error": str(e)}), 500
+    
+
+
+@app.route('/get-providers', methods=['GET'])
+def get_providers():
+    try:
+        file_path = os.path.join(BASE_DIR, "providers.json")
+        print("Buscando providers.json en:", file_path)
+        if not os.path.exists(file_path):
+            print("El archivo no existe, devolviendo []")
+            return jsonify([]), 200
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            file_content = f.read().strip().lstrip('\ufeff')
+            print("Contenido de providers.json:", file_content)
+            if file_content == "":
+                return jsonify([]), 200
+            try:
+                data = json.loads(file_content)
+            except Exception as parse_err:
+                print("Error al parsear JSON. Contenido del archivo:", file_content)
+                raise parse_err
+        return jsonify(data), 200
+    except Exception as e:
+        print("Error al cargar proveedores:", e)
+        return jsonify({"error": str(e)}), 500
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
