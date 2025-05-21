@@ -2,62 +2,83 @@
   "": [
     {
       "description": "No detectado",
-      "quantity": "RU.C.: 0190343928001",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "ital",
-      "quantity": "FACTU RA",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "DELI",
-      "quantity": "No. 008-512-000102612",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "0= L1 | = = 5(4",
-      "quantity": "2 2",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "0992467819001",
+      "price": "RU.C.:",
+      "confidence": 0.845,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "N\u00daMERO DE AUTORIZACI\u00d3N",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "No detectado",
+      "price": "FACTU RA",
+      "confidence": 0.977,
       "class": ""
     },
     {
-      "description": "ITALDELI DELICATESSEN CIA. LTDA.",
-      "quantity": "2402202401019034392800120085120001026121234567816",
+      "description": "KISSU",
+      "quantity": "No detectado",
       "price": "No detectado",
-      "confidence": 1,
+      "confidence": 0.533,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "Y HORA DE FECHA",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "No detectado",
+      "price": "008-002-000003908 No.",
+      "confidence": 0.957,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "AUTORIZACI\u00d3N:",
-      "price": "24/2/2024 20.08:54",
-      "confidence": 1,
+      "quantity": "No detectado",
+      "price": "N\u00daMERO DE AUTORIZACI\u00d3N",
+      "confidence": 0.99,
       "class": ""
     },
     {
-      "description": "Dir Matriz: Fray Vicente Solano 7-98 y Alfonso Moreno Mora",
+      "description": "No detectado",
+      "quantity": "2906202001099246781900120080020000039088836416712",
+      "price": "No detectado",
+      "confidence": 0.919,
+      "class": ""
+    },
+    {
+      "description": "De la f\u00e1brica a tu casa",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 0.871,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No detectado",
+      "price": "2020-06-29713.27.03.000-05.00 FECHA Y HORA DE",
+      "confidence": 0.333,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No detectado",
+      "price": "AUTORIZACI\u00d3N",
+      "confidence": 0.99,
+      "class": ""
+    },
+    {
+      "description": "TKVELECTROS SA",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 0.942,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "No detectado",
+      "price": "AMBIENTE: PRODUCCION",
+      "confidence": 0.771,
+      "class": ""
+    },
+    {
+      "description": "KISSU",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -65,41 +86,20 @@
     },
     {
       "description": "No detectado",
-      "quantity": "Producci\u00f3n AMBIENTE:",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "No detectado",
+      "price": "EMISI\u00d3N: NORMAL",
+      "confidence": 0.849,
       "class": ""
     },
     {
-      "description": "No detectado",
-      "quantity": "EMISI\u00d3N: Normal",
+      "description": "Direcci\u00f3n GALO PLAZA LASSO N62-65 Y NAZARETH",
+      "quantity": "No detectado",
       "price": "No detectado",
-      "confidence": 1,
+      "confidence": 0.644,
       "class": ""
     },
     {
-      "description": "Av Dir Sucursal: de Junio S-N, via a Pasaje",
-      "quantity": "25",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "No detectado",
-      "quantity": "CLAVE DE ACCESO",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Contribuyente Especial No.:",
-      "quantity": "287",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "OBLIGADO A LLEVAR CONTABILIDAD: SI",
+      "description": "Matriz:",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -107,181 +107,76 @@
     },
     {
       "description": "No detectado",
-      "quantity": "2402202401019034392800120085120001026121234567816",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "No detectado",
+      "price": "CLAVE DE ACCESO",
+      "confidence": 0.946,
       "class": ""
     },
     {
-      "description": "LEON PARDO LUIS Raz\u00f3n Social / Nombres Y Apellidos:",
-      "quantity": "0705030278",
+      "description": "ROBLES E7-46 AV.6 DE DICEMBRE Direcci\u00f3n",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 0.658,
+      "class": ""
+    },
+    {
+      "description": "Sucursal:",
+      "quantity": "No detectado",
+      "price": "No detectado",
+      "confidence": 0.906,
+      "class": ""
+    },
+    {
+      "description": "No detectado",
+      "quantity": "290620200109924678190012008002000003908",
+      "price": "No detectado",
+      "confidence": 0.833,
+      "class": ""
+    },
+    {
+      "description": "OBLIGADO A LLEVAR CONTABILIDAD",
+      "quantity": "SI",
+      "price": "No detectado",
+      "confidence": 0.858,
+      "class": ""
+    },
+    {
+      "description": "Raz\u00f3n Social Nombres y Apellidos:",
+      "quantity": "0705030278 LEON PARDO LUIS",
       "price": "Identificaci\u00f3n:",
-      "confidence": 1,
+      "confidence": 0.781,
       "class": ""
     },
     {
-      "description": "Direcci\u00f3n:",
+      "description": "Fecha Emisi\u00f3n: 29/06/2020",
       "quantity": "No detectado",
-      "price": "Tel\u00e9fono:",
-      "confidence": 1,
+      "price": "Gu\u00eda Remisi\u00f3n:",
+      "confidence": 0.992,
       "class": ""
     },
     {
-      "description": "Fecha Emisi\u00f3n: 24/02/2024",
-      "quantity": "Gu\u00eda Remisi\u00f3n:",
+      "description": "Direcci\u00f3n: VIA JUMON",
+      "quantity": "No detectado",
       "price": "No detectado",
-      "confidence": 1,
+      "confidence": 0.988,
       "class": ""
     },
     {
-      "description": "OrdenCompra",
-      "quantity": "PreEntrada",
-      "price": "No detectado",
-      "confidence": 1,
+      "description": "Cod. Cod.",
+      "quantity": "No detectado",
+      "price": "Precio Unitario Precio Total",
+      "confidence": 0.871,
       "class": ""
     },
     {
-      "description": "Cod. Cod. Cant. Descripci\u00f3n",
-      "quantity": "Detalle Detalle Detalle",
-      "price": "Precio Precio Descuento",
-      "confidence": 1,
+      "description": "Cant",
+      "quantity": "Descripci\u00f3n",
+      "price": "Descuento",
+      "confidence": 0.721,
       "class": ""
     },
     {
       "description": "Auxiliar Principal",
-      "quantity": "Adicional Adicional Adicional",
-      "price": "Unitario Total",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "GUITIG AGUA CON",
-      "quantity": "000174 000174",
-      "price": "1.000000 0.5300 0.0000 0.5300",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "GAS PET 5OOML",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "LA ITALIANA",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "MORTADELA",
-      "quantity": "000577 000577",
-      "price": "0.490000 5.2500 0.0000 2.5700",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "BOLOGNA KG",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "CARNE MOLIDA DE",
-      "quantity": "000214 000214",
-      "price": "0.920000 9.4000 0.0000 8.6500",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "RES KG",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "PECHUGA DE POLLO",
-      "quantity": "4",
-      "price": "0.515000 7.4900 0.0000 3.8600",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "FILETE KG",
-      "quantity": "4",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "EL POZO CHORIZO",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "SARTA PICANTE",
-      "quantity": "000513 000513",
-      "price": "1.000000 4.8900 0.0000 4.8900",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "200G",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "LA ITALIANA JAMON",
-      "quantity": "000559 000559",
-      "price": "2.000000 3.1900 1.2800 5.1000",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "YORK 200G",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "LOMO FINO DE RES",
-      "quantity": "000339 000339",
-      "price": "1.190000 19.8800 0.0000 23.6600",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "KG",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "LA ITALIANA",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "CHORIZO DE FREIR",
-      "quantity": "000614 000614",
-      "price": "0.525000 7.9500 0.0000 4.1700",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "KG",
       "quantity": "No detectado",
       "price": "No detectado",
       "confidence": 1,
@@ -289,65 +184,23 @@
     },
     {
       "description": "No detectado",
-      "quantity": "SUBTOTAL 12%",
-      "price": "0.53",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Valor Plazo Forma de Pago",
-      "quantity": "Tiempo",
-      "price": "No detectado",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "SIN UTILIZACION DEL SISTEMA",
-      "quantity": "SUBTOTAL 0%",
-      "price": "52.90",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "FINANCIERO",
-      "quantity": "dias 0",
-      "price": "53.49",
-      "confidence": 1,
+      "quantity": "BICICLETA ESTATICA MULTI EVERTOP ET-8-2 5 EN 1 1387",
+      "price": "0.00 221.43 221.43",
+      "confidence": 0.608,
       "class": ""
     },
     {
       "description": "No detectado",
-      "quantity": "SUB TOTAL SIN IMPUESTOS",
-      "price": "53.43",
-      "confidence": 1,
-      "class": ""
+      "quantity": "SERVICIO LOGISTICO 2828",
+      "price": "0.00 22.32 22.32",
+      "confidence": 0.736,
+      "class": "1"
     },
     {
       "description": "No detectado",
-      "quantity": "TOTAL Descuento",
-      "price": "1.28",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "No detectado",
-      "quantity": "IVA 12%",
-      "price": "0.06",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "No detectado",
-      "quantity": "VALOR TOTAL",
-      "price": "53.49",
-      "confidence": 1,
-      "class": ""
-    },
-    {
-      "description": "Informaci\u00f3n Adicional",
-      "quantity": "No detectado",
-      "price": "No detectado",
-      "confidence": 1,
+      "quantity": "SERVICIO INSTALACION 2161",
+      "price": "17.86 0.00 17.86",
+      "confidence": 0.869,
       "class": ""
     }
   ]

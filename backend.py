@@ -4,13 +4,13 @@ from sklearn.cluster import DBSCAN
 from PIL import Image
 import torch  
 import cv2
-import pytesseract
 import traceback
 from pdf2image import convert_from_bytes
 import os
 import re
 import base64
 import io
+from ultralytics import YOLO
 from pathlib import Path
 import pandas as pd  
 from dotenv import load_dotenv
@@ -20,6 +20,17 @@ import json
 import uuid
 import easyocr
 import numpy as np
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\aryes\Documents\tesseract.exe"
+
+print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
+
+import pathlib
+import sys
+
+if sys.platform == "win32":
+    pathlib.PosixPath = pathlib.WindowsPath
+
 from PIL import Image
 if not hasattr(Image, 'ANTIALIAS'):
     Image.ANTIALIAS = Image.Resampling.LANCZOS
@@ -27,6 +38,8 @@ if not hasattr(Image, 'ANTIALIAS'):
 from craft_text_detector import Craft, craft_utils
 import craft_text_detector.predict as craft_predict
 
+POPPLER_PATH = r"C:\Users\aryes\Documents\doc\poppler-0.89.0\bin"
+PDF_DPI = 300
 
 _original_get_prediction = craft_predict.get_prediction
 
@@ -58,7 +71,8 @@ print("Parche de get_prediction aplicado:", craft_predict.get_prediction)
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
-sys.path.append(str(BASE_DIR / 'yolov5'))  
+sys.path.append(str(BASE_DIR / 'yolov5')) 
+
 
 try:
     from utils.general import non_max_suppression
@@ -97,7 +111,8 @@ else:
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
-MODEL_PATH = Path('/home/yesenia/Escritorio/react/Alcolab/Web/backend/backup-backend-ocr.git/yolov5/runs/train/exp_retrain/weights/best.pt')
+
+MODEL_PATH = Path('C:/Users/aryes/Documents/ocr/backend-ocr/yolov5/runs/train/exp_retrain/weights/best.pt')
 DATA_PATH = BASE_DIR / 'datasets/data.yaml'
 print(f"Ruta esperada de data.yaml: {DATA_PATH}")  
 if not MODEL_PATH.exists():
@@ -132,7 +147,7 @@ else:
     classes = []
 
 
-pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+#pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 TESSDATA_DIR = '/usr/share/tesseract-ocr/5/tessdata/'
 os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
@@ -153,12 +168,9 @@ else:
      print(f"Clases cargadas desde YAML: {classes}")
 
 try:
-    model = torch.hub.load(
-        str(BASE_DIR / "yolov5"),  
-        "custom",
-        path=str(MODEL_PATH),
-        source="local"
-    )
+    model = YOLO(MODEL_PATH)  
+
+    
 
     print("✅ Modelo YOLOv5 cargado correctamente")
     print("📌 Clases del modelo:", model.names)
@@ -187,6 +199,34 @@ def my_adjustResultCoordinates(polys, ratio_w, ratio_h):
     return new_polys
 # Inicializa el lector easyocr que incorpore modo preba
 easyocr_reader = easyocr.Reader(['es'], gpu=False)
+
+
+# ------------------------------------------------------------------------
+def find_table_roi(img_bgr) -> tuple | None:
+    """
+    Devuelve (x,y,w,h) de la tabla principal si detecta líneas
+    horizontales+verticales; si no encuentra nada → None.
+    """
+    gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+    # binarizamos fuerte para ver líneas
+    bw   = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,
+                                 cv2.THRESH_BINARY_INV,15, -2)
+
+    # morfología horizontal / vertical
+    hor = cv2.getStructuringElement(cv2.MORPH_RECT,(40,1))
+    ver = cv2.getStructuringElement(cv2.MORPH_RECT,(1,40))
+    mask = cv2.dilate(cv2.erode(bw,hor),hor) | cv2.dilate(cv2.erode(bw,ver),ver)
+
+    cnts,_ = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    if not cnts:
+        return None
+    # ROI más grande
+    x,y,w,h = cv2.boundingRect(max(cnts,key=cv2.contourArea))
+    # descartamos si ocupa <10 % de la página (falsa detección)
+    if w*h < 0.1*img_bgr.shape[0]*img_bgr.shape[1]:
+        return None
+    return (x,y,w,h)
+# ------------------------------------------------------------------------
 
 def easyocr_text_regions(image):
     reader = easyocr.Reader(['es'], gpu=False)
@@ -280,35 +320,32 @@ def detect_sections_plan_b(image_bgr):
     return df
 
 
-def assign_column(bb, x_desc_max=900, x_cant_max=1200):
-    text = bb["text"].strip()
-    clase = bb["class"].lower()
-    x_center = (bb["xmin"] + bb["xmax"]) / 2
-    if "$" in text:
-        return "precio"
+def assign_column(bb, x_desc_max=1100, x_cant_max=1500):   # ← valores + altos
+    text   = bb["text"].strip()
+    clase  = bb["class"].lower()
+    x_cent = (bb["xmin"] + bb["xmax"]) / 2
 
-    if clase in ["cantidad", "cant"]:
-        return "cantidad"
-    elif clase in ["precio", "precio_unitario", "precio_total"]:
+    # 1) Reglas "obvias"
+    if "$" in text or re.match(r'^\d+[,\.]\d{2}$', text):
         return "precio"
-    elif clase in ["descripcion"]:
+    if clase in ("precio","precio_unitario","precio_total"):
+        return "precio"
+    if clase in ("cantidad","cant"):
+        return "cantidad"
+    if clase == "descripcion":
         return "descripcion"
 
-
+    # 2) Regex numérico
     if is_number(text):
-       
-        if '.' in text or ',' in text:
-            return "precio"
-        else:
-            return "cantidad"
+        return "cantidad" if text.isdigit() else "precio"
 
-   
-    if x_center < x_desc_max:
+    # 3) Posición X
+    if x_cent < x_desc_max:
         return "descripcion"
-    elif x_center < x_cant_max:
+    elif x_cent < x_cant_max:
         return "cantidad"
-    else:
-        return "precio"
+    return "precio"
+
     
 def is_number(text):
     return bool(re.match(r'^\d+([.,]\d+)?$', text))
@@ -336,44 +373,69 @@ def split_and_classify_text(bb):
         sub_bboxes.append(new_bb)
     return sub_bboxes
 
-def group_bboxes_by_rows_and_cols(bboxes, row_tol=15, x_desc_max=900, x_cant_max=1200):
-    filtered = [bb for bb in bboxes if bb["class"].lower() not in 
-                ["logo", "r.u.c", "ruc", "fecha_hora", "numero_factura", "razon_social"]]
-    if not filtered:
+def group_bboxes_by_rows_and_cols(
+        bboxes,
+        row_tol=15,
+        x_desc_max=900,
+        x_cant_max=1200
+    ):
+    """
+    Agrupa todos los bounding-boxes en filas → decide columna (descr / cant / precio)
+    y calcula una confianza de fila = min(confidencias de sus celdas)
+    """
+    # ── 1) Filtrar lo que no es de la tabla ────────────────────────────────
+    SKIP = {"logo", "r.u.c", "ruc", "fecha_hora",
+            "numero_factura", "razon_social"}
+    good = [bb for bb in bboxes
+            if isinstance(bb, dict) and bb.get("class", "").lower() not in SKIP]
+    if not good:
         return []
-    for bb in filtered:
-        bb['y_center'] = (bb['ymin'] + bb['ymax']) / 2
-    bboxes_sorted = sorted(filtered, key=lambda b: b['y_center'])
-    rows = []
-    current_row = [bboxes_sorted[0]]
-    rows.append(current_row)
-    current_row_center = bboxes_sorted[0]['y_center']
-    for bb in bboxes_sorted[1:]:
-        if abs(bb['y_center'] - current_row_center) < row_tol:
-            current_row.append(bb)
-            current_row_center = sum(b['y_center'] for b in current_row) / len(current_row)
+
+    # ── 2) Ordenar por Y centre ────────────────────────────────────────────
+    for bb in good:
+        bb["y_center"] = (bb["ymin"] + bb["ymax"]) / 2
+    good.sort(key=lambda b: b["y_center"])
+
+    # ── 3) Clustering “a mano” por proximidad vertical ─────────────────────
+    rows, cur = [], [good[0]]
+    cur_center = good[0]["y_center"]
+
+    for bb in good[1:]:
+        if abs(bb["y_center"] - cur_center) < row_tol:
+            cur.append(bb)
+            cur_center = sum(b["y_center"] for b in cur) / len(cur)
         else:
-            current_row = [bb]
-            rows.append(current_row)
-            current_row_center = bb['y_center']
-    extracted_rows = []
+            rows.append(cur)
+            cur, cur_center = [bb], bb["y_center"]
+    rows.append(cur)          # agrega la última
+
+    # ── 4) Construir fila normalizada ──────────────────────────────────────
+    extracted = []
     for fila in rows:
-        row_dict = {"descripcion": "", "cantidad": "", "precio": "", "confidence": 1.0}
+        desc, cant, price, row_conf = "", "", "", 1.0
         for bb in fila:
             col = assign_column(bb, x_desc_max, x_cant_max)
+            row_conf = min(row_conf, bb.get("confidence", 1.0))
+
             if "$" in bb["text"]:
                 col = "precio"
+
             if col == "descripcion":
-                row_dict["descripcion"] += bb["text"] + " "
+                desc  += bb["text"] + " "
             elif col == "cantidad":
-                row_dict["cantidad"] += bb["text"] + " "
-            else:
-                row_dict["precio"] += bb["text"] + " "
-        row_dict["descripcion"] = row_dict["descripcion"].strip() or "No detectado"
-        row_dict["cantidad"] = row_dict["cantidad"].strip() or "No detectado"
-        row_dict["precio"] = row_dict["precio"].strip() or "No detectado"
-        extracted_rows.append(row_dict)
-    return extracted_rows
+                cant  += bb["text"] + " "
+            elif col == "precio":
+                price += bb["text"] + " "
+
+        extracted.append({
+            "descripcion": desc.strip()  or "No detectado",
+            "cantidad"   : cant.strip()  or "No detectado",
+            "precio"     : price.strip() or "No detectado",
+            "confidence" : round(row_conf, 3)
+        })
+    return extracted
+
+
 
 
 def extract_text_from_roi(image, detections):
@@ -390,19 +452,27 @@ def extract_text_from_roi(image, detections):
 
 
 def get_all_bboxes(image_np, yolo_detections):
-   
-    yolo_boxes = []
-    for _, row in yolo_detections.iterrows():
-        x_min, y_min, x_max, y_max = map(int, [row["xmin"], row["ymin"], row["xmax"], row["ymax"]])
-        yolo_boxes.append({
-            "class": row["name"],
-            "text": "", 
-            "confidence": row["confidence"],
-            "xmin": x_min,
-            "ymin": y_min,
-            "xmax": x_max,
-            "ymax": y_max
-        })
+    # --- NUEVO: recorte de ROI tabla ----
+    roi_coords = find_table_roi(image_np)
+    if roi_coords:
+        x,y,w,h = roi_coords
+        sub_img = image_np[y:y+h, x:x+w]
+        ocr_target = sub_img
+    else:
+        ocr_target = image_np
+    # ------------------------------------
+
+    yolo_boxes = [...]
+    image_rgb  = cv2.cvtColor(ocr_target, cv2.COLOR_BGR2RGB)
+    ocr_boxes  = easyocr_text_regions(image_rgb)
+
+    # si recortamos ROI, mover coords a sistema global
+    if roi_coords:
+        for b in ocr_boxes:
+            b["xmin"] += x; b["xmax"] += x
+            b["ymin"] += y; b["ymax"] += y
+    
+
 
     # OCR con EasyOCR
     image_rgb = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
@@ -527,43 +597,54 @@ def process_detected_regions(image, detections):
 
     return extracted_data
 
-@app.route('/process-document', methods=['POST'])
+@app.route("/process-document", methods=["POST"])
 def process_document():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No se envió ningún archivo'}), 400
+    if "file" not in request.files:
+        return jsonify({"error": "No se envió ningún archivo"}), 400
 
-    file = request.files['file']
-    
-    if file.filename == '':
-        return jsonify({'error': 'El nombre del archivo está vacío'}), 400
-    
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "El nombre del archivo está vacío"}), 400
+
     image_bgr = None
-    
-    if file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')):
+
+    # ───── IMÁGENES ─────
+    if file.filename.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".bmp")):
         try:
-            image_bgr = cv2.cvtColor(np.array(Image.open(file.stream).convert('RGB')), cv2.COLOR_RGB2BGR)
+            image_bgr = cv2.cvtColor(
+                np.array(Image.open(file.stream).convert("RGB")), cv2.COLOR_RGB2BGR
+            )
         except Exception as e:
-            return jsonify({'error': f'Error procesando la imagen: {e}'}), 500
-    
-    elif file.filename.lower().endswith('.pdf'):
+            return jsonify({"error": f"Error procesando la imagen: {e}"}), 500
+
+    # ───── PDF ─────
+    elif file.filename.lower().endswith(".pdf"):
         try:
-            images = convert_from_bytes(file.read())
+            
+            images = convert_from_bytes(
+                file.read(),
+                dpi=PDF_DPI,  
+                poppler_path=POPPLER_PATH
+            )
             if not images:
-                return jsonify({'error': 'No se pudo convertir el PDF en imágenes'}), 400
+                return jsonify(
+                    {"error": "No se pudo convertir el PDF en imágenes"}), 400
             image_bgr = cv2.cvtColor(np.array(images[0]), cv2.COLOR_RGB2BGR)
         except Exception as e:
-            return jsonify({'error': f'Error procesando el PDF: {e}'}), 500
+            return jsonify({"error": f"Error procesando el PDF: {e}"}), 500
+
     else:
-        return jsonify({'error': 'Tipo de archivo no soportado'}), 400
+        return jsonify({"error": "Tipo de archivo no soportado"}), 400
 
+    # ───── Inferencia + OCR ─────
     detections = detect_sections(image_bgr)
-    data = extract_text_from_roi(image_bgr, detections)
-    
+    data       = extract_text_from_roi(image_bgr, detections)
 
-    marked_image = mark_detections(image_bgr, detections)
-    image_base64 = image_to_base64(marked_image)
+    marked     = mark_detections(image_bgr, detections)
+    img_b64    = image_to_base64(marked)
 
-    return jsonify({'data': data, 'image': image_base64}), 200
+    return jsonify({"data": data, "image": img_b64}), 200
+
     
 @app.route('/save-document-changes', methods=['POST'])
 def save_document_changes():

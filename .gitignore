@@ -51,3 +51,29 @@ Thumbs.db
 .env.development
 .env.test
 .env.production
+
+# entornos virtuales
+.venv/
+env/
+
+# artefactos de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# datos de entrenamiento / resultados grandes
+yolov5/runs/
+*.pt
+
+# pdf2image caché
+*.ppm
+
+# variables de entorno
+.env
+
+# IDEs
+.vscode/
+.idea/
+
+# logs
+*.log
