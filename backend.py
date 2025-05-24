@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.cluster import DBSCAN
 from PIL import Image
+from collections import Counter
 import torch  
 import cv2
 import traceback
@@ -10,7 +11,6 @@ import os
 import re
 import base64
 import io
-from ultralytics import YOLO
 from pathlib import Path
 import pandas as pd  
 from dotenv import load_dotenv
@@ -21,12 +21,24 @@ import uuid
 import easyocr
 import numpy as np
 import pytesseract
+import sys
+sys.path.append("C:/Users/aryes/Documents/ocr/backend-ocr/yolov5")
+sys.path.append("C:/Users/aryes/Documents/ocr/backend-ocr/yolov5/utils")
+
+from utils.augmentations import letterbox
+from models.common import DetectMultiBackend  # asegúrate de tenerlo
+
+# Reemplaza esta carga:
+# model = torch.hub.load(...)
+
+
 pytesseract.pytesseract.tesseract_cmd = r"C:\Users\aryes\Documents\tesseract.exe"
 
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
 
 import pathlib
 import sys
+
 
 if sys.platform == "win32":
     pathlib.PosixPath = pathlib.WindowsPath
@@ -37,6 +49,24 @@ if not hasattr(Image, 'ANTIALIAS'):
 
 from craft_text_detector import Craft, craft_utils
 import craft_text_detector.predict as craft_predict
+
+
+try:
+    from utils.general import non_max_suppression
+    from utils.augmentations import letterbox  # <-- Agrega esta línea
+except ImportError:
+    non_max_suppression = None
+    letterbox = None
+
+
+try:
+    from utils.augmentations import letterbox
+    resultado = "✅ Importación de 'letterbox' realizada correctamente."
+except Exception as e:
+    resultado = f"❌ Error al importar 'letterbox': {e}"
+
+
+
 
 POPPLER_PATH = r"C:\Users\aryes\Documents\doc\poppler-0.89.0\bin"
 PDF_DPI = 300
@@ -113,20 +143,78 @@ else:
     return response
 
 MODEL_PATH = Path('C:/Users/aryes/Documents/ocr/backend-ocr/yolov5/runs/train/exp_retrain/weights/best.pt')
+
+#try:
+    #model = torch.hub.load(
+     #   'yolov5',               # repo local (lo añadiste a sys.path)
+      #  'custom',               # tarea
+      #  path=str(MODEL_PATH),   # pesos
+       # source='local',
+        #trust_repo=True
+    #)
+    #model.conf = 0.25          # umbral de confianza por defecto
+    #model.eval()               # modo inferencia
+    #print("✅ Modelo YOLOv5 cargado ✔")
+    #print("📌 Clases del modelo:", model.names)
+#except Exception as e:
+ #   print("❌ NO se pudo cargar YOLOv5:", e)
+  #  sys.exit(1)
+
+
+# Creamos un archivo export.py temporal para resolver la dependencia faltante
+export_code = """
+def export_formats():
+    return ['torchscript', 'onnx', 'coreml', 'saved_model', 'pb', 'tflite', 
+            'edgetpu', 'tfjs', 'paddle', 'engine', 'xml']
+export_formats = export_formats()
+"""
+
+# Create export module in the correct location BEFORE we try to load the model
+yolo_dir = os.path.join(BASE_DIR, "yolov5")
+export_file_path = os.path.join(yolo_dir, "export.py")
+with open(export_file_path, 'w') as f:
+    f.write(export_code)
+# Initialize model variable
+model = None
+
+# Define classes early if it might not be defined yet
+if 'classes' not in locals():
+    classes = {}
+
+# Define DummyModel as a fallback
+class DummyModel:
+    def __init__(self):
+        self.conf = 0.25
+        self.names = classes
+    def __call__(self, img):
+        return [torch.zeros((0, 6))]
+    def eval(self):
+        pass
+
+# If no model was loaded earlier, use the DummyModel
+if model is None:
+    model = DummyModel()
+    print("⚠️ Usando modelo de respaldo")
+
+try:
+    # Try loading the model now that export.py should be accessible
+    model = DetectMultiBackend(str(MODEL_PATH))
+    model.eval()
+    print("✅ Modelo YOLOv5 cargado correctamente")
+except Exception as e:
+    print(f"❌ Error al cargar el modelo: {e}")
+    model = DummyModel()
+    print("⚠️ Usando modelo de respaldo")
 DATA_PATH = BASE_DIR / 'datasets/data.yaml'
-print(f"Ruta esperada de data.yaml: {DATA_PATH}")  
+print(f"Ruta esperada de data.yaml: {DATA_PATH}")
 if not MODEL_PATH.exists():
     print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
     exit(1)
 
-    if not MODEL_PATH.exists():
-        print(f"ERROR: El modelo no existe en la ruta: {MODEL_PATH}")
+if not DATA_PATH.exists():
+    print(f"ERROR: No se encontro el archivo de configuracion: {DATA_PATH}")
+    print("Usando fallback de clases en código.")
     exit(1)
-
-    if not DATA_PATH.exists():
-        print(f"ERROR: No se encontro el archivo de configuracion: {DATA_PATH}")
-        print("Usando fallback de clases en código.")
-        exit(1)
 
 
 if DATA_PATH.exists():
@@ -167,16 +255,46 @@ else:
         classes = yaml.safe_load(file).get('names', {})
      print(f"Clases cargadas desde YAML: {classes}")
 
-try:
-    model = YOLO(MODEL_PATH)  
 
+
+             #________________modo solo prueba_________________
+             #________________modo solo prueba_________________
+            
+def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True, stride=32):
+        # Get current shape
+        shape = img.shape[:2]  # current shape [height, width]
+        
+        if isinstance(new_shape, int):
+            new_shape = (new_shape, new_shape)
     
+        # Scale ratio (new / old)
+        r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+        if not scaleup:
+            r = min(r, 1.0)
+    
+        # Compute padding
+        ratio = r, r  # width, height ratios
+        new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+        dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]
+        if auto:
+            dw, dh = np.mod(dw, stride), np.mod(dh, stride)
+        elif scaleFill:
+            dw, dh = 0.0, 0.0
+            new_unpad = new_shape
+            ratio = new_shape[1] / shape[1], new_shape[0] / shape[0]
+    
+        dw /= 2  # divide padding into 2 sides
+        dh /= 2
+    
+        # Resize and pad
+        if shape[::-1] != new_unpad:
+            img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+        top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
+        left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
+        img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)
+    
+        return img, ratio, (dw, dh)
 
-    print("✅ Modelo YOLOv5 cargado correctamente")
-    print("📌 Clases del modelo:", model.names)
-except Exception as e:
-    print(f"❌ Error al cargar el modelo YOLOv5: {e}")
-    exit(1)
 
 def my_adjustResultCoordinates(polys, ratio_w, ratio_h):
     new_polys = []
@@ -244,6 +362,7 @@ def easyocr_text_regions(image):
             "ymax": int(max(ys)),
             "class": "ocr"
         })
+    print("🧠 EasyOCR detectó:", [(text, conf) for _, text, conf in results])
     return boxes
 
 
@@ -268,83 +387,99 @@ def allowed_file(filename):
             filename.rsplit('.', 1)[1].lower() in 
             {'png','jpg','jpeg','tiff','bmp','pdf'})
 
-def detect_sections(image):
+# ---------------------------------------------------------------------
+#  YOLO + fallback “plan B”
+def detect_sections(image_bgr):
     try:
-        results = model(image)
-        df = results.pandas().xyxy[0]
-        print("🔍 Detecciones YOLOv5:", df) 
-        df['name'] = df['class'].apply(lambda c: classes[int(c)] if int(c) < len(classes) else f'Clase_{int(c)}')
+        # 1) BGR ➜ RGB y letterbox a 640 × 640
+        img_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+        img_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+        img, *_ = letterbox(img_rgb, new_shape=640, auto=False)
+
+        # 2) Numpy ➜ Tensor [1,C,H,W] 0-1
+        img = img.transpose((2, 0, 1))                    # HWC→CHW
+        img = np.ascontiguousarray(img)
+        img = torch.from_numpy(img).float() / 255.0
+        img = img.unsqueeze(0)                            # batch=1
+
+        # 3) Inferencia
+        with torch.no_grad():
+            pred = model(img)[0]                          # raw pred
+
+        # 4) NMS
+        pred = non_max_suppression(pred,
+                                   conf_thres=model.conf,
+                                   iou_thres=0.45)[0]
+
+        if pred is None or not len(pred):
+            if letterbox is None:
+                print("⚠️ Error: La función 'letterbox' no se ha importado. Revisa la ruta de YOLOv5.")
+            return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
+
+            
+
+        # 5) A DataFrame
+        pred = pred.cpu().numpy()
+        df = pd.DataFrame(pred,
+                          columns=['xmin','ymin','xmax','ymax',
+                                   'confidence','class'])
+        df['name'] = df['class'].apply(
+            lambda c: classes[int(c)] if int(c) < len(classes)
+            else f'Clase_{int(c)}')
+        print("▶️  YOLO DF:\n", df.head())  # Print the dataframe here, after it's created
         return df
+
     except Exception as e:
-        print(f"Error en YOLOv5: {e}")
-        return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
-
-def detect_sections_plan_b(image_bgr):
-    """
-    PLAN B: Se llama cuando 'model(image)' falla en producción.
-    1) Convertir BGR a Tensor
-    2) Llamar al modelo => salida bruta
-    3) Non-Max-Suppression => Nx6
-    4) Convertir a DataFrame => columns=[xmin,ymin,xmax,ymax,confidence,class]
-       + name
-    """
-    if non_max_suppression is None:
-        print("No se pudo importar non_max_suppression. Actualiza tu 'yolov5'.")
-        # Retorna un DF vacío
-        return pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
-
-    if len(image_bgr.shape) == 3 and image_bgr.shape[2] == 3:
-        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-    else:
-        image_rgb = image_bgr
-    image_rgb = cv2.resize(image_rgb, (640,640), interpolation=cv2.INTER_LINEAR)
-
-    image_tensor = torch.from_numpy(image_rgb).float().permute(2,0,1).unsqueeze(0)/255.0
-
-    with torch.no_grad():
-        raw_preds = model(image_tensor) 
-
-    nms = non_max_suppression(raw_preds, conf_thres=0.25, iou_thres=0.45)
-    if not nms or nms[0] is None or len(nms[0])==0:
-        print("Detecciones YOLOv5 (Plan B): vacio")
-        df = pd.DataFrame(columns=['xmin','ymin','xmax','ymax','confidence','class','name'])
-        return df
-
-    pred = nms[0].cpu().numpy()  
-    df = pd.DataFrame(
-        pred, 
-        columns=['xmin','ymin','xmax','ymax','confidence','class']
-    )
-    df['name'] = df['class'].apply(lambda c: classes.get(int(c), f'class_{int(c)}'))
-    print("Detecciones YOLOv5 (Plan B) => DF:\n", df)
-    return df
+        print("⛑  YOLO falló (tensor path):", e)
+        return pd.DataFrame(
+            columns=['xmin','ymin','xmax','ymax',
+                     'confidence','class','name'])
 
 
-def assign_column(bb, x_desc_max=1100, x_cant_max=1500):   # ← valores + altos
-    text   = bb["text"].strip()
-    clase  = bb["class"].lower()
+
+
+
+# def assign_column(bb, x_desc_max, x_cant_max):     
+#     text   = bb["text"].strip()
+#     clase  = bb["class"].lower()
+#     x_cent = (bb["xmin"] + bb["xmax"]) / 2
+
+#     # 1) Reglas "obvias"
+#     if "$" in text or re.match(r'^\d+[,\.]\d{2}$', text):
+#         return "precio"
+#     if clase in ("precio","precio_unitario","precio_total"):
+#         return "precio"
+#     if clase in ("cantidad","cant"):
+#         return "cantidad"
+#     if clase == "descripcion":
+#         return "descripcion"
+
+#     # 2) Regex numérico
+#     if is_number(text):
+#         return "cantidad" if text.isdigit() else "precio"
+
+#     # 3) Posición X
+#     if x_cent < x_desc_max:
+#         return "descripcion"
+#     elif x_cent < x_cant_max:
+#         return "cantidad"
+#     return "precio"
+
+
+def assign_column(bb, x_desc_max, x_cant_max):     
+    text = bb["text"].strip().lower()
     x_cent = (bb["xmin"] + bb["xmax"]) / 2
 
-    # 1) Reglas "obvias"
-    if "$" in text or re.match(r'^\d+[,\.]\d{2}$', text):
+    if any(t in text for t in ["$", "usd", "precio"]) or re.match(r'^\d+[.,]\d{2}$', text):
         return "precio"
-    if clase in ("precio","precio_unitario","precio_total"):
-        return "precio"
-    if clase in ("cantidad","cant"):
+    if re.match(r'^\d+$', text):
         return "cantidad"
-    if clase == "descripcion":
-        return "descripcion"
-
-    # 2) Regex numérico
-    if is_number(text):
-        return "cantidad" if text.isdigit() else "precio"
-
-    # 3) Posición X
     if x_cent < x_desc_max:
         return "descripcion"
     elif x_cent < x_cant_max:
         return "cantidad"
     return "precio"
+
 
     
 def is_number(text):
@@ -375,115 +510,151 @@ def split_and_classify_text(bb):
 
 def group_bboxes_by_rows_and_cols(
         bboxes,
-        row_tol=15,
-        x_desc_max=900,
-        x_cant_max=1200
+        row_tol=None,           # ← opcional / adaptativo
+        x_desc_max=1400,
+        x_cant_max=1900
     ):
     """
-    Agrupa todos los bounding-boxes en filas → decide columna (descr / cant / precio)
-    y calcula una confianza de fila = min(confidencias de sus celdas)
+    Agrupa tokens en filas y las etiqueta {descripcion,cantidad,precio}.
+    Devuelve también una confianza (mínimo de los tokens) y la clase
+    predominante de la fila.
     """
-    # ── 1) Filtrar lo que no es de la tabla ────────────────────────────────
     SKIP = {"logo", "r.u.c", "ruc", "fecha_hora",
             "numero_factura", "razon_social"}
+
     good = [bb for bb in bboxes
             if isinstance(bb, dict) and bb.get("class", "").lower() not in SKIP]
     if not good:
         return []
 
-    # ── 2) Ordenar por Y centre ────────────────────────────────────────────
+    # ── tolerancia vertical automática ────────────────────────────────
+    if row_tol is None:
+        img_h  = max(bb["ymax"] for bb in good)
+        row_tol = int(img_h * 0.008) or 15   # ≈ 0,8 % de la altura
+
+    # ── ordenar y “clusterizar” por Y-centre ──────────────────────────
     for bb in good:
         bb["y_center"] = (bb["ymin"] + bb["ymax"]) / 2
     good.sort(key=lambda b: b["y_center"])
 
-    # ── 3) Clustering “a mano” por proximidad vertical ─────────────────────
     rows, cur = [], [good[0]]
-    cur_center = good[0]["y_center"]
-
+    cur_c = good[0]["y_center"]
     for bb in good[1:]:
-        if abs(bb["y_center"] - cur_center) < row_tol:
+        if abs(bb["y_center"] - cur_c) < row_tol:
             cur.append(bb)
-            cur_center = sum(b["y_center"] for b in cur) / len(cur)
+            cur_c = sum(b["y_center"] for b in cur) / len(cur)
         else:
             rows.append(cur)
-            cur, cur_center = [bb], bb["y_center"]
-    rows.append(cur)          # agrega la última
+            cur, cur_c = [bb], bb["y_center"]
+    rows.append(cur)
 
-    # ── 4) Construir fila normalizada ──────────────────────────────────────
+    # ── construir filas normalizadas ─────────────────────────────────
     extracted = []
     for fila in rows:
-        desc, cant, price, row_conf = "", "", "", 1.0
+        desc = cant = price = ""
+        row_conf = 1.0
         for bb in fila:
-            col = assign_column(bb, x_desc_max, x_cant_max)
-            row_conf = min(row_conf, bb.get("confidence", 1.0))
-
-            if "$" in bb["text"]:
-                col = "precio"
-
+            col       = assign_column(bb, x_desc_max, x_cant_max)
+            row_conf  = min(row_conf, bb.get("confidence", 1.0))
+            token     = bb["text"]
             if col == "descripcion":
-                desc  += bb["text"] + " "
+                desc  += token + " "
             elif col == "cantidad":
-                cant  += bb["text"] + " "
+                cant  += token + " "
             elif col == "precio":
-                price += bb["text"] + " "
+                price += token + " "
+
+        # clase predominante
+        top_cls = Counter(bb.get("class", "") for bb in fila).most_common(1)
+        top_cls = top_cls[0][0] if top_cls else ""
 
         extracted.append({
             "descripcion": desc.strip()  or "No detectado",
             "cantidad"   : cant.strip()  or "No detectado",
             "precio"     : price.strip() or "No detectado",
-            "confidence" : round(row_conf, 3)
+            "confidence" : round(row_conf, 3),
+            "class"      : top_cls
         })
     return extracted
 
 
 
 
+
 def extract_text_from_roi(image, detections):
     """
-    Combina las cajas de detección obtenidas por YOLO (contenidas en 'detections')
-    y las cajas extraídas por CRAFT (usando la función craft_text_regions),
-    para luego agruparlas en filas y asignar columnas (descripción, cantidad, precio).
+    Une detecciones YOLO + OCR, agrupa en filas y devuelve el listado
+    de diccionarios {descripcion,cantidad,precio,...}.
     """
-    all_boxes = get_all_bboxes(image, detections)
+    all_boxes, has_roi = get_all_bboxes(image, detections)
+
+    W = image.shape[1]
+    if has_roi:
+        x_desc = int(0.40 * W)      # 40 % si SÍ hay ROI
+        x_cant = int(0.60 * W)
+    else:
+        x_desc = int(0.45 * W)      # 45 % si NO hay ROI
+        x_cant = int(0.65 * W)
+
+    rows = group_bboxes_by_rows_and_cols(
+               all_boxes,
+               row_tol=None,         # usa tolerancia adaptativa
+               x_desc_max=x_desc,
+               x_cant_max=x_cant)
     
-    final_rows = group_bboxes_by_rows_and_cols(all_boxes, row_tol=15, x_desc_max=700, x_cant_max=1200)
+    print("YOLO boxes:", len(detections) if detections is not None else 0)
+    print("EasyOCR boxes:", len(all_boxes) - (len(detections) if detections is not None else 0))
+    print("Filas finales:", len(rows))
     
-    return final_rows
+    return rows
+
+
 
 
 def get_all_bboxes(image_np, yolo_detections):
-    # --- NUEVO: recorte de ROI tabla ----
+    """
+    • Devuelve la lista de bounding-boxes (YOLO + EasyOCR    )
+    • Además indica si se localizó ROI de tabla (True / False)
+    """
+    # ── 1)  Localizar tabla ───────────────────────────────────────────
     roi_coords = find_table_roi(image_np)
     if roi_coords:
-        x,y,w,h = roi_coords
-        sub_img = image_np[y:y+h, x:x+w]
-        ocr_target = sub_img
+        x, y, w, h = roi_coords
+        ocr_target = image_np[y:y + h, x:x + w]
     else:
         ocr_target = image_np
-    # ------------------------------------
 
-    yolo_boxes = [...]
-    image_rgb  = cv2.cvtColor(ocr_target, cv2.COLOR_BGR2RGB)
-    ocr_boxes  = easyocr_text_regions(image_rgb)
+    # ── 2)  Cajas de YOLO (si existen) ────────────────────────────────
+    yolo_boxes = []
+    if yolo_detections is not None and len(yolo_detections):
+        for _, row in yolo_detections.iterrows():
+            yolo_boxes.append({
+                "class": row["name"],
+                "text":  "",
+                "confidence": float(row["confidence"]),
+                "xmin": int(row["xmin"]),
+                "ymin": int(row["ymin"]),
+                "xmax": int(row["xmax"]),
+                "ymax": int(row["ymax"]),
+            })
 
-    # si recortamos ROI, mover coords a sistema global
+    # ── 3)  OCR con EasyOCR sólo en el ROI ────────────────────────────
+    image_rgb = cv2.cvtColor(ocr_target, cv2.COLOR_BGR2RGB)
+    ocr_boxes = easyocr_text_regions(image_rgb)
+
+    # Remapear coordenadas si hubo recorte
     if roi_coords:
         for b in ocr_boxes:
             b["xmin"] += x; b["xmax"] += x
             b["ymin"] += y; b["ymax"] += y
-    
 
-
-    # OCR con EasyOCR
-    image_rgb = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
-    ocr_boxes = easyocr_text_regions(image_rgb)
-
-   
-    expanded_ocr_boxes = []
+    # Dividir tokens largos (1 “bbox” por token)
+    expanded = []
     for box in ocr_boxes:
-        expanded_ocr_boxes.extend(split_and_classify_text(box))
+        expanded.extend(split_and_classify_text(box))
 
-    return yolo_boxes + expanded_ocr_boxes
+    return yolo_boxes + expanded, bool(roi_coords)
+
 
 
 def group_with_dbscan(bboxes, eps=10, min_samples=1):
@@ -597,6 +768,36 @@ def process_detected_regions(image, detections):
 
     return extracted_data
 
+
+# ──────────────────────────────────────────────────────────────────────modo de pruebalimpiar un poco lo que llega al front
+
+
+def to_invoice_rows(rows: list[dict]) -> list[dict]:
+    """
+    Convierte la lista `rows` que sale de `extract_text_from_roi`
+    al formato que consume el frontend (InvoiceLine).
+    • description  ← rows[i]["descripcion"]
+    • quantity     ← rows[i]["cantidad"]
+    • price        ← rows[i]["precio"]
+    • confidence   ← rows[i]["confidence"]
+    • class        ← etiqueta “mayoritaria” de las celdas de la fila
+                     (si no la calculas, pon simplemente "")
+
+    """
+    out = []
+    for r in rows:
+        out.append({
+            "description": r.get("descripcion", "No detectado"),
+            "quantity":    r.get("cantidad",    "No detectado"),
+            "price":       r.get("precio",      "No detectado"),
+            "confidence":  r.get("confidence",  0.0),
+            "class":       r.get("class", "")          # opcional
+        })
+    return out
+
+
+
+
 @app.route("/process-document", methods=["POST"])
 def process_document():
     if "file" not in request.files:
@@ -638,7 +839,12 @@ def process_document():
 
     # ───── Inferencia + OCR ─────
     detections = detect_sections(image_bgr)
-    data       = extract_text_from_roi(image_bgr, detections)
+
+     # ↓↓↓ nueva línea: obtenemos filas crudas
+    raw_rows   = extract_text_from_roi(image_bgr, detections)
+
+    # ↓↓↓ mapeamos al formato InvoiceLine esperado por el front
+    data       = to_invoice_rows(raw_rows)
 
     marked     = mark_detections(image_bgr, detections)
     img_b64    = image_to_base64(marked)
