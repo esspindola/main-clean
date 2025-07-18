@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "email": "admin@frontposw.com",
+    "password": "admin12345678",
+    "fullName": "Administrador",
+    "role": "admin",
+    "phone": "+1234567890",
+    "address": "123 Main St, City, Country"
+  },
+  {
+    "id": 2,
+    "email": "user@frontposw.com",
+    "password": "user12345678",
+    "fullName": "Usuario Regular",
+    "role": "user",
+    "phone": "+1234567891",
+    "address": "456 Oak St, City, Country"
+  },
+  {
+    "id": 3,
+    "email": "prueba1@gmail.com",
+    "password": "12345678",
+    "fullName": "prueba1",
+    "role": "user",
+    "phone": "+593 967819952",
+    "address": ""
+  }
+]
