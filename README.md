@@ -18,12 +18,6 @@
 </div>
 
 ---
-<video width="560" height="315" controls>
-  <source src="demovideoo.mp4 " type="video/mp4">
-</video>
-
----
----
 
 <a id="table-of-contents"></a>
 ## 📑 Table of Contents
@@ -92,7 +86,9 @@
 ## 🖼️ Demo / Screenshots
 
 <div align="center">
-  <img src="images/demo.jpg" alt="ZatoBox Screenshot" width="600"/>
+  <a href="https://www.youtube.com/watch?v=6Ig0CUW7A8M&t=33s" target="_blank">
+    <img src="images/demo.jpg" alt="ZatoBox Screenshot" width="600"/>
+  </a>
 </div>
 
 ---
