@@ -1,280 +1,306 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+# <div align="center"><img src="images/logozato.png" alt="FrontPOSw Logo" width="200"/><br/>FrontPOSw</div>
 
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logozato.png" alt="Logo" width="800" height="600">
-  </a>
   
-<br /><br />
-  
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-<div align="center">
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![Unlicense License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
+  [![Contributors](https://img.shields.io/github/contributors/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/graphs/contributors)
+  [![Forks](https://img.shields.io/github/forks/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/network/members)
+  [![Stargazers](https://img.shields.io/github/stars/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/stargazers)
+  [![Issues](https://img.shields.io/github/issues/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/issues)
+  [![License](https://img.shields.io/github/license/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/blob/master/LICENSE.txt)
+  [![Discord](https://img.shields.io/discord/1223295651599507486?label=Discord&logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/2zUVsv9aMF)
+  <br/>
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Node-v16%2B-brightgreen?style=for-the-badge&logo=node.js"/>
 </div>
 
-  <h3 align="center">Best-README-Template</h3>
+---
 
-<p align="center">
-  An awesome README template to jumpstart your projects!
-  <br />
-  <a href="https://github.com/ZatoBox/Documents"><strong>Explore the docs »</strong></a>
-  <br />
-  <br />
-  <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-  &middot;
-  <a href="https://github.com/ZatoBox/main/issues/new?template=bug-report---.md">Report Bug</a>
-  &middot;
-  <a href="https://github.com/ZatoBox/main/issues/new?template=feature-request---.md">Request Feature</a>
-</p>
+## 📑 Table of Contents
+- [Overview](#overview)
+- [Main Features](#main-features)
+- [Tech Stack](#tech-stack)
+- [Demo / Screenshots](#demo--screenshots)
+- [Prerequisites](#prerequisites)
+- [Installation & Getting Started](#installation--getting-started)
+- [Project Structure](#project-structure)
+- [Usage Guide](#usage-guide)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact & Support](#contact--support)
+- [Acknowledgments](#acknowledgments)
 
+---
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+## 📖 Overview
 
+**FrontPOSw** is a web solution for inventory and sales management, designed for businesses that need efficient control over products, stock, sales, and users. It features secure authentication, an admin panel, OCR document processing, and a modern, responsive interface.
 
+---
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+## ✨ Main Features
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+- JWT Authentication (login, registration, profiles)
+- Product management (CRUD, images, variants)
+- Inventory control (stock movements, low stock alerts)
+- Sales system (processing, history, statistics)
+- OCR document processing (simulated)
+- User panel and profile configuration
+- Documented RESTful API
+- PostgreSQL database with Sequelize ORM
+- Rate limiting protection
+- File upload (product images)
+- Modern interface with React and Tailwind CSS
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+---
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
+## 🛠️ Tech Stack
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
+**Frontend:**
+- React
+- Vite
+- Tailwind CSS
+- Context API
 
-Use the `BLANK_README.md` to get started.
+**Backend:**
+- Node.js
+- Express
+- Sequelize ORM
+- PostgreSQL
+- Multer (file upload)
+- JWT (authentication)
+- Express-validator (validation)
+- CORS
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
 
+## 🖼️ Demo / Screenshots
 
+<div align="center">
+  <img src="images/screenshot.png" alt="FrontPOSw Screenshot" width="600"/>
+</div>
 
-### Built With
+---
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+## 📋 Prerequisites
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+- Node.js (v16 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
 
+## ⚡ Installation & Getting Started
 
+### 1. Clone the repository
 
-<!-- GETTING STARTED -->
-## Getting Started
+```bash
+git clone https://github.com/ZatoBox/main.git
+cd main
+```
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+### 2. Backend Setup
 
-### Prerequisites
+```bash
+cd backend
+npm install
+cp env.example .env
+```
+Edit `.env` with your PostgreSQL and JWT settings.
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Create the database:
+```sql
+CREATE DATABASE frontposw;
+```
 
-### Installation
+Seed the database with sample data:
+```bash
+npm run seed
+```
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+Start the backend:
+```bash
+npm run dev
+```
+Backend will be available at: [http://localhost:3000](http://localhost:3000)
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
-   ```
+### 3. Frontend Setup
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```bash
+cd ..
+npm install
+npm run dev
+```
+Frontend will be available at: [http://localhost:5173](http://localhost:5173)
 
+---
 
+## 🗂️ Project Structure
 
-<!-- USAGE EXAMPLES -->
-## Usage
+```text
+main/
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── utils/
+│   ├── server.js
+│   └── ...
+│
+├── src/
+│   ├── components/
+│   ├── contexts/
+│   ├── services/
+│   ├── App.tsx
+│   └── ...
+│
+├── public/
+├── images/
+└── ...
+```
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+---
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+## 🧭 Usage Guide
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Access
 
+- **Admin:**  
+  User: `admin@frontposw.com`  
+  Password: `admin123`
 
+- **Standard User:**  
+  User: `user@frontposw.com`  
+  Password: `user123`
 
-<!-- ROADMAP -->
-## Roadmap
+### Features
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+- Log in or register.
+- Manage products: create, edit, delete, and upload images.
+- Control inventory: view stock, movements, and alerts.
+- Make sales and view history.
+- Access and update your profile.
+- Use the OCR module to process documents (simulated).
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+---
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## 📚 API Documentation
 
+### Authentication
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Log in
+- `POST /api/auth/logout` - Log out
+- `GET /api/auth/me` - Get current user
 
+### Products
+- `GET /api/products` - List products
+- `GET /api/products/:id` - Get product
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `POST /api/products/:id/images` - Upload images
 
-<!-- CONTRIBUTING -->
-## Contributing
+### Inventory
+- `GET /api/inventory` - List inventory
+- `GET /api/inventory/low-stock` - Low stock products
+- `PUT /api/inventory/:id/stock` - Update stock
+- `GET /api/inventory/movements` - Inventory movements
+- `POST /api/inventory/bulk-update` - Bulk update
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+### Sales
+- `GET /api/sales` - List sales
+- `GET /api/sales/:id` - Get sale
+- `POST /api/sales` - Create sale
+- `PATCH /api/sales/:id/status` - Update status
+- `GET /api/sales/stats/summary` - Statistics
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+### Profile
+- `GET /api/profile` - Get profile
+- `PUT /api/profile` - Update profile
+- `PUT /api/profile/password` - Change password
+- `GET /api/profile/sessions` - Active sessions
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+### OCR
+- `POST /api/ocr/process-document` - Process document
+- `GET /api/ocr/history` - Processing history
+- `GET /api/ocr/status/:jobId` - Processing status
+
+---
+
+## 🧪 Testing
+
+```bash
+# Backend
+cd backend
+npm test
+```
+
+---
+
+## 🚀 Deployment
+
+### Production
+
+1. Set environment variables for production.
+2. Install dependencies: `npm install --production`
+3. Run migrations: `npm run migrate`
+4. Start the server: `npm start`
+
+### Docker
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!  
+1. Fork the project  
+2. Create a branch (`git checkout -b feature/new-feature`)  
+3. Commit your changes (`git commit -m 'Add new feature'`)  
+4. Push to the branch (`git push origin feature/new-feature`)  
 5. Open a Pull Request
 
-### Top contributors:
+---
 
-<a href="https://github.com/ZatoBox/main/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ZatoBox/main" alt="Top contributors" />
-</a>
+## 📄 License
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+MIT License. See [`LICENSE.txt`](https://github.com/ZatoBox/main/blob/master/LICENSE.txt) for more information.
 
+---
 
-<!-- LICENSE -->
-## License
+## 📬 Contact & Support
 
-Distributed under the Unlicense License. See `LICENSE.txt` for more information.
+For technical support or questions, contact the development team or open an [issue](https://github.com/ZatoBox/main/issues) in the repository.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Join our community on [Discord](https://discord.gg/2zUVsv9aMF)!
 
+---
 
+## 🙏 Acknowledgments
 
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/ZatoBox/main.svg?style=for-the-badge
-[contributors-url]: https://github.com/ZatoBox/main/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/ZatoBox/main.svg?style=for-the-badge
-[forks-url]: https://github.com/ZatoBox/main/network/members
-[stars-shield]: https://img.shields.io/github/stars/ZatoBox/main.svg?style=for-the-badge
-[stars-url]: https://github.com/ZatoBox/main/stargazers
-[issues-shield]: https://img.shields.io/github/issues/ZatoBox/main.svg?style=for-the-badge
-[issues-url]: https://github.com/ZatoBox/main/issues
-[license-shield]: https://img.shields.io/github/license/ZatoBox/main.svg?style=for-the-badge
-[license-url]: https://github.com/ZatoBox/main/blob/main/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/LinkedIn-Follow-blue?style=for-the-badge&logo=linkedin
-[linkedin-url]: https://www.linkedin.com/in/ikhunsa
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+- [React](https://reactjs.org/)
+- [Node.js](https://nodejs.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Express](https://expressjs.com/)
+- [Sequelize](https://sequelize.org/)
+- [Vite](https://vitejs.dev/)
+- And all open source libraries and resources used. 
