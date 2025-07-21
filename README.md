@@ -17,11 +17,12 @@
   <img src="https://img.shields.io/badge/Node-v16%2B-brightgreen?style=for-the-badge&logo=node.js"/>
 </div>
 
+---
 <video width="560" height="315" controls>
   <source src="demovideoo.mp4 " type="video/mp4">
-  Tu navegador no soporta la reproducción de videos.
 </video>
 
+---
 ---
 
 <a id="table-of-contents"></a>
