@@ -19,7 +19,9 @@
 
 ---
 
+<a id="table-of-contents"></a>
 ## 📑 Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Main Features](#main-features)
 - [Tech Stack](#tech-stack)
@@ -27,6 +29,7 @@
 - [Prerequisites](#prerequisites)
 - [Installation & Getting Started](#installation--getting-started)
 - [Project Structure](#project-structure)
+- [Backend-Frontend Connections](#backend-frontend-connections)
 - [Usage Guide](#usage-guide)
 - [API Documentation](#api-documentation)
 - [Testing](#testing)
@@ -167,6 +170,90 @@ main/
 ├── images/
 └── ...
 ```
+
+---
+
+## 🔗 Backend-Frontend Connections
+
+### Ports & Base URLs
+| Service   | URL Base                | Port   |
+|-----------|-------------------------|--------|
+| Backend   | http://localhost:4444   | 4444   |
+| Frontend  | http://localhost:5173   | 5173   |
+
+### Authentication Flow
+1. User registers → `POST /api/auth/register`
+2. User logs in → `POST /api/auth/login` → receives TOKEN
+3. With the TOKEN, user can access:
+   - Products (full CRUD)
+   - Inventory (view & update)
+   - Sales (create & view history)
+   - Profile (view & update)
+
+**Token usage example in frontend:**
+```js
+const token = localStorage.getItem('token');
+fetch('http://localhost:4444/api/products', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+});
+```
+
+### Key Endpoints
+- **Authentication:** `/api/auth/register`, `/api/auth/login`, `/api/auth/me`, `/api/auth/logout`
+- **Products:** `/api/products` (GET, POST, PUT, DELETE)
+- **Inventory:** `/api/inventory` (GET, PUT)
+- **Sales:** `/api/sales` (GET, POST)
+- **Profile:** `/api/profile` (GET, PUT)
+
+### Example Users
+- **Admin:** `admin@frontposw.com` / `admin123`
+- **User:** `user@frontposw.com` / `user123`
+
+### Run & Check Services
+**Start backend:**
+```bash
+cd backend
+node test-server.js
+```
+**Start frontend:**
+```bash
+npm run dev
+```
+**Check backend health:**
+- [http://localhost:4444/health](http://localhost:4444/health)
+**Check users:**
+- [http://localhost:4444/api/users](http://localhost:4444/api/users)
+**Check products:**
+- [http://localhost:4444/api/products](http://localhost:4444/api/products)
+**Check sales:**
+- [http://localhost:4444/api/sales](http://localhost:4444/api/sales)
+
+### Troubleshooting
+- **Backend logs:** Console where `node test-server.js` runs
+- **Frontend logs:** Browser DevTools (F12)
+- **Check ports:**
+```bash
+netstat -ano | findstr "4444"
+netstat -ano | findstr "5173"
+```
+
+### Security Summary
+- **Public endpoints:**
+  - `POST /api/auth/register` (register)
+  - `POST /api/auth/login` (login)
+  - `GET /health` (server health)
+- **Private endpoints (require token):**
+  - All product, inventory, sales, and profile endpoints
+- **Token flow:**
+  1. Register/Login → get token
+  2. Token saved in localStorage
+  3. All private requests include `Authorization: Bearer {token}`
+  4. Backend validates token
+  5. If invalid → 401 Unauthorized
 
 ---
 
