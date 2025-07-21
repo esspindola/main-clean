@@ -1,4 +1,4 @@
-# <div align="center"><img src="images/logozato.png" alt="FrontPOSw Logo" width="200"/><br/>FrontPOSw</div>
+# <div align="center"><img src="images/logozato.png" alt="FrontPOSw Logo" width="200"/><br/></div>
 
 <div align="center">
   
