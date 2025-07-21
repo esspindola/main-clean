@@ -86,7 +86,7 @@
 ## 🖼️ Demo / Screenshots
 
 <div align="center">
-  <img src="images/screenshot.png" alt="ZatoBox Screenshot" width="600"/>
+  <img src="images/demo.jpg" alt="ZatoBox Screenshot" width="600"/>
 </div>
 
 ---
