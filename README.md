@@ -1,4 +1,4 @@
-# <div align="center"><img src="images/logozato.png" alt="FrontPOSw Logo" height="200"/><br/></div>
+# <div align="center"><img src="images/logozato.png" alt="ZatoBox Logo" height="200"/><br/></div>
 
 <div align="center">
   
@@ -43,7 +43,7 @@
 
 ## 📖 Overview
 
-**FrontPOSw** is a web solution for inventory and sales management, designed for businesses that need efficient control over products, stock, sales, and users. It features secure authentication, an admin panel, OCR document processing, and a modern, responsive interface.
+**ZatoBox** is a web solution for inventory and sales management, designed for businesses that need efficient control over products, stock, sales, and users. It features secure authentication, an admin panel, OCR document processing, and a modern, responsive interface.
 
 ---
 
@@ -86,7 +86,7 @@
 ## 🖼️ Demo / Screenshots
 
 <div align="center">
-  <img src="images/screenshot.png" alt="FrontPOSw Screenshot" width="600"/>
+  <img src="images/screenshot.png" alt="ZatoBox Screenshot" width="600"/>
 </div>
 
 ---
@@ -119,7 +119,7 @@ Edit `.env` with your PostgreSQL and JWT settings.
 
 Create the database:
 ```sql
-CREATE DATABASE frontposw;
+CREATE DATABASE ZatoBox;
 ```
 
 Seed the database with sample data:
