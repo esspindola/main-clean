@@ -7,7 +7,7 @@
   [![Stargazers](https://img.shields.io/github/stars/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/stargazers)
   [![Issues](https://img.shields.io/github/issues/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/issues)
   [![License](https://img.shields.io/github/license/ZatoBox/main.svg?style=for-the-badge)](https://github.com/ZatoBox/main/blob/master/LICENSE.txt)
-  [![Discord](https://img.shields.io/discord/1223295651599507486?label=Discord&logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/2zUVsv9aMF)
+  [![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/2zUVsv9aMF)
   <br/>
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
