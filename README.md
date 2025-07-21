@@ -83,7 +83,7 @@
 
 ---
 
-## 🖼️ Demo / Screenshots
+## 🖼️ Demo / Screenshots / Video
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=6Ig0CUW7A8M&t=33s" target="_blank">
