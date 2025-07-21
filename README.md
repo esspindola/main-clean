@@ -21,8 +21,8 @@
 
 <a id="table-of-contents"></a>
 ## 📑 Table of Contents
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
+- [Table of Contents](#-table-of-contents)
+- [Overview](#-overview)
 - [Main Features](#main-features)
 - [Tech Stack](#tech-stack)
 - [Demo / Screenshots](#demo--screenshots)
