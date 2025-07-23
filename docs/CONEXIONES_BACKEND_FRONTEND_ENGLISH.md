@@ -1,4 +1,4 @@
-# BACKEND-FRONTEND CONNECTIONS - FrontPOSw v2.0
+# BACKEND-FRONTEND CONNECTIONS - ZatoBox v2.0
 
 ## 📋 CONNECTION SUMMARY
 
@@ -299,7 +299,7 @@ Response:
   "users": [
     {
       "id": 1,
-      "email": "admin@frontposw.com",
+      "email": "admin@zatobox.com",
       "fullName": "Administrator",
       "role": "admin",
       "phone": "+1234567890",
@@ -764,7 +764,7 @@ app.use(cors({
 ## 📁 FILE STRUCTURE
 
 ```
-FrontPOSw-main/
+ZatoBox-main/
 ├── backend/
 │   ├── test-server.js          # Test server ✨ UPDATED
 │   ├── users.json              # Persisted users
@@ -1034,4 +1034,4 @@ Detailed logging for debugging
 
 ---
 
-**FrontPOSw v2.0** - Modern Inventory & Sales Management System 
+**ZatoBox v2.0** - Modern Inventory & Sales Management System 

@@ -1,8 +1,8 @@
-# FrontPOSw - Backend-Frontend Architecture and Connections
+# ZatoBox - Backend-Frontend Architecture and Connections
 
 ## 🏗️ General System Architecture
 
-### FrontPOSw v2.0
+### ZatoBox v2.0
 - **Type**: Full-Stack Application
 - **Backend**: Node.js + Express
 - **Frontend**: React + TypeScript + Vite
@@ -595,4 +595,4 @@ Backend → JSON Response → Frontend
 
 ---
 
-**FrontPOSw v2.0** - Complete Architecture of Inventory and Sales Management System 
+**ZatoBox v2.0** - Complete Architecture of Inventory and Sales Management System 

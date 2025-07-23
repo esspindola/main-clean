@@ -1,8 +1,8 @@
-# FrontPOSw - Documentación del Proyecto
+# ZatoBox - Documentación del Proyecto
 
 ## 📚 Índice de Documentación
 
-Esta carpeta contiene toda la documentación técnica del proyecto FrontPOSw v2.0.
+Esta carpeta contiene toda la documentación técnica del proyecto ZatoBox v2.0.
 
 ---
 
@@ -167,4 +167,4 @@ Esta carpeta contiene toda la documentación técnica del proyecto FrontPOSw v2.
 
 ---
 
-**FrontPOSw v2.0** - Documentación Completa del Sistema 
+**ZatoBox v2.0** - Documentación Completa del Sistema 

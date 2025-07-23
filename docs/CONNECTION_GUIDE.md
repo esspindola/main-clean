@@ -1,8 +1,8 @@
-# FrontPOSw - Connection Guide v2.0
+# ZatoBox - Connection Guide v2.0
 
 ## 📋 Quick Start Guide
 
-This guide will help you set up and run the FrontPOSw application locally.
+This guide will help you set up and run the ZatoBox application locally.
 
 ---
 
@@ -73,7 +73,7 @@ netstat -ano | findstr "5173"
 ```json
 {
   "status": "ok",
-  "message": "FrontPOSw Backend is running",
+  "message": "ZatoBox Backend is running",
   "timestamp": "2024-01-15T10:30:00Z"
 }
 ```
@@ -86,12 +86,12 @@ netstat -ano | findstr "5173"
 ## 🔐 Default Users
 
 ### Admin User
-- **Email**: `admin@frontposw.com`
+- **Email**: `admin@zatobox.com`
 - **Password**: `admin12345678`
 - **Role**: Administrator
 
 ### Standard User
-- **Email**: `user@frontposw.com`
+- **Email**: `user@zatobox.com`
 - **Password**: `user12345678`
 - **Role**: User
 
@@ -198,7 +198,7 @@ npm run preview
 ## 📁 Project Structure
 
 ```
-FrontPOSw-main/
+ZatoBox-main/
 ├── backend/
 │   ├── test-server.js          # Main server file
 │   ├── users.json              # User data storage
@@ -414,7 +414,7 @@ VITE_API_URL=http://localhost:4444
 
 ---
 
-**FrontPOSw v2.0** - Modern Inventory & Sales Management System
+**ZatoBox v2.0** - Modern Inventory & Sales Management System
 
 For detailed technical information, see:
 - [CONEXIONES_BACKEND_FRONTEND.md](CONEXIONES_BACKEND_FRONTEND.md) (Spanish)
