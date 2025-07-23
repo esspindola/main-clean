@@ -65,7 +65,14 @@ const apiRequest = async <T>(endpoint: string, options: RequestInit = {}): Promi
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      const errorMessage = errorData.message || errorData.error || `HTTP error! status: ${response.status}`;
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: `${API_BASE_URL}${endpoint}`,
+        errorData
+      });
+      throw new Error(errorMessage);
     }
     
     return await response.json();

@@ -7,43 +7,43 @@ const seedData = require('./src/utils/seedData');
 
 async function initializeDatabase() {
   try {
-    console.log('🔄 Inicializando base de datos...');
+    console.log('🔄 Initializing database...');
     
-    // Sincronizar modelos con la base de datos (sin asociaciones primero)
+    // Sync models with database (without associations first)
     await sequelize.sync({ force: true });
-    console.log('✅ Tablas creadas exitosamente');
+    console.log('✅ Tables created successfully');
     
-    // Configurar asociaciones después de crear las tablas
+    // Configure associations after creating tables
     require('./src/config/associations');
-    console.log('✅ Asociaciones configuradas');
+    console.log('✅ Associations configured');
     
-    // Poblar con datos de ejemplo
-    console.log('🔄 Poblando con datos de ejemplo...');
+    // Populate with sample data
+    console.log('🔄 Populating with sample data...');
     
-    // Crear usuarios
+    // Create users
     const users = await User.bulkCreate(seedData.users);
-    console.log(`✅ ${users.length} usuarios creados`);
+    console.log(`✅ ${users.length} users created`);
     
-    // Crear productos
+    // Create products
     const products = await Product.bulkCreate(seedData.products);
-    console.log(`✅ ${products.length} productos creados`);
+    console.log(`✅ ${products.length} products created`);
     
-    // Crear movimientos de inventario iniciales
+    // Create initial inventory movements
     const inventoryMovements = await InventoryMovement.bulkCreate(seedData.inventoryMovements);
-    console.log(`✅ ${inventoryMovements.length} movimientos de inventario creados`);
+    console.log(`✅ ${inventoryMovements.length} inventory movements created`);
     
-    // Crear algunas ventas de ejemplo
+    // Create some sample sales
     const sales = await Sale.bulkCreate(seedData.sales);
-    console.log(`✅ ${sales.length} ventas de ejemplo creadas`);
+    console.log(`✅ ${sales.length} sample sales created`);
     
-    console.log('\n🎉 Base de datos inicializada exitosamente!');
-    console.log('\n📋 Credenciales de ejemplo:');
+    console.log('\n🎉 Database initialized successfully!');
+    console.log('\n📋 Sample credentials:');
     console.log('👤 Admin: admin@frontposw.com / admin12345678');
-    console.log('👤 Usuario: user@frontposw.com / user12345678');
-    console.log('\n🚀 Puedes iniciar el servidor con: npm start');
+    console.log('👤 User: user@frontposw.com / user12345678');
+    console.log('\n🚀 You can start the server with: npm start');
     
   } catch (error) {
-    console.error('❌ Error al inicializar la base de datos:', error);
+    console.error('❌ Error initializing database:', error);
     process.exit(1);
   } finally {
     await sequelize.close();

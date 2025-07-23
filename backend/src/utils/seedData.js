@@ -36,7 +36,8 @@ const products = [
     location: 'almacen-principal',
     unit: 'Por artículo',
     weight: 25.50,
-    userId: 1 // Se asignará al primer usuario creado
+    userId: 1, // Se asignará al primer usuario creado
+    images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop']
   },
   {
     name: 'Escritorio Ejecutivo',
@@ -51,7 +52,8 @@ const products = [
     location: 'almacen-principal',
     unit: 'Por artículo',
     weight: 35.00,
-    userId: 1
+    userId: 1,
+    images: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop']
   },
   {
     name: 'Silla Ergonómica',
@@ -66,7 +68,8 @@ const products = [
     location: 'almacen-principal',
     unit: 'Por artículo',
     weight: 12.00,
-    userId: 1
+    userId: 1,
+    images: ['https://images.unsplash.com/photo-1592078615290-033ee584e267?w=400&h=300&fit=crop']
   },
   {
     name: 'Monitor 24 pulgadas',
@@ -81,7 +84,8 @@ const products = [
     location: 'almacen-electronica',
     unit: 'Por artículo',
     weight: 8.50,
-    userId: 1
+    userId: 1,
+    images: ['https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop']
   },
   {
     name: 'Teclado Mecánico',
@@ -96,7 +100,8 @@ const products = [
     location: 'almacen-electronica',
     unit: 'Por artículo',
     weight: 1.20,
-    userId: 1
+    userId: 1,
+    images: ['https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=300&fit=crop']
   },
   {
     name: 'Lámpara LED',
@@ -111,7 +116,8 @@ const products = [
     location: 'almacen-principal',
     unit: 'Por artículo',
     weight: 2.50,
-    userId: 1
+    userId: 1,
+    images: ['https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=300&fit=crop']
   }
 ];
 

@@ -21,6 +21,7 @@ interface Product {
   price: number;
   status: 'active' | 'inactive';
   image?: string;
+  images?: string[];
 }
 
 const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = '' }) => {
@@ -36,7 +37,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Carrito de compras
+  // Shopping cart
   interface CartItem {
     id: number;
     name: string;
@@ -61,19 +62,19 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         setLoading(true);
         const response = await productsAPI.getAll();
         if (response.success) {
-          // Mostrar productos activos (permitir stock 0 para ver todos los productos)
+          // Show active products (allow stock 0 to see all products)
           const availableProducts = response.products.filter(
             (product: Product) => product.status === 'active'
           );
-          console.log('Productos cargados:', response.products);
-          console.log('Productos disponibles:', availableProducts);
+          console.log('Products loaded:', response.products);
+          console.log('Available products:', availableProducts);
           setProducts(availableProducts);
         } else {
-          setError('Error al cargar los productos');
+          setError('Error loading products');
         }
       } catch (err) {
         console.error('Error fetching products:', err);
-        setError('Error al cargar los productos');
+        setError('Error loading products');
       } finally {
         setLoading(false);
       }
@@ -82,19 +83,17 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
     fetchProducts();
   }, [isAuthenticated]);
 
-  // Actualizar productos cuando la página se vuelve visible
+  // Update products when page becomes visible
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (!document.hidden && isAuthenticated) {
-        handleRefreshProducts();
+      if (!document.hidden) {
+        reloadProducts();
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [isAuthenticated]);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   // Filter products based on search term
   const filteredProducts = useMemo(() => {
@@ -107,14 +106,14 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
     );
   }, [activeSearchTerm, products]);
 
-  // Al hacer click en un producto, agregarlo al carrito
+  // When clicking on a product, add it to cart
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
     setIsDrawerOpen(true);
     setCartItems(prevCart => {
       const existing = prevCart.find(item => item.id === product.id);
       if (existing) {
-        // Sumar cantidad, respetando el stock
+        // Add quantity, respecting stock
         return prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: Math.min(item.quantity + 1, product.stock) }
@@ -150,7 +149,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
 
   const handlePaymentSuccess = async (method: string) => {
     try {
-      // Preparar los datos de la venta
+      // Prepare sale data
       const saleData = {
         items: cartItems.map(item => ({
           productId: item.id,
@@ -161,13 +160,13 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         paymentMethod: method
       };
 
-      // Enviar la venta al backend
+      // Send sale to backend
       const saleResponse = await salesAPI.create(saleData);
       
       if (saleResponse.success) {
-        console.log('Venta creada exitosamente:', saleResponse);
+        console.log('Sale created successfully:', saleResponse);
         
-        // Actualizar el inventario local inmediatamente
+        // Update local inventory immediately
         setProducts(prevProducts => 
           prevProducts.map(product => {
             const cartItem = cartItems.find(item => item.id === product.id);
@@ -181,17 +180,17 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
           })
         );
 
-        // Mostrar mensaje de éxito
+        // Show success message
         setPaymentMethod(method);
         setIsPaymentOpen(false);
         setIsSuccessOpen(true);
       } else {
-        console.error('Error al crear la venta:', saleResponse);
-        alert('Error al procesar la venta. Por favor, intenta de nuevo.');
+        console.error('Error creating sale:', saleResponse);
+        alert('Error processing sale. Please try again.');
       }
     } catch (error) {
-      console.error('Error al procesar la venta:', error);
-      alert('Error al procesar la venta. Por favor, intenta de nuevo.');
+      console.error('Error processing sale:', error);
+              alert('Error processing sale. Please try again.');
     }
   };
 
@@ -211,49 +210,47 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
     setLocalSearchTerm(value);
   };
 
-  // Modificar cantidad de un producto en el carrito
-  const updateCartItemQuantity = (id: number, change: number) => {
-    setCartItems(prevCart =>
-      prevCart.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, Math.min(item.quantity + change, item.stock)) }
+  // Modify quantity of a product in cart
+  const updateCartItemQuantity = (productId: number, change: number) => {
+    setCartItems(prev => {
+      const updatedItems = prev.map(item =>
+        item.id === productId
+          ? { ...item, quantity: Math.max(0, item.quantity + change) }
           : item
-      )
-    );
+      );
+      return updatedItems.filter(item => item.quantity > 0);
+    });
   };
 
-  // Eliminar producto del carrito
-  const removeCartItem = (id: number) => {
-    setCartItems(prevCart => prevCart.filter(item => item.id !== id));
+  // Remove product from cart
+  const removeFromCart = (productId: number) => {
+    setCartItems(prev => prev.filter(item => item.id !== productId));
   };
 
-  // Limpiar carrito
+  // Clear cart
   const clearCart = () => {
     setCartItems([]);
   };
 
-  // Función para recargar productos
-  const handleRefreshProducts = async () => {
-    if (!isAuthenticated) return;
-    
+  // Function to reload products
+  const reloadProducts = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await productsAPI.getAll();
+      
       if (response.success) {
-        // Mostrar productos activos (permitir stock 0 para ver todos los productos)
-        const availableProducts = response.products.filter(
-          (product: Product) => product.status === 'active'
-        );
-        console.log('Productos recargados:', response.products);
-        console.log('Productos disponibles:', availableProducts);
+        // Show active products (allow stock 0 to see all products)
+        const availableProducts = response.products.filter(product => product.status === 'active');
         setProducts(availableProducts);
+        console.log('Products reloaded:', response.products);
+        console.log('Available products:', availableProducts);
       } else {
-        setError('Error al recargar los productos');
+        setError('Error reloading products');
       }
     } catch (err) {
-      console.error('Error refreshing products:', err);
-      setError('Error al recargar los productos');
+      console.error('Error reloading products:', err);
+      setError('Error reloading products');
     } finally {
       setLoading(false);
     }
@@ -265,7 +262,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
       <div className="min-h-screen bg-bg-main pt-16 flex items-center justify-center animate-fade-in">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4 animate-pulse-glow"></div>
-          <p className="text-text-secondary animate-slide-in-left">Cargando productos...</p>
+          <p className="text-text-secondary animate-slide-in-left">Loading products...</p>
         </div>
       </div>
     );
@@ -303,7 +300,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
             {/* Title and Search Row */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
               <h1 className="text-2xl font-bold text-text-primary animate-slide-in-left">
-                Tablero de Venta
+                Sales Dashboard
               </h1>
               
               {/* Search and Refresh Row */}
@@ -315,17 +312,17 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
                     type="text"
                     value={localSearchTerm}
                     onChange={(e) => handleLocalSearchChange(e.target.value)}
-                    placeholder="Buscar productos..."
+                    placeholder="Search products..."
                     className="w-full pl-10 pr-4 py-2 border border-divider rounded-lg text-sm focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary placeholder-text-secondary transition-all duration-300 hover:border-complement/50"
                   />
                 </div>
                 
                 {/* Refresh Button */}
                 <button
-                  onClick={handleRefreshProducts}
+                  onClick={reloadProducts}
                   disabled={loading}
                   className="p-2 bg-primary hover:bg-primary-600 text-black rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg icon-bounce disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Actualizar productos"
+                  title="Update products"
                 >
                   <RefreshCw size={20} className={`${loading ? 'animate-spin' : ''}`} />
                 </button>
@@ -336,10 +333,10 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
             <p className="text-text-secondary animate-slide-in-right">
               {activeSearchTerm ? (
                 <>
-                  Mostrando {filteredProducts.length} resultado{filteredProducts.length !== 1 ? 's' : ''} para "{activeSearchTerm}"
+                  Showing {filteredProducts.length} result{filteredProducts.length !== 1 ? 's' : ''} for "{activeSearchTerm}"
                 </>
               ) : (
-                'Selecciona productos para crear órdenes de venta rápidamente'
+                'Select products to create sales orders quickly'
               )}
             </p>
           </div>
@@ -364,12 +361,12 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-text-primary mb-2 animate-slide-in-left">
-                  No se encontraron productos
+                  No products found
                 </h3>
                 <p className="text-text-secondary animate-slide-in-right">
                   {activeSearchTerm 
-                    ? `No hay productos que coincidan con "${activeSearchTerm}". Intenta con otros términos de búsqueda.`
-                    : 'No hay productos disponibles para la venta.'
+                    ? `No products match "${activeSearchTerm}". Try different search terms.`
+                    : 'No products available for sale.'
                   }
                 </p>
               </div>
@@ -384,7 +381,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         onNavigateToPayment={handleNavigateToPayment}
         cartItems={cartItems}
         updateCartItemQuantity={updateCartItemQuantity}
-        removeCartItem={removeCartItem}
+        removeCartItem={removeFromCart}
         clearCart={clearCart}
       />
 

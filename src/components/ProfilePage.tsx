@@ -42,7 +42,7 @@ interface Invoice {
   id: string;
   date: string;
   amount: number;
-  status: 'Pagado' | 'Pendiente' | 'Vencido';
+  status: 'Paid' | 'Pending' | 'Overdue';
 }
 
 interface PaymentCard {
@@ -69,18 +69,18 @@ const ProfilePage: React.FC = () => {
 
   // Profile data state
   const [profileData, setProfileData] = useState({
-    name: 'Juan Pérez',
-    email: 'juan.perez@empresa.com',
+    name: 'John Doe',
+    email: 'john.doe@company.com',
     phone: '+1 (555) 123-4567',
-    address: 'Av. Principal 123, Ciudad, País',
-    role: 'Administrador',
+    address: '123 Main St, City, Country',
+    role: 'Administrator',
     lastAccess: '2024-01-15 14:30',
     emailVerified: true,
     phoneVerified: false,
     twoFactorEnabled: false,
-    language: 'es',
-    timezone: 'America/Mexico_City',
-    dateFormat: 'DD/MM/YYYY',
+    language: 'en',
+    timezone: 'America/New_York',
+    dateFormat: 'MM/DD/YYYY',
     currency: 'USD',
     notifications: {
       lowStock: { email: true, inApp: true },
@@ -100,43 +100,56 @@ const ProfilePage: React.FC = () => {
   const [sessions] = useState<Session[]>([
     {
       id: '1',
-      device: 'MacBook Pro - Chrome',
-      location: 'Ciudad de México, México',
-      lastActive: 'Ahora',
+      device: 'Chrome on Windows',
+      location: 'New York, USA',
+      lastActive: '2024-01-15 14:30',
       current: true
     },
     {
       id: '2',
-      device: 'iPhone 14 - Safari',
-      location: 'Ciudad de México, México',
-      lastActive: 'Hace 2 horas',
+      device: 'Safari on iPhone',
+      location: 'Los Angeles, USA',
+      lastActive: '2024-01-14 09:15',
       current: false
     },
     {
       id: '3',
-      device: 'Windows PC - Edge',
-      location: 'Guadalajara, México',
-      lastActive: 'Hace 1 día',
+      device: 'Firefox on Mac',
+      location: 'San Francisco, USA',
+      lastActive: '2024-01-13 16:45',
       current: false
     }
   ]);
 
   const [invoices] = useState<Invoice[]>([
-    { id: 'INV-2024-001', date: '2024-01-01', amount: 29.99, status: 'Pagado' },
-    { id: 'INV-2023-012', date: '2023-12-01', amount: 29.99, status: 'Pagado' },
-    { id: 'INV-2023-011', date: '2023-11-01', amount: 29.99, status: 'Pagado' },
-    { id: 'INV-2023-010', date: '2023-10-01', amount: 29.99, status: 'Vencido' }
+    {
+      id: 'INV-001',
+      date: '2024-01-15',
+      amount: 299.99,
+      status: 'Paid'
+    },
+    {
+      id: 'INV-002',
+      date: '2024-01-10',
+      amount: 149.50,
+      status: 'Pending'
+    },
+    {
+      id: 'INV-003',
+      date: '2024-01-05',
+      amount: 89.99,
+      status: 'Overdue'
+    }
   ]);
 
-  // Payment cards state
   const [paymentCards, setPaymentCards] = useState<PaymentCard[]>([
     {
       id: '1',
       type: 'visa',
       lastFour: '4242',
       expiryMonth: '12',
-      expiryYear: '25',
-      holderName: 'Juan Pérez',
+      expiryYear: '2025',
+      holderName: 'John Doe',
       isDefault: true
     },
     {
@@ -144,8 +157,8 @@ const ProfilePage: React.FC = () => {
       type: 'mastercard',
       lastFour: '8888',
       expiryMonth: '08',
-      expiryYear: '26',
-      holderName: 'Juan Pérez',
+      expiryYear: '2026',
+      holderName: 'John Doe',
       isDefault: false
     }
   ]);
@@ -159,13 +172,13 @@ const ProfilePage: React.FC = () => {
   });
 
   const sections = [
-    { id: 'profile', name: 'Perfil', icon: User },
-    { id: 'personal', name: 'Datos Personales', icon: User },
-    { id: 'security', name: 'Seguridad', icon: Shield },
-    { id: 'preferences', name: 'Preferencias', icon: Globe },
-    { id: 'notifications', name: 'Notificaciones', icon: Bell },
-    { id: 'billing', name: 'Plan y Facturación', icon: CreditCard },
-    { id: 'support', name: 'Soporte y Ayuda', icon: HelpCircle }
+    { id: 'profile', name: 'Profile', icon: User },
+    { id: 'personal', name: 'Personal Data', icon: User },
+    { id: 'security', name: 'Security', icon: Shield },
+    { id: 'preferences', name: 'Preferences', icon: Globe },
+    { id: 'notifications', name: 'Notifications', icon: Bell },
+    { id: 'billing', name: 'Billing & Plan', icon: CreditCard },
+    { id: 'support', name: 'Support & Help', icon: HelpCircle }
   ];
 
   const handleInputChange = (field: string, value: any) => {
@@ -173,16 +186,19 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleNestedInputChange = (parent: string, field: string, subfield: string, value: any) => {
-    setProfileData(prev => ({
-      ...prev,
-      [parent]: {
-        ...prev[parent as keyof typeof prev],
-        [field]: {
-          ...(prev[parent as keyof typeof prev] as any)[field],
-          [subfield]: value
+    setProfileData(prev => {
+      const parentData = prev[parent as keyof typeof prev] as any;
+      return {
+        ...prev,
+        [parent]: {
+          ...parentData,
+          [field]: {
+            ...(parentData?.[field] || {}),
+            [subfield]: value
+          }
         }
-      }
-    }));
+      };
+    });
   };
 
   const handlePasswordChange = (field: string, value: string) => {
@@ -194,12 +210,13 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleSaveChanges = () => {
-    // Simulate save
-    console.log('Guardando cambios...', profileData);
+    // Save changes logic
+    console.log('Saving changes...');
   };
 
   const handleCloseSession = (sessionId: string) => {
-    console.log('Cerrando sesión:', sessionId);
+    // Close session logic
+    console.log('Closing session:', sessionId);
   };
 
   const handleOpenPaymentModal = () => {
@@ -210,132 +227,71 @@ const ProfilePage: React.FC = () => {
     setShowPaymentModal(false);
     setShowAddCardForm(false);
     setEditingCard(null);
-    setNewCard({
-      number: '',
-      expiryMonth: '',
-      expiryYear: '',
-      cvc: '',
-      holderName: ''
-    });
+  };
+
+  const handleAddCard = () => {
+    setShowAddCardForm(true);
+    setEditingCard(null);
   };
 
   const handleSetDefaultCard = (cardId: string) => {
-    setPaymentCards(cards =>
-      cards.map(card => ({
-        ...card,
-        isDefault: card.id === cardId
-      }))
-    );
+    setPaymentCards(prev => prev.map(card => ({
+      ...card,
+      isDefault: card.id === cardId
+    })));
   };
 
   const handleDeleteCard = (cardId: string) => {
-    if (paymentCards.length <= 1) {
-      alert('Debes tener al menos una tarjeta registrada');
-      return;
-    }
-    
-    const cardToDelete = paymentCards.find(card => card.id === cardId);
-    if (cardToDelete?.isDefault) {
-      // Set another card as default
-      const otherCard = paymentCards.find(card => card.id !== cardId);
-      if (otherCard) {
-        setPaymentCards(cards =>
-          cards.filter(card => card.id !== cardId)
-            .map(card => card.id === otherCard.id ? { ...card, isDefault: true } : card)
-        );
-      }
-    } else {
-      setPaymentCards(cards => cards.filter(card => card.id !== cardId));
-    }
+    setPaymentCards(prev => prev.filter(card => card.id !== cardId));
   };
 
   const handleEditCard = (card: PaymentCard) => {
     setEditingCard(card);
-    setNewCard({
-      number: `•••• •••• •••• ${card.lastFour}`,
-      expiryMonth: card.expiryMonth,
-      expiryYear: card.expiryYear,
-      cvc: '',
-      holderName: card.holderName
-    });
     setShowAddCardForm(true);
   };
 
   const handleSaveCard = () => {
-    if (!newCard.holderName || !newCard.expiryMonth || !newCard.expiryYear) {
-      alert('Por favor completa todos los campos requeridos');
-      return;
-    }
-
     if (editingCard) {
-      // Update existing card
-      setPaymentCards(cards =>
-        cards.map(card =>
-          card.id === editingCard.id
-            ? {
-                ...card,
-                expiryMonth: newCard.expiryMonth,
-                expiryYear: newCard.expiryYear,
-                holderName: newCard.holderName
-              }
-            : card
-        )
-      );
+      setPaymentCards(prev => prev.map(card => 
+        card.id === editingCard.id ? editingCard : card
+      ));
     } else {
-      // Add new card
-      if (!newCard.number || !newCard.cvc) {
-        alert('Por favor completa todos los campos para la nueva tarjeta');
-        return;
-      }
-
-      const lastFour = newCard.number.replace(/\s/g, '').slice(-4);
-      const cardType = newCard.number.startsWith('4') ? 'visa' : 
-                      newCard.number.startsWith('5') ? 'mastercard' : 'amex';
-
-      const newCardData: PaymentCard = {
+      // Add new card logic
+      const newCard: PaymentCard = {
         id: Date.now().toString(),
-        type: cardType,
-        lastFour,
-        expiryMonth: newCard.expiryMonth,
-        expiryYear: newCard.expiryYear,
-        holderName: newCard.holderName,
-        isDefault: paymentCards.length === 0
+        type: 'visa',
+        lastFour: '1234',
+        expiryMonth: '12',
+        expiryYear: '2025',
+        holderName: 'John Doe',
+        isDefault: false
       };
-
-      setPaymentCards(cards => [...cards, newCardData]);
+      setPaymentCards(prev => [...prev, newCard]);
     }
-
     setShowAddCardForm(false);
     setEditingCard(null);
-    setNewCard({
-      number: '',
-      expiryMonth: '',
-      expiryYear: '',
-      cvc: '',
-      holderName: ''
-    });
   };
 
   const getCardIcon = (type: string) => {
     switch (type) {
       case 'visa':
-        return <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">VISA</div>;
+        return '💳';
       case 'mastercard':
-        return <div className="w-8 h-5 bg-red-600 rounded text-white text-xs flex items-center justify-center font-bold">MC</div>;
+        return '💳';
       case 'amex':
-        return <div className="w-8 h-5 bg-green-600 rounded text-white text-xs flex items-center justify-center font-bold">AMEX</div>;
+        return '💳';
       default:
-        return <CreditCard size={20} className="text-text-secondary" />;
+        return '💳';
     }
   };
 
   const getInvoiceStatusColor = (status: string) => {
     switch (status) {
-      case 'Pagado':
+      case 'Paid':
         return 'bg-success-100 text-success-800';
-      case 'Pendiente':
+      case 'Pending':
         return 'bg-warning-100 text-warning-800';
-      case 'Vencido':
+      case 'Overdue':
         return 'bg-error-100 text-error-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -364,7 +320,7 @@ const ProfilePage: React.FC = () => {
               {profileData.role}
             </span>
             <span className="text-sm text-text-secondary">
-              Último acceso: {profileData.lastAccess}
+              Last access: {profileData.lastAccess}
             </span>
           </div>
         </div>
@@ -377,7 +333,7 @@ const ProfilePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Nombre completo
+            Full Name
           </label>
           <input
             type="text"
@@ -389,7 +345,7 @@ const ProfilePage: React.FC = () => {
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Correo electrónico
+            Email
           </label>
           <div className="flex space-x-2">
             <input
@@ -403,14 +359,14 @@ const ProfilePage: React.FC = () => {
                 ? 'bg-success-100 text-success-800 cursor-default'
                 : 'bg-complement hover:bg-complement-600 text-white'
             }`}>
-              {profileData.emailVerified ? 'Verificado' : 'Verificar'}
+              {profileData.emailVerified ? 'Verified' : 'Verify'}
             </button>
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Teléfono
+            Phone
           </label>
           <div className="flex space-x-2">
             <input
@@ -424,14 +380,14 @@ const ProfilePage: React.FC = () => {
                 ? 'bg-success-100 text-success-800 cursor-default'
                 : 'bg-complement hover:bg-complement-600 text-white'
             }`}>
-              {profileData.phoneVerified ? 'Verificado' : 'Verificar SMS'}
+              {profileData.phoneVerified ? 'Verified' : 'Verify SMS'}
             </button>
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Dirección completa
+            Full Address
           </label>
           <input
             type="text"
@@ -448,11 +404,11 @@ const ProfilePage: React.FC = () => {
     <div className="space-y-6">
       {/* Password Change */}
       <div>
-        <h3 className="text-lg font-medium text-text-primary mb-4">Cambiar contraseña</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Change Password</h3>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              Contraseña actual
+              Current Password
             </label>
             <div className="relative">
               <input
@@ -473,7 +429,7 @@ const ProfilePage: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              Nueva contraseña
+              New Password
             </label>
             <div className="relative">
               <input
@@ -494,7 +450,7 @@ const ProfilePage: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              Confirmar nueva contraseña
+              Confirm New Password
             </label>
             <div className="relative">
               <input
@@ -519,8 +475,8 @@ const ProfilePage: React.FC = () => {
       <div className="border-t border-divider pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-medium text-text-primary">Autenticación de dos factores</h3>
-            <p className="text-sm text-text-secondary">Añade una capa extra de seguridad a tu cuenta</p>
+            <h3 className="text-lg font-medium text-text-primary">Two-Factor Authentication</h3>
+            <p className="text-sm text-text-secondary">Add an extra layer of security to your account</p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input
@@ -536,7 +492,7 @@ const ProfilePage: React.FC = () => {
 
       {/* Active Sessions */}
       <div className="border-t border-divider pt-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Sesiones activas</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Active Sessions</h3>
         <div className="space-y-3">
           {sessions.map((session) => (
             <div key={session.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-divider">
@@ -553,7 +509,7 @@ const ProfilePage: React.FC = () => {
                     {session.device}
                     {session.current && (
                       <span className="ml-2 inline-flex px-2 py-1 text-xs font-medium rounded-full bg-success-100 text-success-800">
-                        Actual
+                        Current
                       </span>
                     )}
                   </div>
@@ -567,7 +523,7 @@ const ProfilePage: React.FC = () => {
                   onClick={() => handleCloseSession(session.id)}
                   className="px-3 py-1 text-sm text-error hover:bg-error-50 rounded transition-colors"
                 >
-                  Cerrar sesión
+                  Close Session
                 </button>
               )}
             </div>
@@ -582,39 +538,39 @@ const ProfilePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Idioma
+            Language
           </label>
           <select
             value={profileData.language}
             onChange={(e) => handleInputChange('language', e.target.value)}
             className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
           >
-            <option value="es">Español</option>
             <option value="en">English</option>
-            <option value="fr">Français</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
             <option value="pt">Português</option>
           </select>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Zona horaria
+            Timezone
           </label>
           <select
             value={profileData.timezone}
             onChange={(e) => handleInputChange('timezone', e.target.value)}
             className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
           >
-            <option value="America/Mexico_City">Ciudad de México (GMT-6)</option>
-            <option value="America/New_York">Nueva York (GMT-5)</option>
-            <option value="America/Los_Angeles">Los Ángeles (GMT-8)</option>
+            <option value="America/Mexico_City">Mexico City (GMT-6)</option>
+            <option value="America/New_York">New York (GMT-5)</option>
+            <option value="America/Los_Angeles">Los Angeles (GMT-8)</option>
             <option value="Europe/Madrid">Madrid (GMT+1)</option>
           </select>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Formato de fecha
+            Date Format
           </label>
           <select
             value={profileData.dateFormat}
@@ -629,17 +585,17 @@ const ProfilePage: React.FC = () => {
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Moneda predeterminada
+            Default Currency
           </label>
           <select
             value={profileData.currency}
             onChange={(e) => handleInputChange('currency', e.target.value)}
             className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
           >
-            <option value="USD">USD - Dólar estadounidense</option>
-            <option value="MXN">MXN - Peso mexicano</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="MXN">MXN - Mexican Peso</option>
             <option value="EUR">EUR - Euro</option>
-            <option value="GBP">GBP - Libra esterlina</option>
+            <option value="GBP">GBP - British Pound</option>
           </select>
         </div>
       </div>
@@ -650,29 +606,29 @@ const ProfilePage: React.FC = () => {
     <div className="space-y-6">
       {/* Notification Types */}
       <div>
-        <h3 className="text-lg font-medium text-text-primary mb-4">Tipos de notificaciones</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Notification Types</h3>
         <div className="space-y-4">
           {Object.entries(profileData.notifications).map(([key, value]) => (
             <div key={key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-divider">
               <div>
                 <div className="font-medium text-text-primary">
-                  {key === 'lowStock' && 'Stock bajo'}
-                  {key === 'newOrders' && 'Nuevas órdenes'}
-                  {key === 'paymentCompleted' && 'Pago completado'}
-                  {key === 'ocrErrors' && 'Errores OCR'}
+                  {key === 'lowStock' && 'Low Stock'}
+                  {key === 'newOrders' && 'New Orders'}
+                  {key === 'paymentCompleted' && 'Payment Completed'}
+                  {key === 'ocrErrors' && 'OCR Errors'}
                 </div>
                 <div className="text-sm text-text-secondary">
-                  {key === 'lowStock' && 'Cuando un producto tenga stock bajo'}
-                  {key === 'newOrders' && 'Cuando se reciba una nueva orden'}
-                  {key === 'paymentCompleted' && 'Cuando se complete un pago'}
-                  {key === 'ocrErrors' && 'Cuando ocurra un error en el OCR'}
+                  {key === 'lowStock' && 'When a product has low stock'}
+                  {key === 'newOrders' && 'When a new order is received'}
+                  {key === 'paymentCompleted' && 'When a payment is completed'}
+                  {key === 'ocrErrors' && 'When OCR processing fails'}
                 </div>
               </div>
               <div className="flex items-center space-x-4">
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={value.email}
+                    checked={profileData.notifications[key as keyof typeof profileData.notifications].email}
                     onChange={(e) => handleNestedInputChange('notifications', key, 'email', e.target.checked)}
                     className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement"
                   />
@@ -681,7 +637,7 @@ const ProfilePage: React.FC = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={value.inApp}
+                    checked={profileData.notifications[key as keyof typeof profileData.notifications].inApp}
                     onChange={(e) => handleNestedInputChange('notifications', key, 'inApp', e.target.checked)}
                     className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement"
                   />
@@ -695,15 +651,15 @@ const ProfilePage: React.FC = () => {
 
       {/* Frequency */}
       <div className="border-t border-divider pt-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Frecuencia</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Frequency</h3>
         <select
           value={profileData.notificationFrequency}
           onChange={(e) => handleInputChange('notificationFrequency', e.target.value)}
           className="w-full md:w-auto p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
         >
-          <option value="immediate">Inmediata</option>
-          <option value="daily">Diario</option>
-          <option value="weekly">Semanal</option>
+          <option value="immediate">Immediate</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
         </select>
       </div>
     </div>
@@ -712,15 +668,15 @@ const ProfilePage: React.FC = () => {
   const renderBilling = () => (
     <div className="space-y-6">
       {/* Current Plan */}
-      <div className="bg-gray-50 rounded-lg p-6 border border-divider">
-        <h3 className="text-lg font-medium text-text-primary mb-2">Plan actual</h3>
+      <div className="bg-bg-surface rounded-lg border border-divider p-6">
+        <h3 className="text-lg font-medium text-text-primary mb-4">Current Plan</h3>
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-2xl font-bold text-text-primary">Plan Pro</div>
-            <div className="text-text-secondary">$29.99/mes • Hasta 10,000 productos</div>
+            <h4 className="font-medium text-text-primary">Pro Plan</h4>
+            <div className="text-text-secondary">$29.99/month • Up to 10,000 products</div>
           </div>
-          <button className="bg-complement hover:bg-complement-600 text-white px-4 py-2 rounded-lg transition-colors">
-            Cambiar plan
+          <button className="px-4 py-2 bg-complement hover:bg-complement-600 text-white rounded-lg transition-colors">
+            Upgrade
           </button>
         </div>
       </div>
@@ -728,11 +684,11 @@ const ProfilePage: React.FC = () => {
       {/* Payment Method */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-text-primary">Método de pago</h3>
+          <h3 className="text-lg font-medium text-text-primary">Payment Method</h3>
           <button 
             onClick={handleOpenPaymentModal}
             className="bg-secondary hover:bg-secondary-600 text-white px-4 py-2 rounded-lg transition-colors">
-            Actualizar método
+            Update Method
           </button>
         </div>
         
@@ -743,12 +699,14 @@ const ProfilePage: React.FC = () => {
               {getCardIcon(paymentCards.find(card => card.isDefault)?.type || 'visa')}
               <div>
                 <div className="font-medium text-text-primary">
-                  •••• •••• •••• {paymentCards.find(card => card.isDefault)?.lastFour}
+                  •••• •••• •••• {paymentCards.find(card => card.isDefault)?.lastFour || '****'}
                 </div>
                 <div className="text-sm text-text-secondary">
-                  {paymentCards.find(card => card.isDefault)?.type.charAt(0).toUpperCase() + 
-                   paymentCards.find(card => card.isDefault)?.type.slice(1)} • 
-                  Expira {paymentCards.find(card => card.isDefault)?.expiryMonth}/{paymentCards.find(card => card.isDefault)?.expiryYear}
+                  {(() => {
+                    const defaultCard = paymentCards.find(card => card.isDefault);
+                    if (!defaultCard) return 'No default card';
+                    return `${defaultCard.type.charAt(0).toUpperCase() + defaultCard.type.slice(1)} • Expires ${defaultCard.expiryMonth}/${defaultCard.expiryYear}`;
+                  })()}
                 </div>
               </div>
             </div>
@@ -758,22 +716,22 @@ const ProfilePage: React.FC = () => {
 
       {/* Invoices */}
       <div>
-        <h3 className="text-lg font-medium text-text-primary mb-4">Historial de facturas</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Invoice History</h3>
         <div className="bg-bg-surface rounded-lg border border-divider overflow-hidden">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  Fecha
+                  Date
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  Monto
+                  Amount
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  Estado
+                  Status
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  Acciones
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -790,7 +748,7 @@ const ProfilePage: React.FC = () => {
                   <td className="px-4 py-4">
                     <button className="text-complement hover:text-complement-600 text-sm font-medium">
                       <Download size={16} className="inline mr-1" />
-                      Descargar PDF
+                      Download PDF
                     </button>
                   </td>
                 </tr>
@@ -807,20 +765,20 @@ const ProfilePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <button className="p-6 bg-gray-50 rounded-lg border border-divider hover:bg-gray-100 transition-colors text-left">
           <HelpCircle size={32} className="text-complement mb-3" />
-          <h3 className="font-medium text-text-primary mb-2">Centro de ayuda</h3>
-          <p className="text-sm text-text-secondary">Encuentra respuestas a preguntas frecuentes</p>
+          <h3 className="font-medium text-text-primary mb-2">Help Center</h3>
+          <p className="text-sm text-text-secondary">Find answers to frequently asked questions</p>
         </button>
 
         <button className="p-6 bg-gray-50 rounded-lg border border-divider hover:bg-gray-100 transition-colors text-left">
           <MessageSquare size={32} className="text-complement mb-3" />
-          <h3 className="font-medium text-text-primary mb-2">Enviar feedback</h3>
-          <p className="text-sm text-text-secondary">Comparte tus comentarios y sugerencias</p>
+          <h3 className="font-medium text-text-primary mb-2">Send Feedback</h3>
+          <p className="text-sm text-text-secondary">Share your comments and suggestions</p>
         </button>
 
         <button className="p-6 bg-gray-50 rounded-lg border border-divider hover:bg-gray-100 transition-colors text-left">
           <Activity size={32} className="text-complement mb-3" />
-          <h3 className="font-medium text-text-primary mb-2">Estado del sistema</h3>
-          <p className="text-sm text-text-secondary">Verifica el estado de nuestros servicios</p>
+          <h3 className="font-medium text-text-primary mb-2">System Status</h3>
+          <p className="text-sm text-text-secondary">Check the status of our services</p>
         </button>
       </div>
     </div>
@@ -860,7 +818,7 @@ const ProfilePage: React.FC = () => {
               >
                 <ArrowLeft size={20} className="text-text-primary" />
               </button>
-              <h1 className="text-xl font-semibold text-text-primary">Mi Perfil</h1>
+              <h1 className="text-xl font-semibold text-text-primary">My Profile</h1>
             </div>
           </div>
         </div>
@@ -945,7 +903,7 @@ const ProfilePage: React.FC = () => {
             className="bg-primary hover:bg-primary-600 text-black font-medium py-3 px-8 rounded-lg transition-colors flex items-center space-x-2"
           >
             <Save size={16} />
-            <span>Guardar cambios</span>
+            <span>Save Changes</span>
           </button>
         </div>
       </div>
@@ -957,7 +915,7 @@ const ProfilePage: React.FC = () => {
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-divider">
               <h3 className="text-lg font-medium text-text-primary">
-                Gestionar Métodos de Pago
+                Manage Payment Methods
               </h3>
               <button
                 onClick={handleClosePaymentModal}

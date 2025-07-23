@@ -11,6 +11,7 @@ interface Product {
   price: number;
   status: 'active' | 'inactive';
   image?: string;
+  images?: string[];
 }
 
 interface ProductCardProps {
@@ -22,6 +23,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   const handleClick = () => {
     onClick(product);
   };
+
+  // Obtener la imagen a mostrar (prioridad: image > images[0] > placeholder)
+  const getImageUrl = () => {
+    if (product.image) {
+      // Si la imagen ya tiene http, usarla tal como está
+      if (product.image.startsWith('http')) {
+        return product.image;
+      }
+      // Si es una URL relativa, construir la URL completa
+      return `http://localhost:4444${product.image}`;
+    }
+    if (product.images && product.images.length > 0) {
+      const imageUrl = product.images[0];
+      // Si la imagen ya tiene http, usarla tal como está
+      if (imageUrl.startsWith('http')) {
+        return imageUrl;
+      }
+      // Si es una URL relativa, construir la URL completa
+      return `http://localhost:4444${imageUrl}`;
+    }
+    return null;
+  };
+
+  const imageUrl = getImageUrl();
 
   return (
     <div 
@@ -47,27 +72,32 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               ? 'bg-warning-500' 
               : 'bg-error-500'
           }`}></div>
-          {product.stock} en stock
+          {product.stock} in stock
         </span>
       </div>
 
       {/* Product Image */}
       <div className="relative h-48 bg-gray-100 overflow-hidden group-hover:bg-gray-50 transition-colors duration-300">
-        {product.image ? (
+        {imageUrl ? (
           <img
-            src={product.image}
+            src={imageUrl}
             alt={product.name}
             className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+            onError={(e) => {
+              // Si la imagen falla, mostrar el placeholder
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.nextElementSibling?.classList.remove('hidden');
+            }}
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-gray-400 group-hover:text-gray-500 transition-colors duration-300">
-              <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
+        ) : null}
+        
+        {/* Fallback placeholder */}
+        <div className={`w-full h-full flex items-center justify-center ${imageUrl ? 'hidden' : ''}`}>
+          <div className="text-gray-400 group-hover:text-gray-500 transition-colors duration-300">
+            <Package className="w-16 h-16" />
           </div>
-        )}
+        </div>
         
         {/* Overlay on hover */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
@@ -106,13 +136,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               ${product.price.toFixed(2)}
             </span>
             <span className="text-xs text-text-secondary group-hover:text-text-primary transition-colors duration-300">
-              por unidad
+              per unit
             </span>
           </div>
           
           {/* Add to Cart Button */}
           <button className="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out bg-complement hover:bg-complement-600 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-lg hover:shadow-xl">
-            Agregar
+            Add
           </button>
         </div>
       </div>

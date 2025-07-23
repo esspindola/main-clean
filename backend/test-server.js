@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const PORT = 4444;
@@ -63,15 +64,34 @@ app.use(cors({
     // Permitir requests sin origin (como aplicaciones móviles o Postman)
     if (!origin) return callback(null, true);
     
+    // Permitir todos los puertos de localhost para desarrollo
+    if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+      return callback(null, true);
+    }
+    
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:5175',
       'http://localhost:5176',
       'http://localhost:5177',
+      'http://localhost:5178',
+      'http://localhost:5179',
+      'http://localhost:5180',
+      'http://localhost:5181',
+      'http://localhost:5182',
+      'http://localhost:5183',
       'http://127.0.0.1:5173',
       'http://127.0.0.1:5174',
-      'http://127.0.0.1:5175'
+      'http://127.0.0.1:5175',
+      'http://127.0.0.1:5176',
+      'http://127.0.0.1:5177',
+      'http://127.0.0.1:5178',
+      'http://127.0.0.1:5179',
+      'http://127.0.0.1:5180',
+      'http://127.0.0.1:5181',
+      'http://127.0.0.1:5182',
+      'http://127.0.0.1:5183'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -89,6 +109,75 @@ app.use(cors({
 
 app.use(express.json());
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
+// Configure multer for OCR file uploads
+const ocrStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = 'uploads/ocr';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'ocr-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+// Configure multer for product image uploads
+const productImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = 'uploads/products';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'product-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const ocrUpload = multer({
+  storage: ocrStorage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|pdf/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image and PDF files are allowed!'));
+    }
+  }
+});
+
+const productImageUpload = multer({
+  storage: productImageStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit for product images
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ 
@@ -100,13 +189,47 @@ app.get('/health', (req, res) => {
 
 // Auth endpoints
 app.post('/api/auth/register', (req, res) => {
-  console.log('Register request received:', req.body);
+  console.log('=== REGISTER REQUEST ===');
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  console.log('Content-Type:', req.headers['content-type']);
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
   
   const { email, password, fullName, phone } = req.body;
+  
+  // Validar que todos los campos requeridos estén presentes
+  if (!email || !password || !fullName) {
+    console.log('Missing required fields:', { email: !!email, password: !!password, fullName: !!fullName });
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Email, password, and fullName are required' 
+    });
+  }
+  
+  // Validar formato de email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    console.log('Invalid email format:', email);
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid email format' 
+    });
+  }
+  
+  // Validar longitud de contraseña
+  if (password.length < 8) {
+    console.log('Password too short:', password.length);
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Password must be at least 8 characters long' 
+    });
+  }
   
   // Verificar si el email ya existe
   const existingUser = registeredUsers.find(user => user.email === email);
   if (existingUser) {
+    console.log('Email already exists:', email);
     return res.status(400).json({ 
       success: false, 
       message: 'User with this email already exists' 
@@ -238,31 +361,77 @@ app.get('/api/users', (req, res) => {
   });
 });
 
-// Almacenamiento en memoria para productos
+// In-memory storage for products
 let products = [
   {
     id: 1,
     name: 'Cabinet with Doors',
-    description: 'Mueble de oficina con puertas corredizas',
+    description: 'Office cabinet with sliding doors',
     sku: 'CAB-001',
-    category: 'Muebles',
+    category: 'Furniture',
     price: 180.00,
     stock: 25,
-    status: 'active'
+    status: 'active',
+    images: ['https://picsum.photos/400/300?random=1']
   },
   {
     id: 2,
-    name: 'Escritorio Ejecutivo',
-    description: 'Escritorio de madera para ejecutivos',
+    name: 'Executive Desk',
+    description: 'Wooden desk for executives',
     sku: 'ESC-001',
-    category: 'Muebles',
+    category: 'Furniture',
     price: 250.00,
     stock: 8,
-    status: 'active'
+    status: 'active',
+    images: ['https://picsum.photos/400/300?random=2']
+  },
+  {
+    id: 3,
+    name: 'Ergonomic Chair',
+    description: 'Ergonomic office chair',
+    sku: 'SIL-001',
+    category: 'Furniture',
+    price: 120.00,
+    stock: 15,
+    status: 'active',
+    images: ['https://picsum.photos/400/300?random=3']
+  },
+  {
+    id: 4,
+    name: '24-inch Monitor',
+    description: '24-inch LED monitor',
+    sku: 'MON-001',
+    category: 'Electronics',
+    price: 180.00,
+    stock: 6,
+    status: 'active',
+    images: ['https://picsum.photos/400/300?random=4']
+  },
+  {
+    id: 5,
+    name: 'Mechanical Keyboard',
+    description: 'Gaming mechanical keyboard',
+    sku: 'TEC-001',
+    category: 'Electronics',
+    price: 85.00,
+    stock: 20,
+    status: 'active',
+    images: ['https://picsum.photos/400/300?random=5']
+  },
+  {
+    id: 6,
+    name: 'LED Lamp',
+    description: 'LED desk lamp',
+    sku: 'LAM-001',
+    category: 'Lighting',
+    price: 35.00,
+    stock: 0,
+    status: 'inactive',
+    images: ['https://picsum.photos/400/300?random=6']
   }
 ];
 
-let nextProductId = 3;
+let nextProductId = 7;
 
 // Función para verificar autenticación
 function authenticateToken(req, res, next) {
@@ -321,7 +490,7 @@ app.get('/api/products/:id', authenticateToken, (req, res) => {
   });
 });
 
-app.post('/api/products', authenticateToken, (req, res) => {
+app.post('/api/products', authenticateToken, productImageUpload.array('images', 5), async (req, res) => {
   console.log('Create product request:', req.body);
   
   const { name, description, sku, category, price, stock } = req.body;
@@ -343,6 +512,10 @@ app.post('/api/products', authenticateToken, (req, res) => {
     stock: parseInt(stock) || 0,
     status: 'active'
   };
+
+  if (req.files && req.files.length > 0) {
+    newProduct.images = req.files.map(file => `/uploads/products/${file.filename}`);
+  }
   
   products.push(newProduct);
   
@@ -354,7 +527,7 @@ app.post('/api/products', authenticateToken, (req, res) => {
   });
 });
 
-app.put('/api/products/:id', authenticateToken, (req, res) => {
+app.put('/api/products/:id', authenticateToken, productImageUpload.array('images', 5), (req, res) => {
   const productId = parseInt(req.params.id);
   console.log('Update product request:', productId, req.body);
   
@@ -378,6 +551,11 @@ app.put('/api/products/:id', authenticateToken, (req, res) => {
     price: price ? parseFloat(price) : products[productIndex].price,
     stock: stock ? parseInt(stock) : products[productIndex].stock
   };
+
+  // Handle image uploads
+  if (req.files && req.files.length > 0) {
+    products[productIndex].images = req.files.map(file => `/uploads/products/${file.filename}`);
+  }
   
   console.log('Product updated:', products[productIndex]);
   res.json({
@@ -389,7 +567,10 @@ app.put('/api/products/:id', authenticateToken, (req, res) => {
 
 app.delete('/api/products/:id', authenticateToken, (req, res) => {
   const productId = parseInt(req.params.id);
-  console.log('Delete product request:', productId);
+  console.log('=== DELETE PRODUCT REQUEST ===');
+  console.log('Product ID:', productId);
+  console.log('User:', req.user.email);
+  console.log('Headers:', req.headers);
   
   const productIndex = products.findIndex(p => p.id === productId);
   
@@ -407,6 +588,44 @@ app.delete('/api/products/:id', authenticateToken, (req, res) => {
     success: true,
     message: 'Product deleted successfully',
     product: deletedProduct
+  });
+});
+
+// Upload images to existing product
+app.post('/api/products/:id/images', authenticateToken, productImageUpload.array('images', 5), (req, res) => {
+  const productId = parseInt(req.params.id);
+  console.log('Upload images request for product:', productId);
+  
+  const productIndex = products.findIndex(p => p.id === productId);
+  
+  if (productIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: 'Product not found'
+    });
+  }
+
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'No images uploaded'
+    });
+  }
+
+  // Initialize images array if it doesn't exist
+  if (!products[productIndex].images) {
+    products[productIndex].images = [];
+  }
+
+  // Add new images
+  const newImages = req.files.map(file => `/uploads/products/${file.filename}`);
+  products[productIndex].images = [...products[productIndex].images, ...newImages];
+
+  console.log('Images uploaded for product:', productId, newImages);
+  res.json({
+    success: true,
+    message: 'Images uploaded successfully',
+    product: products[productIndex]
   });
 });
 
@@ -460,7 +679,7 @@ app.post('/api/sales', authenticateToken, (req, res) => {
   }
   
   try {
-    // Verificar stock disponible y actualizar inventario
+    // Check available stock and update inventory
     const updatedProducts = [];
     
     for (const item of items) {
@@ -480,12 +699,12 @@ app.post('/api/sales', authenticateToken, (req, res) => {
         });
       }
       
-      // Actualizar stock del producto
+      // Update product stock
       product.stock -= item.quantity;
       updatedProducts.push(product);
     }
     
-    // Crear la venta
+    // Create the sale
     const sale = {
       id: Date.now(),
       items: items.map(item => {
@@ -536,6 +755,110 @@ app.get('/api/inventory', authenticateToken, (req, res) => {
       }
     ]
   });
+});
+
+// OCR endpoints
+app.post('/api/ocr/process-document', authenticateToken, ocrUpload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Simulate OCR processing
+    const mockOcrResult = {
+      success: true,
+      data: {
+        documentType: 'invoice',
+        vendor: 'Proveedor ABC',
+        date: '2024-01-15',
+        total: 1250.00,
+        items: [
+          {
+            description: 'Cabinet with Doors',
+            quantity: 5,
+            unitPrice: 180.00,
+            total: 900.00
+          },
+          {
+            description: 'Escritorio Ejecutivo',
+            quantity: 2,
+            unitPrice: 250.00,
+            total: 500.00
+          }
+        ],
+        tax: 187.50,
+        subtotal: 1062.50,
+        confidence: 0.95
+      },
+      file: {
+        originalName: req.file.originalname,
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      }
+    };
+
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    res.json(mockOcrResult);
+  } catch (error) {
+    console.error('OCR processing error:', error);
+    res.status(500).json({ 
+      error: 'Failed to process document',
+      details: error.message 
+    });
+  }
+});
+
+app.get('/api/ocr/history', authenticateToken, async (req, res) => {
+  try {
+    const history = [
+      {
+        id: 1,
+        filename: 'invoice-001.pdf',
+        documentType: 'invoice',
+        processedAt: '2024-01-15T10:30:00Z',
+        status: 'completed',
+        confidence: 0.95
+      },
+      {
+        id: 2,
+        filename: 'receipt-002.jpg',
+        documentType: 'receipt',
+        processedAt: '2024-01-14T15:45:00Z',
+        status: 'completed',
+        confidence: 0.88
+      }
+    ];
+
+    res.json({ history });
+  } catch (error) {
+    console.error('Get OCR history error:', error);
+    res.status(500).json({ error: 'Failed to get OCR history' });
+  }
+});
+
+app.get('/api/ocr/status/:jobId', authenticateToken, async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    
+    const status = {
+      jobId,
+      status: 'completed',
+      progress: 100,
+      result: {
+        documentType: 'invoice',
+        vendor: 'Proveedor ABC',
+        total: 1250.00
+      }
+    };
+
+    res.json(status);
+  } catch (error) {
+    console.error('Get OCR status error:', error);
+    res.status(500).json({ error: 'Failed to get OCR status' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -29,12 +29,12 @@ const RegisterPage: React.FC = () => {
     
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       return;
     }
     
     if (!formData.acceptTerms) {
-      setError('Debes aceptar los Términos y Condiciones');
+      setError('You must accept the Terms and Conditions');
       return;
     }
 
@@ -50,7 +50,7 @@ const RegisterPage: React.FC = () => {
       });
       navigate('/');
     } catch (error: any) {
-      setError(error.message || 'Error al registrar usuario');
+      setError(error.message || 'Error registering user');
     } finally {
       setIsLoading(false);
     }
@@ -64,10 +64,10 @@ const RegisterPage: React.FC = () => {
           {/* Title and Description */}
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-text-primary mb-4">
-              Crear cuenta
+              Create Account
             </h1>
             <p className="text-sm text-text-secondary">
-              Regístrate para empezar a gestionar tu inventario
+              Sign up to start managing your inventory
             </p>
           </div>
 
@@ -79,7 +79,7 @@ const RegisterPage: React.FC = () => {
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange('fullName', e.target.value)}
-                placeholder="Tu nombre completo"
+                placeholder="Your full name"
                 className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
                 required
               />
@@ -91,7 +91,7 @@ const RegisterPage: React.FC = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="ejemplo@mail.com"
+                placeholder="example@email.com"
                 className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
                 required
               />
@@ -103,7 +103,7 @@ const RegisterPage: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                placeholder="Al menos 8 caracteres"
+                placeholder="at least 8 characters"
                 className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
                 required
                 minLength={8}
@@ -123,7 +123,7 @@ const RegisterPage: React.FC = () => {
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Repite tu contraseña"
+                placeholder="confirm your password"
                 className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
                 required
                 minLength={8}
@@ -137,82 +137,99 @@ const RegisterPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Phone (Optional) */}
+            {/* Phone */}
             <div>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="+12 345 678 9012"
+                placeholder="phone number (optional)"
                 className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
               />
             </div>
 
-            {/* Terms and Conditions Checkbox */}
-            <div className="flex items-start space-x-2">
+            {/* Terms and Conditions */}
+            <div className="flex items-start space-x-3">
               <input
                 type="checkbox"
                 id="acceptTerms"
                 checked={formData.acceptTerms}
                 onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary mt-0.5"
+                className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement mt-1"
                 required
               />
-              <label htmlFor="acceptTerms" className="text-sm text-text-primary">
-                Acepto los{' '}
+              <label htmlFor="acceptTerms" className="text-sm text-text-secondary">
+                I agree to the{' '}
                 <button
                   type="button"
-                  className="text-complement hover:text-complement-600 underline transition-colors"
+                  className="text-complement hover:text-complement-600 font-medium transition-colors"
                 >
-                  Términos y Condiciones
+                  Terms and Conditions
+                </button>
+                {' '}and{' '}
+                <button
+                  type="button"
+                  className="text-complement hover:text-complement-600 font-medium transition-colors"
+                >
+                  Privacy Policy
                 </button>
               </label>
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mt-4">
+              <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
                 {error}
               </div>
             )}
 
-            {/* Register Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-primary hover:bg-primary-600 text-black font-medium rounded transition-all duration-150 ease-in-out hover:shadow-md transform hover:scale-[1.02] mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-11 bg-primary hover:bg-primary-600 text-black font-medium rounded transition-all duration-150 ease-in-out hover:shadow-md transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Registrando...' : 'Registrarse'}
+              {isLoading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 
           {/* Sign In Link */}
-          <div className="text-center mt-4">
+          <div className="text-center mt-6">
             <p className="text-sm text-text-secondary">
-              ¿Ya tienes una cuenta?{' '}
+              Already have an account?{' '}
               <button
-                type="button"
                 onClick={() => navigate('/login')}
-                className="text-complement hover:text-complement-600 font-medium transition-colors underline"
+                className="text-complement hover:text-complement-600 font-medium transition-colors"
               >
-                Inicia sesión
+                Sign in
               </button>
             </p>
           </div>
         </div>
       </div>
 
-      {/* Tablet Layout (≥768px and <1024px) */}
-      <div className="hidden md:block lg:hidden">
-        <div className="min-h-screen flex items-center justify-center p-6">
-          <div className="w-full max-w-md bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
+      {/* Mobile Layout (<1024px) */}
+      <div className="lg:hidden min-h-screen p-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-black font-bold text-sm">F</span>
+            </div>
+            <span className="text-xl font-bold text-text-primary">FrontPOSw</span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-full max-w-sm space-y-6">
             {/* Title and Description */}
-            <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-text-primary mb-4">
-                Crear cuenta
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-text-primary mb-2">
+                Create Account
               </h1>
               <p className="text-sm text-text-secondary">
-                Regístrate para empezar a gestionar tu inventario
+                Sign up to start managing your inventory
               </p>
             </div>
 
@@ -224,8 +241,8 @@ const RegisterPage: React.FC = () => {
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => handleInputChange('fullName', e.target.value)}
-                  placeholder="Tu nombre completo"
-                  className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
+                  placeholder="Your full name"
+                  className="w-full h-11 px-4 border border-divider rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary"
                   required
                 />
               </div>
@@ -236,8 +253,8 @@ const RegisterPage: React.FC = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="ejemplo@mail.com"
-                  className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
+                  placeholder="example@email.com"
+                  className="w-full h-11 px-4 border border-divider rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary"
                   required
                 />
               </div>
@@ -248,8 +265,8 @@ const RegisterPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  placeholder="Al menos 8 caracteres"
-                  className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
+                  placeholder="at least 8 characters"
+                  className="w-full h-11 px-4 pr-12 border border-divider rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary"
                   required
                   minLength={8}
                 />
@@ -268,8 +285,8 @@ const RegisterPage: React.FC = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  placeholder="Repite tu contraseña"
-                  className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
+                  placeholder="confirm your password"
+                  className="w-full h-11 px-4 pr-12 border border-divider rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary"
                   required
                   minLength={8}
                 />
@@ -282,196 +299,74 @@ const RegisterPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Phone (Optional) */}
+              {/* Phone */}
               <div>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="+12 345 678 9012"
-                  className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
+                  placeholder="phone number (optional)"
+                  className="w-full h-11 px-4 border border-divider rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary"
                 />
               </div>
 
-              {/* Terms and Conditions Checkbox */}
-              <div className="flex items-start space-x-2">
+              {/* Terms and Conditions */}
+              <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
-                  id="acceptTermsTablet"
+                  id="acceptTermsMobile"
                   checked={formData.acceptTerms}
                   onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary mt-0.5"
+                  className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement mt-1"
                   required
                 />
-                <label htmlFor="acceptTermsTablet" className="text-sm text-text-primary">
-                  Acepto los{' '}
+                <label htmlFor="acceptTermsMobile" className="text-sm text-text-secondary">
+                  I agree to the{' '}
                   <button
                     type="button"
-                    className="text-complement hover:text-complement-600 underline transition-colors"
+                    className="text-complement hover:text-complement-600 font-medium transition-colors"
                   >
-                    Términos y Condiciones
+                    Terms and Conditions
+                  </button>
+                  {' '}and{' '}
+                  <button
+                    type="button"
+                    className="text-complement hover:text-complement-600 font-medium transition-colors"
+                  >
+                    Privacy Policy
                   </button>
                 </label>
               </div>
 
-              {/* Register Button */}
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
+                  {error}
+                </div>
+              )}
+
+              {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full h-11 bg-primary hover:bg-primary-600 text-black font-medium rounded transition-all duration-150 ease-in-out hover:shadow-md transform hover:scale-[1.02] mt-6"
+                disabled={isLoading}
+                className="w-full h-11 bg-primary hover:bg-primary-600 text-black font-medium rounded-lg transition-all duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Registrarse
+                {isLoading ? 'Creating account...' : 'Create Account'}
               </button>
             </form>
 
             {/* Sign In Link */}
-            <div className="text-center mt-4">
+            <div className="text-center">
               <p className="text-sm text-text-secondary">
-                ¿Ya tienes una cuenta?{' '}
+                Already have an account?{' '}
                 <button
-                  type="button"
                   onClick={() => navigate('/login')}
-                  className="text-complement hover:text-complement-600 font-medium transition-colors underline"
+                  className="text-complement hover:text-complement-600 font-medium transition-colors"
                 >
-                  Inicia sesión
+                  Sign in
                 </button>
               </p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Layout (<768px) */}
-      <div className="md:hidden min-h-screen p-4">
-        <div className="w-full bg-bg-surface rounded-lg shadow-sm border border-divider p-6 mt-8">
-          {/* Title and Description */}
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-text-primary mb-4">
-              Crear cuenta
-            </h1>
-            <p className="text-sm text-text-secondary">
-              Regístrate para empezar a gestionar tu inventario
-            </p>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name */}
-            <div>
-              <input
-                type="text"
-                value={formData.fullName}
-                onChange={(e) => handleInputChange('fullName', e.target.value)}
-                placeholder="Tu nombre completo"
-                className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
-                required
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="ejemplo@mail.com"
-                className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
-                required
-              />
-            </div>
-
-            {/* Password */}
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                placeholder="Al menos 8 caracteres"
-                className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
-                required
-                minLength={8}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            {/* Confirm Password */}
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Repite tu contraseña"
-                className="w-full h-11 px-4 pr-12 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
-                required
-                minLength={8}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors"
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            {/* Phone (Optional) */}
-            <div>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="+12 345 678 9012"
-                className="w-full h-11 px-4 border border-divider rounded focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 ease-in-out bg-bg-surface text-text-primary placeholder-text-secondary hover:shadow-sm"
-              />
-            </div>
-
-            {/* Terms and Conditions Checkbox */}
-            <div className="flex items-start space-x-2">
-              <input
-                type="checkbox"
-                id="acceptTermsMobile"
-                checked={formData.acceptTerms}
-                onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary mt-0.5"
-                required
-              />
-              <label htmlFor="acceptTermsMobile" className="text-sm text-text-primary">
-                Acepto los{' '}
-                <button
-                  type="button"
-                  className="text-complement hover:text-complement-600 underline transition-colors"
-                >
-                  Términos y Condiciones
-                </button>
-              </label>
-            </div>
-
-            {/* Register Button */}
-            <button
-              type="submit"
-              className="w-full h-11 bg-primary hover:bg-primary-600 text-black font-medium rounded transition-all duration-150 ease-in-out hover:shadow-md mt-6"
-            >
-              Registrarse
-            </button>
-          </form>
-
-          {/* Sign In Link */}
-          <div className="text-center mt-4">
-            <p className="text-sm text-text-secondary">
-              ¿Ya tienes una cuenta?{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/login')}
-                className="text-complement hover:text-complement-600 font-medium transition-colors underline"
-              >
-                Inicia sesión
-              </button>
-            </p>
           </div>
         </div>
       </div>

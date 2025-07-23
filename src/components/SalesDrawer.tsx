@@ -41,7 +41,7 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-divider bg-bg-surface">
         <h2 className="text-lg font-semibold text-text-primary animate-slide-in-left">
-          Carrito de Compras
+          Shopping Cart
         </h2>
         <button 
           onClick={onClose}
@@ -90,7 +90,7 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
                   </div>
                   <div className="text-right">
                     <div className="font-medium text-text-primary">${(item.price * item.quantity).toFixed(2)}</div>
-                    <div className="text-sm text-text-secondary">${item.price.toFixed(2)} c/u</div>
+                    <div className="text-sm text-text-secondary">${item.price.toFixed(2)} each</div>
                   </div>
                 </div>
               </div>
@@ -98,44 +98,51 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
           </div>
         ) : (
           <div className="text-center py-12 animate-fade-in">
-            <div className="text-text-secondary mb-4 animate-bounce-in">
-              <ShoppingCart size={48} className="mx-auto" />
+            <ShoppingCart size={48} className="text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-text-primary mb-2">Your cart is empty</h3>
+            <p className="text-text-secondary">Add some products to get started</p>
+          </div>
+        )}
+
+        {/* Summary */}
+        {cartItems.length > 0 && (
+          <div className="mt-6 space-y-4 animate-fade-in">
+            {/* Subtotal */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-divider">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Subtotal:</span>
+                  <span className="text-text-primary">${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Tax (15%):</span>
+                  <span className="text-text-primary">${tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-lg font-bold border-t border-divider pt-2">
+                  <span className="text-text-primary">Total:</span>
+                  <span className="text-success">${total.toFixed(2)}</span>
+                </div>
+              </div>
             </div>
-            <h3 className="text-lg font-medium text-text-primary mb-2 animate-slide-in-left">
-              Carrito vacío
-            </h3>
-            <p className="text-text-secondary animate-slide-in-right">
-              Agrega productos desde el tablero de ventas
-            </p>
+
+            {/* Payment Button */}
+            <button
+              onClick={handlePaymentClick}
+              className="w-full bg-complement hover:bg-complement-700 text-white font-medium py-4 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg btn-animate"
+            >
+              Proceed to Payment
+            </button>
+
+            {/* Clear Cart */}
+            <button
+              onClick={clearCart}
+              className="w-full bg-gray-100 hover:bg-gray-200 text-text-primary font-medium py-3 rounded-lg transition-all duration-300"
+            >
+              Clear Cart
+            </button>
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      {cartItems.length > 0 && (
-        <div className="border-t border-divider p-4 bg-bg-surface animate-slide-in-right">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-lg font-medium text-text-primary">Total:</span>
-            <span className="text-2xl font-bold text-text-primary">${total.toFixed(2)}</span>
-          </div>
-          
-          <div className="space-y-2">
-            <button 
-              onClick={() => onNavigateToPayment(total)}
-              className="w-full bg-complement hover:bg-complement-600 text-white font-medium py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg btn-animate"
-            >
-              Proceder al Pago
-            </button>
-            
-            <button 
-              onClick={clearCart}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-text-primary font-medium py-2 rounded-lg transition-all duration-300 hover:scale-105 btn-animate"
-            >
-              Limpiar Carrito
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

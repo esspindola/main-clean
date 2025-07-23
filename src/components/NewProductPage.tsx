@@ -23,12 +23,12 @@ const NewProductPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
-    productType: 'Producto físico',
+    productType: 'Physical Product',
     name: '',
     description: '',
     location: '',
     createCategory: false,
-    unit: 'Por artículo',
+    unit: 'Per item',
     weight: '',
     price: '',
     inventoryQuantity: '',
@@ -37,46 +37,48 @@ const NewProductPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [dragActive, setDragActive] = useState(false);
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showMoreVariantsPanel, setShowMoreVariantsPanel] = useState(false);
 
   const existingCategories = [
-    'Muebles',
+    'Furniture',
     'Textiles', 
-    'Iluminación',
-    'Electrónicos',
-    'Decoración',
-    'Oficina'
+    'Lighting',
+    'Electronics',
+    'Decoration',
+    'Office'
   ];
 
   const variantTypes = [
     'Color',
-    'Tamaño',
+    'Size',
     'Material',
-    'Estilo',
-    'Acabado'
+    'Style',
+    'Finish'
   ];
 
   const [variants, setVariants] = useState<VariantData>({
     Color: {
       isActive: false,
       values: [
-        { id: '1', value: 'Rojo', selected: false },
-        { id: '2', value: 'Azul', selected: false },
-        { id: '3', value: 'Verde', selected: false },
-        { id: '4', value: 'Negro', selected: false }
+        { id: '1', value: 'Red', selected: false },
+        { id: '2', value: 'Blue', selected: false },
+        { id: '3', value: 'Green', selected: false },
+        { id: '4', value: 'Black', selected: false }
       ],
       newValue: '',
       showPanel: false
     },
-    Tamaño: {
+    Size: {
       isActive: false,
       values: [
-        { id: '1', value: 'Pequeño', selected: false },
-        { id: '2', value: 'Mediano', selected: false },
-        { id: '3', value: 'Grande', selected: false },
-        { id: '4', value: 'Extra Grande', selected: false }
+        { id: '1', value: 'Small', selected: false },
+        { id: '2', value: 'Medium', selected: false },
+        { id: '3', value: 'Large', selected: false },
+        { id: '4', value: 'Extra Large', selected: false }
       ],
       newValue: '',
       showPanel: false
@@ -84,32 +86,32 @@ const NewProductPage: React.FC = () => {
     Material: {
       isActive: false,
       values: [
-        { id: '1', value: 'Madera', selected: false },
+        { id: '1', value: 'Wood', selected: false },
         { id: '2', value: 'Metal', selected: false },
-        { id: '3', value: 'Plástico', selected: false },
-        { id: '4', value: 'Vidrio', selected: false }
+        { id: '3', value: 'Plastic', selected: false },
+        { id: '4', value: 'Glass', selected: false }
       ],
       newValue: '',
       showPanel: false
     },
-    Estilo: {
+    Style: {
       isActive: false,
       values: [
-        { id: '1', value: 'Moderno', selected: false },
-        { id: '2', value: 'Clásico', selected: false },
-        { id: '3', value: 'Minimalista', selected: false },
+        { id: '1', value: 'Modern', selected: false },
+        { id: '2', value: 'Classic', selected: false },
+        { id: '3', value: 'Minimalist', selected: false },
         { id: '4', value: 'Industrial', selected: false }
       ],
       newValue: '',
       showPanel: false
     },
-    Acabado: {
+    Finish: {
       isActive: false,
       values: [
-        { id: '1', value: 'Mate', selected: false },
-        { id: '2', value: 'Brillante', selected: false },
-        { id: '3', value: 'Satinado', selected: false },
-        { id: '4', value: 'Texturizado', selected: false }
+        { id: '1', value: 'Matte', selected: false },
+        { id: '2', value: 'Glossy', selected: false },
+        { id: '3', value: 'Satin', selected: false },
+        { id: '4', value: 'Textured', selected: false }
       ],
       newValue: '',
       showPanel: false
@@ -118,6 +120,47 @@ const NewProductPage: React.FC = () => {
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // File upload handlers
+  const handleFileSelect = (files: FileList | null) => {
+    if (files) {
+      const fileArray = Array.from(files);
+      const validFiles = fileArray.filter(file => 
+        file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024 // 5MB limit
+      );
+      
+      if (validFiles.length !== fileArray.length) {
+        setError('Some files were rejected. Only images under 5MB are allowed.');
+        setTimeout(() => setError(null), 5000);
+      }
+      
+      setSelectedFiles(prev => [...prev, ...validFiles]);
+    }
+  };
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelect(e.dataTransfer.files);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleCategoryToggle = (category: string) => {
@@ -221,13 +264,17 @@ const NewProductPage: React.FC = () => {
   };
 
   const handleSave = async () => {
+    console.log('handleSave called');
+    
     if (!isAuthenticated) {
-      setError('Debes iniciar sesión para crear productos');
+      console.log('User not authenticated');
+      setError('You must log in to create products');
       return;
     }
 
     if (!formData.name || !formData.price) {
-      setError('El nombre y precio son obligatorios');
+      console.log('Missing required fields:', { name: formData.name, price: formData.price });
+      setError('Name and price are required');
       return;
     }
 
@@ -235,26 +282,52 @@ const NewProductPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const productData = {
-        name: formData.name,
-        description: formData.description,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.inventoryQuantity) || 0,
-        category: selectedCategories[0] || 'General',
-        sku: formData.sku || undefined
-      };
+      console.log('Creating FormData...');
+      console.log('Selected files:', selectedFiles);
 
-      const response = await productsAPI.create(productData);
+      // Create FormData for multipart/form-data request
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('stock', (parseInt(formData.inventoryQuantity) || 0).toString());
+      formDataToSend.append('category', selectedCategories[0] || 'General');
+      if (formData.sku) {
+        formDataToSend.append('sku', formData.sku);
+      }
+
+      // Add images to FormData
+      selectedFiles.forEach((file) => {
+        console.log('Adding file to FormData:', file.name);
+        formDataToSend.append('images', file);
+      });
+
+      const token = localStorage.getItem('token');
+      console.log('Token:', token);
+      console.log('Sending request to:', 'http://localhost:4444/api/products');
+
+      const response = await fetch('http://localhost:4444/api/products', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+
+      console.log('Response status:', response.status);
+      const result = await response.json();
+      console.log('Response result:', result);
       
-      if (response.success) {
-        console.log('Product created successfully:', response.product);
+      if (result.success) {
+        console.log('Product created successfully:', result.product);
         navigate('/inventory');
       } else {
-        setError('Error al crear el producto');
+        console.log('Error creating product:', result.message);
+        setError(result.message || 'Error creating product');
       }
     } catch (err) {
       console.error('Error creating product:', err);
-      setError('Error al crear el producto');
+      setError('Error creating product');
     } finally {
       setLoading(false);
     }
@@ -273,7 +346,7 @@ const NewProductPage: React.FC = () => {
               >
                 <ArrowLeft size={20} className="text-text-primary" />
               </button>
-              <h1 className="text-xl font-semibold text-text-primary md:hidden">Nuevo Producto</h1>
+              <h1 className="text-xl font-semibold text-text-primary md:hidden">New Product</h1>
             </div>
             
             <div className="flex items-center space-x-3">
@@ -292,10 +365,10 @@ const NewProductPage: React.FC = () => {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
-                    <span>Guardando...</span>
+                    <span>Saving...</span>
                   </>
                 ) : (
-                  <span>Guardar</span>
+                  <span>Save</span>
                 )}
               </button>
             </div>
@@ -317,85 +390,119 @@ const NewProductPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Tipo de artículo
+                    Product Type
                   </label>
                   <select
                     value={formData.productType}
                     onChange={(e) => handleInputChange('productType', e.target.value)}
                     className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
                   >
-                    <option value="Producto físico">Producto físico</option>
-                    <option value="Servicio">Servicio</option>
+                    <option value="Physical Product">Physical Product</option>
+                    <option value="Service">Service</option>
                     <option value="Digital">Digital</option>
                   </select>
                 </div>
                 <button className="ml-4 px-4 py-2 text-sm border border-divider rounded-lg hover:bg-gray-50 transition-colors text-text-primary">
-                  Cambiar
+                  Change
                 </button>
               </div>
             </div>
 
             {/* Basic Information */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
-                  Nombre (requerido)
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-                  placeholder="Nombre del producto"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-primary mb-2">
+                      Product Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Product name"
+                      className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
-                  Descripción
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  rows={4}
-                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent resize-none bg-bg-surface text-text-primary"
-                  placeholder="Descripción del producto"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-primary mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Product description"
+                      rows={3}
+                      className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary resize-none"
+                    />
+                  </div>
             </div>
 
             {/* Image Upload */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <label className="block text-sm font-medium text-text-primary mb-4">
-                Imágenes del producto
+                Product Images
               </label>
-              <div className="border-2 border-dashed border-divider rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                <Upload size={48} className="text-text-secondary mx-auto mb-4" />
-                <p className="text-text-secondary mb-2">Arrastra y suelta imágenes aquí</p>
-                <p className="text-sm text-text-secondary">o haz click para seleccionar archivos</p>
+              <div 
+                className={`border-2 border-dashed border-divider rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer ${
+                  dragActive ? 'border-complement' : ''
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <Upload size={48} className="text-text-secondary mx-auto mb-4" />
+                  <p className="text-text-secondary mb-2">Drag and drop images here</p>
+                  <p className="text-sm text-text-secondary">or click to select files</p>
+                </label>
               </div>
+              {selectedFiles.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center bg-gray-100 text-gray-800 text-sm rounded-md p-2">
+                      <span>{file.name}</span>
+                      <button
+                        onClick={() => removeFile(index)}
+                        className="ml-2 text-gray-500 hover:text-gray-700"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Location */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <label className="block text-sm font-medium text-text-primary mb-2">
-                Ubicaciones
+                Locations
               </label>
               <select
                 value={formData.location}
                 onChange={(e) => handleInputChange('location', e.target.value)}
                 className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
               >
-                <option value="">Seleccionar almacén</option>
-                <option value="almacen-principal">Almacén Principal</option>
-                <option value="almacen-secundario">Almacén Secundario</option>
-                <option value="tienda-fisica">Tienda Física</option>
+                <option value="">Select a warehouse</option>
+                <option value="almacen-principal">Main Warehouse</option>
+                <option value="almacen-secundario">Secondary Warehouse</option>
+                <option value="tienda-fisica">Physical Store</option>
               </select>
             </div>
 
             {/* Categorization */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Categorización</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-4">Categorization</h3>
               
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
@@ -407,13 +514,13 @@ const NewProductPage: React.FC = () => {
                     className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement"
                   />
                   <label htmlFor="create-category" className="text-sm font-medium text-text-primary">
-                    Crear categoría
+                    Create category
                   </label>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-3">
-                    Categorías existentes
+                    Existing categories
                   </label>
                   <div className="space-y-2">
                     {existingCategories.map((category) => (
@@ -441,28 +548,28 @@ const NewProductPage: React.FC = () => {
             
             {/* Units Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Unidades</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-4">Units</h3>
               
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Unidad
+                    Unit
                   </label>
                   <select
                     value={formData.unit}
                     onChange={(e) => handleInputChange('unit', e.target.value)}
                     className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
                   >
-                    <option value="Por artículo">Por artículo</option>
-                    <option value="Por kilogramo">Por kilogramo</option>
-                    <option value="Por metro">Por metro</option>
-                    <option value="Por litro">Por litro</option>
+                    <option value="Per item">Per item</option>
+                    <option value="Per kilogramo">Per kilogramo</option>
+                    <option value="Per metro">Per metro</option>
+                    <option value="Per litro">Per litro</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Peso (kg)
+                    Weight (kg)
                   </label>
                   <input
                     type="number"
@@ -476,7 +583,7 @@ const NewProductPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Precio (requerido)
+                    Price (required)
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary">$</span>
@@ -493,19 +600,19 @@ const NewProductPage: React.FC = () => {
 
                 <button className="w-full p-3 border border-dashed border-divider rounded-lg text-text-secondary hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
                   <Plus size={16} />
-                  <span>Agregar unidad adicional</span>
+                  <span>Add additional unit</span>
                 </button>
               </div>
             </div>
 
             {/* Inventory Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Existencia</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-4">Inventory</h3>
               
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Cantidad de inventario
+                    Inventory quantity
                   </label>
                   <input
                     type="number"
@@ -518,7 +625,7 @@ const NewProductPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
-                    Alerta de existencias bajas
+                    Low stock alert
                   </label>
                   <input
                     type="number"
@@ -546,7 +653,7 @@ const NewProductPage: React.FC = () => {
 
             {/* Variants Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Variantes</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-4">Variants</h3>
               
               <div className="space-y-4">
                 {variantTypes.map((variant) => (
@@ -590,7 +697,7 @@ const NewProductPage: React.FC = () => {
                             type="text"
                             value={variants[variant].newValue}
                             onChange={(e) => handleNewValueChange(variant, e.target.value)}
-                            placeholder="Agregar valor"
+                            placeholder="Add value"
                             className="flex-1 p-2 border border-divider rounded text-sm focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
                           />
                           <button
@@ -625,13 +732,13 @@ const NewProductPage: React.FC = () => {
                             onClick={() => handleSaveVariant(variant)}
                             className="px-3 py-1 bg-success hover:bg-success-600 text-white text-sm rounded transition-colors"
                           >
-                            Guardar
+                            Save
                           </button>
                           <button
                             onClick={() => handleCancelVariant(variant)}
                             className="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-text-primary text-sm rounded transition-colors"
                           >
-                            Cancelar
+                            Cancel
                           </button>
                         </div>
                       </div>
@@ -644,7 +751,7 @@ const NewProductPage: React.FC = () => {
                   className="w-full p-3 border border-dashed border-divider rounded-lg text-text-secondary hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2 mt-4"
                 >
                   <Plus size={16} />
-                  <span>Agregar más variantes</span>
+                  <span>Add more variants</span>
                 </button>
               </div>
             </div>
@@ -657,7 +764,7 @@ const NewProductPage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-60 flex items-center justify-center p-4">
           <div className="bg-bg-surface rounded-lg shadow-xl max-w-md w-full p-6 border border-divider">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-text-primary">Agregar Variantes</h3>
+              <h3 className="text-lg font-medium text-text-primary">Add Variants</h3>
               <button
                 onClick={() => setShowMoreVariantsPanel(false)}
                 className="p-1 hover:bg-gray-50 rounded transition-colors"
@@ -688,13 +795,13 @@ const NewProductPage: React.FC = () => {
                 onClick={handleSaveMoreVariants}
                 className="flex-1 bg-success hover:bg-success-600 text-white font-medium py-2 rounded-lg transition-colors"
               >
-                Guardar
+                Save
               </button>
               <button
                 onClick={() => setShowMoreVariantsPanel(false)}
                 className="flex-1 bg-gray-300 hover:bg-gray-400 text-text-primary font-medium py-2 rounded-lg transition-colors"
               >
-                Cancelar
+                Cancel
               </button>
             </div>
           </div>

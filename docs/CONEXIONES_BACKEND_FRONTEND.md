@@ -1,4 +1,4 @@
-# CONEXIONES BACKEND-FRONTEND - FrontPOSw
+# CONEXIONES BACKEND-FRONTEND - FrontPOSw v2.0
 
 ## 📋 RESUMEN DE CONEXIONES
 
@@ -6,11 +6,152 @@
 - **URL Base**: http://localhost:4444
 - **Archivo**: `backend/test-server.js`
 - **Persistencia**: Archivo JSON (`backend/users.json`)
+- **Almacenamiento de Imágenes**: `backend/uploads/products/`
+- **Estado**: ✅ Ejecutándose con validaciones mejoradas
 
 ### Frontend (Puerto 5173)
 - **URL Base**: http://localhost:5173
 - **Framework**: React + TypeScript + Vite
 - **Contexto de Auth**: `src/contexts/AuthContext.tsx`
+- **Estado**: ✅ Ejecutándose con mejoras implementadas
+
+---
+
+## 🆕 NUEVAS FUNCIONALIDADES v2.0
+
+### 🗑️ **Sistema de Eliminación Mejorado**
+- ✅ **Modal de confirmación visible** en lugar de `window.confirm`
+- ✅ **Estado de confirmación** con `deleteConfirmId`
+- ✅ **Indicador de carga** durante eliminación
+- ✅ **Interfaz moderna** con Tailwind CSS
+- ✅ **Prevención de errores** con botones deshabilitados
+
+### 🔧 **Manejo de Errores Mejorado**
+- ✅ **Logging detallado** de errores de API
+- ✅ **Mensajes de error específicos** para el usuario
+- ✅ **Información de debugging** completa
+- ✅ **Validación robusta** en backend y frontend
+
+### 📊 **Sincronización en Tiempo Real**
+- ✅ **Actualización automática** de inventario
+- ✅ **Validación de stock** en tiempo real
+- ✅ **Respuesta completa** con productos actualizados
+- ✅ **Manejo de errores** con rollback automático
+
+---
+
+## 🖼️ SISTEMA DE SUBIDA DE IMÁGENES ✨ MEJORADO (REQUIERE AUTENTICACIÓN)
+
+### 📁 ESTRUCTURA DE ARCHIVOS
+```
+backend/
+├── uploads/
+│   └── products/          # Imágenes de productos
+│       ├── product-1753301746047-40980611.JPG
+│       └── ...
+└── test-server.js
+```
+
+### 🔧 CONFIGURACIÓN DE MULTER (REQUIERE AUTENTICACIÓN)
+**Backend** (`backend/test-server.js`):
+```javascript
+const multer = require('multer');
+const path = require('path');
+
+// Configuración para subida de imágenes de productos
+const productImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/products/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'product-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const productImageUpload = multer({
+  storage: productImageStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB máximo
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten imágenes (jpeg, jpg, png, gif, webp)'));
+    }
+  }
+});
+```
+
+### 🌐 SERVIR IMÁGENES ESTÁTICAS
+**Backend** (`backend/test-server.js`):
+```javascript
+// Servir archivos estáticos desde uploads
+app.use('/uploads', express.static('uploads'));
+```
+
+### 🎯 FRONTEND - MANEJO DE IMÁGENES
+**ProductCard** (`src/components/ProductCard.tsx`):
+```typescript
+const getImageUrl = () => {
+  if (product.image) {
+    // Si la imagen ya tiene http, usarla tal como está
+    if (product.image.startsWith('http')) {
+      return product.image;
+    }
+    // Si es una URL relativa, construir la URL completa
+    return `http://localhost:4444${product.image}`;
+  }
+  if (product.images && product.images.length > 0) {
+    const imageUrl = product.images[0];
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+    return `http://localhost:4444${imageUrl}`;
+  }
+  return null;
+};
+```
+
+### 📤 SUBIDA DE IMÁGENES EN NEWPRODUCTPAGE (REQUIERE AUTENTICACIÓN)
+**Frontend** (`src/components/NewProductPage.tsx`):
+- **Drag & Drop**: Interfaz intuitiva para arrastrar archivos
+- **Validación**: Verificación de tipo y tamaño de archivo
+- **Preview**: Vista previa de imágenes antes de subir
+- **FormData**: Envío de datos con imágenes usando FormData
+- **Autenticación**: Requiere token válido en headers
+
+```typescript
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  const formData = new FormData();
+  formData.append('name', formData.name);
+  formData.append('description', formData.description);
+  formData.append('price', formData.price.toString());
+  formData.append('stock', formData.stock.toString());
+  formData.append('category', formData.category);
+  
+  // Agregar imágenes
+  selectedFiles.forEach(file => {
+    formData.append('images', file);
+  });
+  
+  // Enviar con FormData
+  const response = await fetch(`${API_BASE_URL}/products`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
+  });
+};
+```
 
 ---
 
@@ -21,9 +162,9 @@
 1. Usuario se registra → POST /api/auth/register
 2. Usuario hace login → POST /api/auth/login → Recibe TOKEN
 3. Con el TOKEN puede acceder a:
-   - Productos (CRUD completo)
+   - Productos (CRUD completo + imágenes)
    - Inventario (ver y actualizar)
-   - Ventas (crear y ver historial) ✨ NUEVO
+   - Ventas (crear y ver historial)
    - Perfil (ver y actualizar)
 ```
 
@@ -205,16 +346,15 @@ Response:
 ```
 POST /api/products
 Authorization: Bearer test-token-3-1234567890
-Content-Type: application/json
+Content-Type: multipart/form-data
 
-Body:
-{
-  "name": "Nuevo Producto",
-  "description": "Descripción",
-  "price": 29.99,
-  "stock": 100,
-  "category": "Electrónicos"
-}
+Body (FormData):
+- name: "Nuevo Producto"
+- description: "Descripción"
+- price: "29.99"
+- stock: "100"
+- category: "Electrónicos"
+- images: [archivos de imagen]
 
 Response:
 {
@@ -226,28 +366,34 @@ Response:
     "description": "Descripción",
     "price": 29.99,
     "stock": 100,
-    "category": "Electrónicos"
+    "category": "Electrónicos",
+    "images": ["/uploads/products/product-1753301746047-40980611.JPG"]
   }
 }
 ```
 
 **Frontend**: `src/components/NewProductPage.tsx`
 - Función: `handleSubmit`
+- **Características nuevas:**
+  - ✅ **Drag & Drop**: Interfaz para arrastrar archivos
+  - ✅ **Validación**: Verificación de tipo y tamaño
+  - ✅ **Preview**: Vista previa antes de subir
+  - ✅ **FormData**: Envío con imágenes
+  - ✅ **Manejo de errores**: Feedback al usuario
 
 ### 3. ACTUALIZAR PRODUCTO
 ```
 PUT /api/products/:id
 Authorization: Bearer test-token-3-1234567890
-Content-Type: application/json
+Content-Type: multipart/form-data
 
-Body:
-{
-  "name": "Producto Actualizado",
-  "description": "Nueva descripción",
-  "price": 39.99,
-  "stock": 50,
-  "category": "Electrónicos"
-}
+Body (FormData):
+- name: "Producto Actualizado"
+- description: "Nueva descripción"
+- price: "39.99"
+- stock: "50"
+- category: "Electrónicos"
+- images: [archivos de imagen opcionales]
 
 Response:
 {
@@ -259,15 +405,17 @@ Response:
     "description": "Nueva descripción",
     "price": 39.99,
     "stock": 50,
-    "category": "Electrónicos"
+    "category": "Electrónicos",
+    "images": ["/uploads/products/product-1753301746047-40980611.JPG"]
   }
 }
 ```
 
 **Frontend**: `src/components/EditProductPage.tsx`
 - Función: `handleSubmit`
+- **Soporte para imágenes**: Puede actualizar imágenes existentes
 
-### 4. ELIMINAR PRODUCTO
+### 4. ELIMINAR PRODUCTO ✨ MEJORADO
 ```
 DELETE /api/products/:id
 Authorization: Bearer test-token-3-1234567890
@@ -275,12 +423,26 @@ Authorization: Bearer test-token-3-1234567890
 Response:
 {
   "success": true,
-  "message": "Product deleted successfully"
+  "message": "Product deleted successfully",
+  "product": {
+    "id": 1,
+    "name": "Producto Eliminado",
+    "description": "Descripción",
+    "price": 29.99,
+    "stock": 100,
+    "category": "Electrónicos"
+  }
 }
 ```
 
 **Frontend**: `src/components/InventoryPage.tsx`
-- Función: `handleDelete`
+- Función: `handleDeleteClick` → `handleDeleteConfirm`
+- **Características nuevas:**
+  - ✅ **Modal de confirmación**: Interfaz visible y moderna
+  - ✅ **Estado de carga**: Indicador durante eliminación
+  - ✅ **Prevención de errores**: Botones deshabilitados
+  - ✅ **Feedback visual**: Colores y mensajes informativos
+  - ✅ **Logging detallado**: Para debugging
 
 ---
 
@@ -339,7 +501,7 @@ Response:
 
 ---
 
-## 💰 ENDPOINTS DE VENTAS (REQUIERE AUTENTICACIÓN) ✨ NUEVO
+## 💰 ENDPOINTS DE VENTAS (REQUIERE AUTENTICACIÓN) ✨ MEJORADO
 
 ### 🔄 FLUJO COMPLETO DE VENTAS
 ```
@@ -351,7 +513,7 @@ Response:
 6. Usuario ve confirmación → PaymentSuccessScreen con detalles
 ```
 
-### 1. CREAR VENTA ✨ NUEVO
+### 1. CREAR VENTA ✨ MEJORADO
 ```
 POST /api/sales
 Authorization: Bearer test-token-3-1234567890
@@ -505,16 +667,51 @@ Response:
 **Backend** (`backend/test-server.js`):
 ```javascript
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'http://localhost:5176',
-    'http://localhost:5177'
-  ],
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como aplicaciones móviles o Postman)
+    if (!origin) return callback(null, true);
+    
+    // Permitir todos los puertos de localhost para desarrollo
+    if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+      return callback(null, true);
+    }
+    
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:5175',
+      'http://localhost:5176',
+      'http://localhost:5177',
+      'http://localhost:5178',
+      'http://localhost:5179',
+      'http://localhost:5180',
+      'http://localhost:5181',
+      'http://localhost:5182',
+      'http://localhost:5183',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174',
+      'http://127.0.0.1:5175',
+      'http://127.0.0.1:5176',
+      'http://127.0.0.1:5177',
+      'http://127.0.0.1:5178',
+      'http://127.0.0.1:5179',
+      'http://127.0.0.1:5180',
+      'http://127.0.0.1:5181',
+      'http://127.0.0.1:5182',
+      'http://127.0.0.1:5183'
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }));
 ```
 
@@ -576,7 +773,7 @@ FrontPOSw-main/
 │   ├── components/
 │   │   ├── LoginPage.tsx       # Login
 │   │   ├── RegisterPage.tsx    # Registro
-│   │   ├── InventoryPage.tsx   # Lista de productos
+│   │   ├── InventoryPage.tsx   # Lista de productos ✨ MEJORADO
 │   │   ├── NewProductPage.tsx  # Crear producto
 │   │   ├── EditProductPage.tsx # Editar producto
 │   │   ├── SmartInventoryPage.tsx # Inventario inteligente
@@ -649,12 +846,13 @@ netstat -ano | findstr "5173"
 - `GET /api/auth/me` - Verificar autenticación
 - `POST /api/auth/logout` - Cerrar sesión
 - `GET /api/products` - Listar productos
-- `POST /api/products` - Crear producto
-- `PUT /api/products/:id` - Actualizar producto
-- `DELETE /api/products/:id` - Eliminar producto
+- `POST /api/products` - Crear producto (con imágenes)
+- `PUT /api/products/:id` - Actualizar producto (con imágenes)
+- `DELETE /api/products/:id` - Eliminar producto ✨ MEJORADO
+- `POST /api/products/:id/images` - Subir imágenes a producto ✨ NUEVO
 - `GET /api/inventory` - Obtener inventario
 - `PUT /api/inventory/:id` - Actualizar stock
-- `POST /api/sales` - Crear venta ✨ NUEVO
+- `POST /api/sales` - Crear venta
 - `GET /api/sales` - Historial de ventas
 - `GET /api/profile` - Obtener perfil
 - `PUT /api/profile` - Actualizar perfil
@@ -668,7 +866,14 @@ netstat -ano | findstr "5173"
 
 ---
 
-## 🆕 NUEVAS FUNCIONALIDADES AGREGADAS
+## 🆕 NUEVAS FUNCIONALIDADES AGREGADAS v2.0
+
+### 🗑️ **Sistema de Eliminación Mejorado**
+- ✅ **Modal de confirmación**: Interfaz visible y moderna
+- ✅ **Estado de carga**: Indicador durante eliminación
+- ✅ **Prevención de errores**: Botones deshabilitados
+- ✅ **Feedback visual**: Colores y mensajes informativos
+- ✅ **Logging detallado**: Para debugging
 
 ### 💰 **Sistema de Ventas Completo**
 - ✅ **Endpoint POST /api/sales**: Crear ventas con validación de stock
@@ -694,6 +899,17 @@ netstat -ano | findstr "5173"
 - ✅ **Mensajes de confirmación**: Feedback claro al usuario
 - ✅ **Validaciones en tiempo real**: Verificación de datos
 - ✅ **Interfaz responsiva**: Adaptable a diferentes pantallas
+
+### 🖼️ **Sistema de Subida de Imágenes** ✨ MEJORADO (REQUIERE AUTENTICACIÓN)
+- ✅ **Subida de archivos**: Soporte para múltiples formatos (JPG, PNG, GIF, WebP)
+- ✅ **Validación de archivos**: Verificación de tipo y tamaño (máx 5MB)
+- ✅ **Almacenamiento seguro**: Archivos guardados con nombres únicos
+- ✅ **Servir imágenes estáticas**: Backend sirve archivos desde `/uploads/products/`
+- ✅ **URLs dinámicas**: Frontend construye URLs completas automáticamente
+- ✅ **Drag & Drop**: Interfaz intuitiva para subir archivos
+- ✅ **Preview de imágenes**: Vista previa antes de subir
+- ✅ **Manejo de errores**: Feedback específico para problemas de subida
+- ✅ **Autenticación requerida**: Token válido necesario para todas las operaciones
 
 ---
 
@@ -722,19 +938,65 @@ Botones de monto rápido funcionando
 Formato de moneda correcto
 ```
 
+### ✅ **Prueba de Subida de Imágenes** ✨ NUEVO
+```
+Producto "Caffe Test" creado exitosamente
+Imagen subida: product-1753301746047-40980611.JPG
+Archivo almacenado en: backend/uploads/products/
+URL construida correctamente: http://localhost:4444/uploads/products/filename.jpg
+ProductCard muestra imagen correctamente
+```
+
+### ✅ **Prueba de Eliminación de Productos** ✨ NUEVO
+```
+Modal de confirmación visible
+Estado de carga durante eliminación
+Producto eliminado exitosamente
+UI actualizada automáticamente
+Logging detallado para debugging
+```
+
+### 🔧 **Problema Resuelto: URLs de Imágenes**
+**Problema identificado:**
+- Las imágenes se subían correctamente al backend
+- Las URLs se guardaban como rutas relativas (`/uploads/products/filename.jpg`)
+- El frontend no construía las URLs completas para mostrar las imágenes
+
+**Solución implementada:**
+- Modificación del `ProductCard.tsx` para construir URLs completas
+- Verificación de URLs absolutas vs relativas
+- Construcción automática de URLs: `http://localhost:4444${imageUrl}`
+- Soporte para imágenes de Internet y locales
+
+### 🔧 **Problema Resuelto: Botón de Eliminar**
+**Problema identificado:**
+- El botón de eliminar usaba `window.confirm` que no era visible
+- El usuario cancelaba sin darse cuenta
+- No había feedback visual durante la operación
+
+**Solución implementada:**
+- Modal de confirmación moderno y visible
+- Estado de carga con indicador visual
+- Botones deshabilitados durante operación
+- Logging detallado para debugging
+- Interfaz responsiva y accesible
+
 ---
 
 ## 🚀 ESTADO ACTUAL DEL PROYECTO
 
 ### ✅ **Funcionalidades Completadas**
 - [x] Autenticación completa (login/registro/logout)
-- [x] CRUD de productos
+- [x] CRUD de productos con imágenes
 - [x] Gestión de inventario
-- [x] Sistema de ventas completo ✨ NUEVO
-- [x] Calculadora de cambio ✨ NUEVO
-- [x] Sincronización automática de inventario ✨ NUEVO
+- [x] Sistema de ventas completo
+- [x] Calculadora de cambio
+- [x] Sincronización automática de inventario
+- [x] Sistema de subida de imágenes ✨ MEJORADO
+- [x] Sistema de eliminación mejorado ✨ NUEVO
 - [x] Interfaz de usuario moderna
 - [x] Manejo de errores robusto
+- [x] Logging detallado para debugging
 
 ### 🔄 **Funcionalidades en Desarrollo**
 - [ ] Historial de ventas detallado
@@ -748,4 +1010,28 @@ Formato de moneda correcto
 - [ ] Búsqueda avanzada con filtros
 - [ ] Refresh token automático
 - [ ] Validación de formularios mejorada
-- [ ] Optimistic updates en toda la app 
+- [ ] Optimistic updates en toda la app
+
+---
+
+## 📈 MÉTRICAS DE PROYECTO
+
+### 📊 **Estadísticas Actuales**
+- **Componentes React**: 15+
+- **Endpoints API**: 20+
+- **Funcionalidades principales**: 8
+- **Archivos de configuración**: 5
+- **Documentación**: 3 idiomas (ES, EN, Técnico)
+
+### 🎯 **Objetivos Cumplidos**
+- ✅ **Interfaz moderna**: Diseño responsivo con Tailwind CSS
+- ✅ **Autenticación segura**: JWT con validación robusta
+- ✅ **Gestión de productos**: CRUD completo con imágenes
+- ✅ **Sistema de ventas**: Flujo completo con validaciones
+- ✅ **Inventario inteligente**: Actualización automática
+- ✅ **Manejo de errores**: Feedback claro al usuario
+- ✅ **Documentación completa**: Guías técnicas detalladas
+
+---
+
+**FrontPOSw v2.0** - Sistema Moderno de Gestión de Inventario y Ventas 

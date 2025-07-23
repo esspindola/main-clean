@@ -1,54 +1,143 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Package, Home, Plus, Archive, Brain, Settings, LogOut, User, Menu, X } from 'lucide-react';
+import { Package, Home, Plus, Archive, Brain, Settings, LogOut, User, Menu, X, Scan, Store } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlugins } from '../contexts/PluginContext';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { isPluginActive } = usePlugins();
   const [showLogout, setShowLogout] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
+  const [animatingItems, setAnimatingItems] = useState<Set<string>>(new Set());
+
+
+  // Initialize visible items on component mount
+  useEffect(() => {
+    const initialVisibleItems = new Set<string>();
+    menuItems.forEach((item) => {
+      const shouldBeVisible = item.alwaysVisible || (item.pluginId && isPluginActive(item.pluginId));
+      if (shouldBeVisible) {
+        initialVisibleItems.add(item.path);
+      }
+    });
+    setVisibleItems(initialVisibleItems);
+  }, []);
+
+
+
+  // Effect to handle menu item animations when plugins change
+  useEffect(() => {
+    const newVisibleItems = new Set<string>();
+    
+    menuItems.forEach((item) => {
+      const shouldBeVisible = item.alwaysVisible || (item.pluginId && isPluginActive(item.pluginId));
+      if (shouldBeVisible) {
+        newVisibleItems.add(item.path);
+      }
+    });
+
+    // Find items that are being added
+    const addedItems = Array.from(newVisibleItems).filter(path => !visibleItems.has(path));
+    // Find items that are being removed
+    const removedItems = Array.from(visibleItems).filter(path => !newVisibleItems.has(path));
+
+    // Animate out items that are being removed
+    if (removedItems.length > 0) {
+      setAnimatingItems(prev => new Set([...prev, ...removedItems]));
+      
+      setTimeout(() => {
+        setVisibleItems(newVisibleItems);
+        setAnimatingItems(prev => {
+          const newSet = new Set(prev);
+          removedItems.forEach(item => newSet.delete(item));
+          return newSet;
+        });
+      }, 300); // Match the CSS transition duration
+    } else {
+      // Immediately show new items
+      setVisibleItems(newVisibleItems);
+    }
+
+    // Animate in new items
+    if (addedItems.length > 0) {
+      setTimeout(() => {
+        setAnimatingItems(prev => {
+          const newSet = new Set(prev);
+          addedItems.forEach(item => newSet.delete(item));
+          return newSet;
+        });
+      }, 50); // Small delay for smooth animation
+    }
+  }, [isPluginActive]); // Removed visibleItems from dependencies to prevent infinite loop
 
   const menuItems = [
     {
       name: 'Home',
       icon: Home,
       path: '/',
-      description: 'Página principal'
+      description: 'Main page',
+      alwaysVisible: true
     },
     {
-      name: 'Nuevo Producto',
+      name: 'New Product',
       icon: Plus,
       path: '/new-product',
-      description: 'Agregar producto'
+      description: 'Add product',
+      alwaysVisible: true
     },
     {
-      name: 'Inventario',
+      name: 'Inventory',
       icon: Archive,
       path: '/inventory',
-      description: 'Ver inventario'
+      description: 'View inventory',
+      alwaysVisible: true
     },
     {
       name: 'Smart Inventory',
       icon: Brain,
       path: '/smart-inventory',
-      description: 'IA para inventario'
+      description: 'AI for inventory',
+      pluginId: 'smart-inventory'
+    },
+    {
+      name: 'OCR Documents',
+      icon: Scan,
+      path: '/ocr-result',
+      description: 'Process documents',
+      pluginId: 'ocr-module'
+    },
+    {
+      name: 'POS Integration',
+      icon: Package,
+      path: '/pos-integration',
+      description: 'POS system integration',
+      pluginId: 'pos-integration'
+    },
+    {
+      name: 'Plugin Store',
+      icon: Store,
+      path: '/plugin-store',
+      description: 'Browse modules',
+      alwaysVisible: true
     }
   ];
 
   const bottomMenuItems = [
     {
-      name: 'Configuraciones',
+      name: 'Settings',
       icon: Settings,
       path: '/profile',
-      description: 'Ajustes'
+      description: 'Settings'
     }
   ];
 
   const handleNavigation = (path: string) => {
     navigate(path);
-    // Cerrar menú móvil después de navegar
+    // Close mobile menu after navigation
     setIsMobileMenuOpen(false);
   };
 
@@ -62,41 +151,70 @@ const SideMenu: React.FC = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Componente para renderizar los elementos del menú
-  const renderMenuItems = (items: typeof menuItems, className: string = '') => {
-    return items.map((item) => {
-      const Icon = item.icon;
-      const isActive = location.pathname === item.path;
+  // Component to render menu items
+  const renderMenuItems = (items: any[], className: string = '') => {
+    return items
+      .filter((item) => {
+        // Always show items that are always visible
+        if (item.alwaysVisible) return true;
+        // Show items that have a pluginId only if the plugin is active
+        if (item.pluginId) return isPluginActive(item.pluginId);
+        return true;
+      })
+      .map((item, index) => {
+        const Icon = item.icon;
+        const isActive = location.pathname === item.path;
+        const isVisible = visibleItems.has(item.path);
+        const isAnimating = animatingItems.has(item.path);
+        const isNewItem = !visibleItems.has(item.path) && (item.alwaysVisible || (item.pluginId && isPluginActive(item.pluginId)));
+        
+        // Don't render if not visible and not animating
+        if (!isVisible && !isAnimating && !isNewItem) return null;
       
-      return (
-        <button
-          key={item.path}
-          onClick={() => handleNavigation(item.path)}
-          className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors group ${className} ${
-            isActive
-              ? 'bg-complement-50 text-complement-700 border border-complement-200'
-              : 'text-text-secondary hover:bg-gray-50 hover:text-text-primary'
-          }`}
-        >
-          <Icon 
-            size={20} 
-            className={`mr-3 ${
-              isActive ? 'text-complement-600' : 'text-text-secondary group-hover:text-text-primary'
-            }`} 
-          />
-          <div className="flex-1">
-            <div className={`font-medium ${
-              isActive ? 'text-complement-700' : 'text-text-primary'
-            }`}>
-              {item.name}
-            </div>
-            <div className="text-xs text-text-secondary">
-              {item.description}
-            </div>
+        return (
+          <div
+            key={item.path}
+            className={`sidebar-menu-item transition-all duration-300 ease-in-out transform ${
+              isVisible && !isAnimating
+                ? 'opacity-100 translate-y-0 scale-100 animate-menu-item-bounce'
+                : isAnimating
+                ? 'opacity-0 translate-y-2 scale-95 animate-menu-item-out'
+                : 'opacity-0 translate-y-2 scale-95'
+            } ${isNewItem ? 'animate-menu-item-in' : ''} ${isActive ? 'active' : ''}`}
+            style={{
+              animationDelay: `${index * 50}ms`,
+              transitionDelay: isNewItem ? `${index * 50}ms` : '0ms'
+            }}
+          >
+            <button
+              onClick={() => handleNavigation(item.path)}
+              className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-all duration-300 group ${className} ${
+                isActive
+                  ? 'bg-complement-50 text-complement-700 border border-complement-200 shadow-sm'
+                  : 'text-text-secondary hover:bg-gray-50 hover:text-text-primary hover:shadow-sm'
+              } ${item.pluginId && isPluginActive(item.pluginId) ? 'plugin-indicator' : ''}`}
+            >
+              <Icon 
+                size={20} 
+                className={`mr-3 transition-all duration-300 ${
+                  isActive ? 'text-complement-600 scale-110' : 'text-text-secondary group-hover:text-text-primary group-hover:scale-105'
+                }`} 
+              />
+                                <div className="flex-1">
+                    <div className={`font-medium transition-colors duration-300 ${
+                      isActive ? 'text-complement-700' : 'text-text-primary'
+                    }`}>
+                      {item.name}
+                    </div>
+                    <div className="text-xs text-text-secondary transition-colors duration-300">
+                      {item.description}
+                    </div>
+                  </div>
+            </button>
           </div>
-        </button>
-      );
-    });
+        );
+      })
+      .filter(Boolean); // Remove null items
   };
 
   return (
@@ -137,7 +255,7 @@ const SideMenu: React.FC = () => {
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto sidebar-menu-container">
           {renderMenuItems(menuItems)}
         </nav>
 
@@ -154,10 +272,10 @@ const SideMenu: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-text-primary truncate">
-                {user?.fullName || 'Usuario'}
+                {user?.fullName || 'User'}
               </div>
               <div className="text-xs text-text-secondary truncate">
-                {user?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                {user?.role === 'admin' ? 'Administrator' : 'User'}
               </div>
             </div>
             <button
@@ -182,7 +300,7 @@ const SideMenu: React.FC = () => {
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        <nav className="flex-1 px-4 py-6 space-y-2 sidebar-menu-container">
           {renderMenuItems(menuItems)}
         </nav>
 
@@ -208,10 +326,10 @@ const SideMenu: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-text-primary truncate">
-                  {user?.fullName || 'Usuario'}
+                  {user?.fullName || 'User'}
                 </div>
                 <div className="text-xs text-text-secondary truncate">
-                  {user?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                  {user?.role === 'admin' ? 'Administrator' : 'User'}
                 </div>
               </div>
               
@@ -236,12 +354,14 @@ const SideMenu: React.FC = () => {
                 className="flex items-center space-x-2 font-medium text-sm"
               >
                 <LogOut size={16} />
-                <span>Cerrar sesión</span>
+                <span>Logout</span>
               </button>
             </div>
           </div>
         </div>
       </div>
+
+
     </>
   );
 };

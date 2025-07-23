@@ -24,12 +24,12 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
     changeFor: ''
   });
 
-  // Estados para el cálculo de cambio
+  // States for change calculation
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [changeAmount, setChangeAmount] = useState<number>(0);
   const [isSufficientAmount, setIsSufficientAmount] = useState<boolean>(false);
 
-  // Calcular cambio automáticamente cuando cambia el monto recibido
+  // Calculate change automatically when received amount changes
   useEffect(() => {
     const received = parseFloat(cashReceived.toString()) || 0;
     const change = received - total;
@@ -55,7 +55,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
       case 'crypto':
         return formData.walletAddress;
       case 'cash':
-        return cashReceived >= total; // Debe recibir al menos el total
+        return cashReceived >= total; // Must receive at least the total
       default:
         return false;
     }
@@ -64,7 +64,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
   const getPaymentMethodName = (method: PaymentMethod | null) => {
     switch (method) {
       case 'card':
-        return 'Tarjeta de Crédito/Débito';
+        return 'Credit/Debit Card';
       case 'wallet':
         return 'Apple Pay / Google Pay';
       case 'crypto':
@@ -72,7 +72,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
       case 'cash':
         return 'Cash on Delivery';
       default:
-        return 'Método de pago';
+        return 'Payment method';
     }
   };
 
@@ -82,9 +82,9 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
     }
   };
 
-  // Función para formatear moneda
+  // Function to format currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-ES', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2
@@ -103,7 +103,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
         >
           <ArrowLeft size={20} className="text-text-primary" />
         </button>
-        <h1 className="text-lg font-semibold text-text-primary animate-slide-in-left">Opciones de Pago</h1>
+        <h1 className="text-lg font-semibold text-text-primary animate-slide-in-left">Payment Options</h1>
         <div className="w-10"></div> {/* Spacer */}
       </div>
 
@@ -112,7 +112,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
         {/* Total Amount */}
         <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-divider animate-bounce-in">
           <div className="text-center">
-            <span className="text-sm text-text-secondary">Total a pagar</span>
+            <span className="text-sm text-text-secondary">Total to pay</span>
             <div className="text-2xl font-bold text-text-primary">{formatCurrency(total)}</div>
           </div>
         </div>
@@ -134,7 +134,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
               </div>
               <CreditCard size={20} className="text-text-secondary icon-bounce" />
               <div>
-                <div className="font-medium text-text-primary text-glow">Tarjeta de Crédito/Débito</div>
+                <div className="font-medium text-text-primary text-glow">Credit/Debit Card</div>
                 <div className="text-sm text-text-secondary">Visa, Mastercard, American Express</div>
               </div>
             </div>
@@ -156,7 +156,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
               <Smartphone size={20} className="text-text-secondary icon-bounce" />
               <div>
                 <div className="font-medium text-text-primary text-glow">Apple Pay / Google Pay</div>
-                <div className="text-sm text-text-secondary">Pago rápido con tu wallet</div>
+                <div className="text-sm text-text-secondary">Quick payment with your wallet</div>
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
               <Bitcoin size={20} className="text-text-secondary icon-bounce" />
               <div>
                 <div className="font-medium text-text-primary text-glow">Coinbase Pay / Crypto</div>
-                <div className="text-sm text-text-secondary">Bitcoin, Ethereum, y más</div>
+                <div className="text-sm text-text-secondary">Bitcoin, Ethereum, and more</div>
               </div>
             </div>
           </div>
@@ -198,234 +198,179 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
               <Banknote size={20} className="text-text-secondary icon-bounce" />
               <div>
                 <div className="font-medium text-text-primary text-glow">Cash on Delivery</div>
-                <div className="text-sm text-text-secondary">Pago en efectivo al recibir</div>
+                <div className="text-sm text-text-secondary">Pay with cash upon delivery</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Payment Forms */}
-        {selectedMethod === 'card' && (
-          <div className="space-y-4">
-            <h3 className="font-medium text-text-primary">Información de la Tarjeta</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
-                Número de tarjeta
-              </label>
-              <input
-                type="text"
-                value={formData.cardNumber}
-                onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                placeholder="1234 5678 9012 3456"
-                className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-              />
-            </div>
+        {/* Payment Method Forms */}
+        {selectedMethod && (
+          <div className="bg-bg-surface border border-divider rounded-lg p-6 mb-6 animate-fade-in">
+            {selectedMethod === 'card' && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Card Information</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Card Number</label>
+                  <input
+                    type="text"
+                    value={formData.cardNumber}
+                    onChange={(e) => handleInputChange('cardNumber', e.target.value)}
+                    placeholder="1234 5678 9012 3456"
+                    className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                    maxLength={19}
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-1">
-                  Fecha de expiración
-                </label>
-                <input
-                  type="text"
-                  value={formData.expiryDate}
-                  onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                  placeholder="MM/AA"
-                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text-primary mb-1">
-                  CVC
-                </label>
-                <input
-                  type="text"
-                  value={formData.cvc}
-                  onChange={(e) => handleInputChange('cvc', e.target.value)}
-                  placeholder="123"
-                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
-                Nombre en la tarjeta
-              </label>
-              <input
-                type="text"
-                value={formData.cardName}
-                onChange={(e) => handleInputChange('cardName', e.target.value)}
-                placeholder="Juan Pérez"
-                className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-              />
-            </div>
-          </div>
-        )}
-
-        {selectedMethod === 'wallet' && (
-          <div className="text-center py-8">
-            <div className="bg-gray-50 rounded-lg p-6 border border-divider">
-              <p className="text-text-secondary mb-4">Inicia tu pago con tu wallet</p>
-              <div className="bg-gray-200 rounded-lg p-4 text-text-secondary">
-                [Botón nativo de Apple Pay / Google Pay]
-              </div>
-            </div>
-          </div>
-        )}
-
-        {selectedMethod === 'crypto' && (
-          <div className="space-y-4">
-            <h3 className="font-medium text-text-primary">Pago con Criptomonedas</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
-                Moneda
-              </label>
-              <select
-                value={formData.cryptoCurrency}
-                onChange={(e) => handleInputChange('cryptoCurrency', e.target.value)}
-                className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-              >
-                <option value="bitcoin">Bitcoin (BTC)</option>
-                <option value="ethereum">Ethereum (ETH)</option>
-                <option value="litecoin">Litecoin (LTC)</option>
-                <option value="dogecoin">Dogecoin (DOGE)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
-                Dirección de wallet
-              </label>
-              <input
-                type="text"
-                value={formData.walletAddress}
-                onChange={(e) => handleInputChange('walletAddress', e.target.value)}
-                placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
-                className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-              />
-            </div>
-          </div>
-        )}
-
-        {selectedMethod === 'cash' && (
-          <div className="space-y-6">
-            <div className="flex items-center space-x-2">
-              <Calculator size={20} className="text-complement" />
-              <h3 className="font-medium text-text-primary">Calculadora de Cambio</h3>
-            </div>
-            
-            {/* Resumen del total */}
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-blue-800">Total a pagar:</span>
-                <span className="text-lg font-bold text-blue-900">{formatCurrency(total)}</span>
-              </div>
-            </div>
-
-            {/* Input para monto recibido */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                💵 Monto que me das
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-lg">$</span>
-                <input
-                  type="number"
-                  value={cashReceived || ''}
-                  onChange={(e) => handleCashReceivedChange(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full pl-8 pr-3 py-4 text-lg border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-                  step="0.01"
-                  min="0"
-                />
-              </div>
-              {cashReceived > 0 && !isSufficientAmount && (
-                <p className="text-red-500 text-sm mt-1">
-                  ⚠️ Monto insuficiente. Faltan {formatCurrency(total - cashReceived)}
-                </p>
-              )}
-            </div>
-
-            {/* Cálculo de cambio */}
-            {cashReceived > 0 && (
-              <div className="bg-gray-50 p-4 rounded-lg border border-divider">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-text-secondary">Monto recibido:</span>
-                    <span className="font-medium text-text-primary">{formatCurrency(cashReceived)}</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-text-primary mb-2">Expiry Date</label>
+                    <input
+                      type="text"
+                      value={formData.expiryDate}
+                      onChange={(e) => handleInputChange('expiryDate', e.target.value)}
+                      placeholder="MM/YY"
+                      className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                      maxLength={5}
+                    />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-text-secondary">Total a pagar:</span>
-                    <span className="font-medium text-text-primary">{formatCurrency(total)}</span>
+                  <div>
+                    <label className="block text-sm font-medium text-text-primary mb-2">CVC</label>
+                    <input
+                      type="text"
+                      value={formData.cvc}
+                      onChange={(e) => handleInputChange('cvc', e.target.value)}
+                      placeholder="123"
+                      className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                      maxLength={4}
+                    />
                   </div>
-                  <div className="border-t border-divider pt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-text-primary">Cambio a devolver:</span>
-                      <span className={`text-lg font-bold ${
-                        changeAmount >= 0 ? 'text-success' : 'text-red-500'
-                      }`}>
-                        {changeAmount >= 0 ? '+' : ''}{formatCurrency(changeAmount)}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Cardholder Name</label>
+                  <input
+                    type="text"
+                    value={formData.cardName}
+                    onChange={(e) => handleInputChange('cardName', e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                  />
+                </div>
+              </div>
+            )}
+
+            {selectedMethod === 'crypto' && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Crypto Payment</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Cryptocurrency</label>
+                  <select
+                    value={formData.cryptoCurrency}
+                    onChange={(e) => handleInputChange('cryptoCurrency', e.target.value)}
+                    className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                  >
+                    <option value="bitcoin">Bitcoin (BTC)</option>
+                    <option value="ethereum">Ethereum (ETH)</option>
+                    <option value="litecoin">Litecoin (LTC)</option>
+                    <option value="cardano">Cardano (ADA)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Wallet Address</label>
+                  <input
+                    type="text"
+                    value={formData.walletAddress}
+                    onChange={(e) => handleInputChange('walletAddress', e.target.value)}
+                    placeholder="Enter your wallet address"
+                    className="w-full px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
+                  />
+                </div>
+              </div>
+            )}
+
+            {selectedMethod === 'cash' && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Cash Payment</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Amount Received</label>
+                  <input
+                    type="number"
+                    value={cashReceived}
+                    onChange={(e) => handleCashReceivedChange(e.target.value)}
+                    placeholder="0.00"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent ${
+                      isSufficientAmount ? 'border-green-500' : 'border-divider'
+                    }`}
+                    min={total}
+                    step="0.01"
+                  />
+                  {!isSufficientAmount && cashReceived > 0 && (
+                    <p className="text-red-500 text-sm mt-1">Insufficient amount. Please enter at least {formatCurrency(total)}</p>
+                  )}
+                </div>
+
+                {/* Quick Amount Buttons */}
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-2">Quick Amount</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[10, 20, 50, 100, 200, 500].map((amount) => (
+                      <button
+                        key={amount}
+                        type="button"
+                        onClick={() => handleCashReceivedChange(amount.toString())}
+                        className="px-3 py-2 border border-divider rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                      >
+                        ${amount}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Change Calculator */}
+                {cashReceived > 0 && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-text-secondary">Change to return:</span>
+                      <span className={`text-lg font-bold ${changeAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatCurrency(Math.abs(changeAmount))}
                       </span>
                     </div>
+                    {changeAmount < 0 && (
+                      <p className="text-red-500 text-sm">Additional amount needed: {formatCurrency(Math.abs(changeAmount))}</p>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
             )}
 
-            {/* Botones de monto rápido */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                💡 Montos comunes
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {[10, 20, 50, 100, 200, 500].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setCashReceived(amount)}
-                    className={`p-2 text-sm rounded-lg border transition-colors ${
-                      cashReceived === amount
-                        ? 'bg-complement text-white border-complement'
-                        : 'bg-bg-surface text-text-primary border-divider hover:bg-gray-50'
-                    }`}
-                  >
-                    ${amount}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mensaje de confirmación */}
-            {isSufficientAmount && (
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-green-800">
-                    ✅ Pago completo. Cambio: {formatCurrency(changeAmount)}
-                  </span>
-                </div>
+            {selectedMethod === 'wallet' && (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">📱</div>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Mobile Payment</h3>
+                <p className="text-text-secondary">Use your mobile wallet to complete the payment</p>
               </div>
             )}
           </div>
         )}
-      </div>
 
-      {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-divider bg-bg-surface animate-slide-in-right">
-        <button 
-          disabled={!isFormValid()}
+        {/* Confirm Payment Button */}
+        <button
           onClick={handleConfirmPayment}
-          className={`w-full py-4 rounded-lg font-medium transition-all duration-300 btn-animate ${
+          disabled={!isFormValid()}
+          className={`w-full py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 ${
             isFormValid()
-              ? 'bg-success hover:bg-success-600 text-white hover:scale-105 hover:shadow-lg'
-              : 'bg-gray-300 text-text-secondary cursor-not-allowed'
+              ? 'bg-complement hover:bg-complement-700 text-white shadow-lg'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {selectedMethod === 'cash' && cashReceived > 0 && !isSufficientAmount
-            ? `Faltan ${formatCurrency(total - cashReceived)}`
-            : 'Confirmar pago'
+          {selectedMethod === 'cash' 
+            ? `Confirm Payment - ${formatCurrency(total)}`
+            : 'Confirm Payment'
           }
         </button>
       </div>

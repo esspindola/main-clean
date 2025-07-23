@@ -39,7 +39,7 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
   const tax = subtotal * 0.15;
   const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
-  const currentDate = new Date().toLocaleDateString('es-ES');
+  const currentDate = new Date().toLocaleDateString('en-US');
 
   if (!isOpen) return null;
 
@@ -65,7 +65,7 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
 
       {/* Header */}
       <div className="flex items-center justify-center p-4 border-b border-divider bg-bg-surface relative">
-        <h1 className="text-lg font-semibold text-text-primary animate-slide-in-left">Pago Exitoso</h1>
+        <h1 className="text-lg font-semibold text-text-primary animate-slide-in-left">Payment Successful</h1>
       </div>
 
       {/* Content */}
@@ -88,143 +88,115 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
 
               {/* Success Message */}
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold text-text-primary animate-slide-in-left">¡Pago Confirmado!</h2>
-                <p className="text-text-secondary animate-slide-in-right">Tu transacción se ha procesado exitosamente</p>
+                <h2 className="text-2xl font-bold text-text-primary animate-slide-in-left">Payment Confirmed!</h2>
+                <p className="text-text-secondary animate-slide-in-right">Your transaction has been processed successfully</p>
                 <div className="bg-gray-50 p-3 rounded-lg border border-divider animate-bounce-in">
-                  <span className="text-sm text-text-secondary">Método de pago: </span>
+                  <span className="text-sm text-text-secondary">Payment method: </span>
                   <span className="font-medium text-text-primary">{paymentMethod}</span>
                 </div>
               </div>
 
               {/* Email Section */}
               <div className="w-full max-w-md space-y-4 animate-fade-in">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-2">
-                    Enviar factura por correo
-                  </label>
+                <h3 className="text-lg font-semibold text-text-primary text-center">Get your receipt</h3>
+                <div className="flex space-x-2">
                   <input
                     type="email"
-                    id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Ej. ejemplo@mail.com"
-                    className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary transition-all duration-300 hover:border-complement/50"
+                    placeholder="Enter your email"
+                    className="flex-1 px-4 py-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent"
                   />
-                </div>
-
-                {/* Action Buttons */}
-                <div className="space-y-3">
-                  <button className="w-full bg-secondary hover:bg-secondary-600 text-white font-medium py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg btn-animate flex items-center justify-center space-x-2">
-                    <Download size={20} className="icon-bounce" />
-                    <span>Descargar PDF</span>
-                  </button>
-                  
-                  <button 
-                    disabled={!email}
-                    className={`w-full font-medium py-3 rounded-lg transition-all duration-300 hover:scale-105 btn-animate flex items-center justify-center space-x-2 ${
-                      email 
-                        ? 'bg-success hover:bg-success-600 text-white hover:shadow-lg' 
-                        : 'bg-gray-300 text-text-secondary cursor-not-allowed'
-                    }`}
-                  >
-                    <Mail size={20} className="icon-bounce" />
-                    <span>Enviar por correo</span>
+                  <button className="px-6 py-3 bg-complement text-white rounded-lg hover:bg-complement-700 transition-colors flex items-center">
+                    <Mail size={16} className="mr-2" />
+                    Send
                   </button>
                 </div>
               </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md animate-fade-in">
+                <button
+                  onClick={onNewOrder}
+                  className="flex-1 bg-primary text-black font-medium px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors"
+                >
+                  New Order
+                </button>
+                <button className="flex-1 bg-gray-100 text-text-primary font-medium px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center">
+                  <Download size={16} className="mr-2" />
+                  Download Receipt
+                </button>
+              </div>
             </div>
 
-            {/* Right Side - Invoice */}
-            <div className="lg:pl-8 lg:border-l border-divider animate-slide-in-right">
-              <div className="bg-bg-surface border border-divider rounded-lg shadow-sm p-6 hover-lift">
-                
-                {/* Invoice Header */}
-                <div className="border-b border-divider pb-4 mb-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-bold text-text-primary text-glow">FACTURA</h3>
-                      <p className="text-sm text-text-secondary">#{invoiceNumber}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-text-secondary">Fecha: {currentDate}</p>
-                      <p className="text-sm text-text-secondary">Inventory Pro</p>
-                    </div>
-                  </div>
+            {/* Right Side - Invoice Details */}
+            <div className="bg-bg-surface rounded-lg border border-divider p-6 animate-slide-in-right">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-text-primary">Invoice</h3>
+                <div className="text-right">
+                  <div className="text-sm text-text-secondary">Invoice #</div>
+                  <div className="font-medium text-text-primary">{invoiceNumber}</div>
                 </div>
+              </div>
 
-                {/* Customer Info */}
-                <div className="mb-6">
-                  <h4 className="font-medium text-text-primary mb-2">Facturado a:</h4>
-                  <div className="bg-gray-50 p-3 rounded border border-divider">
-                    <p className="text-sm text-text-primary">Consumidor Final</p>
-                    <p className="text-sm text-text-secondary">Venta al por menor</p>
-                  </div>
+              <div className="space-y-4 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Date:</span>
+                  <span className="text-text-primary">{currentDate}</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Payment Method:</span>
+                  <span className="text-text-primary">{paymentMethod}</span>
+                </div>
+              </div>
 
-                {/* Line Items */}
-                <div className="mb-6">
-                  <h4 className="font-medium text-text-primary mb-3">Artículos:</h4>
-                  <div className="space-y-2">
-                    {items.map((item, index) => (
-                      <div 
-                        key={item.id} 
-                        className="flex justify-between items-center py-2 border-b border-gray-100 animate-fade-in"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-text-primary">{item.name}</p>
-                          <p className="text-xs text-text-secondary">{item.quantity} x ${item.price.toFixed(2)}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-text-primary">
-                            ${(item.quantity * item.price).toFixed(2)}
-                          </p>
-                        </div>
+              {/* Items List */}
+              <div className="border-t border-divider pt-4 mb-6">
+                <h4 className="font-semibold text-text-primary mb-3">Items</h4>
+                <div className="space-y-3">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center">
+                      <div className="flex-1">
+                        <div className="font-medium text-text-primary">{item.name}</div>
+                        <div className="text-sm text-text-secondary">Qty: {item.quantity}</div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="text-right">
+                        <div className="font-medium text-text-primary">${(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="text-sm text-text-secondary">${item.price.toFixed(2)} each</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                {/* Totals */}
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-text-secondary">Subtotal:</span>
-                    <span className="text-text-primary">${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-text-secondary">Impuestos (15%):</span>
-                    <span className="text-text-primary">${tax.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-lg font-bold border-t border-divider pt-2">
-                    <span className="text-text-primary">Total:</span>
-                    <span className="text-text-primary">${total.toFixed(2)}</span>
-                  </div>
+              {/* Totals */}
+              <div className="border-t border-divider pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Subtotal:</span>
+                  <span className="text-text-primary">${subtotal.toFixed(2)}</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-text-secondary">Tax (15%):</span>
+                  <span className="text-text-primary">${tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-lg font-bold border-t border-divider pt-2">
+                  <span className="text-text-primary">Total:</span>
+                  <span className="text-success">${total.toFixed(2)}</span>
+                </div>
+              </div>
 
-                {/* Invoice Footer */}
-                <div className="border-t border-divider pt-4">
-                  <div className="text-center text-xs text-text-secondary space-y-1">
-                    <p>Gracias por su compra</p>
-                    <p>Inventory Pro - Sistema de Gestión</p>
-                    <p>Para soporte: soporte@inventorypro.com</p>
-                  </div>
+              {/* Thank You Message */}
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="text-center">
+                  <div className="text-green-600 mb-2">🎉</div>
+                  <h4 className="font-semibold text-green-800 mb-1">Thank you for your purchase!</h4>
+                  <p className="text-sm text-green-700">
+                    Your order has been processed successfully. You will receive a confirmation email shortly.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Fixed Footer */}
-      <div className="border-t border-divider p-4 bg-bg-surface animate-slide-in-right">
-        <div className="max-w-6xl mx-auto">
-          <button 
-            onClick={onNewOrder}
-            className="w-full bg-primary hover:bg-primary-600 text-black font-medium py-4 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg btn-animate flex items-center justify-center space-x-2"
-          >
-            <ArrowLeft size={20} className="icon-bounce" />
-            <span>Nueva Orden</span>
-          </button>
         </div>
       </div>
     </div>
