@@ -53,7 +53,7 @@ import craft_text_detector.predict as craft_predict
 
 try:
     from utils.general import non_max_suppression
-    from utils.augmentations import letterbox  # <-- Agrega esta línea
+    from utils.augmentations import letterbox 
 except ImportError:
     non_max_suppression = None
     letterbox = None
@@ -144,24 +144,7 @@ else:
 
 MODEL_PATH = Path('C:/Users/aryes/Documents/ocr/backend-ocr/yolov5/runs/train/exp_retrain/weights/best.pt')
 
-#try:
-    #model = torch.hub.load(
-     #   'yolov5',               # repo local (lo añadiste a sys.path)
-      #  'custom',               # tarea
-      #  path=str(MODEL_PATH),   # pesos
-       # source='local',
-        #trust_repo=True
-    #)
-    #model.conf = 0.25          # umbral de confianza por defecto
-    #model.eval()               # modo inferencia
-    #print("✅ Modelo YOLOv5 cargado ✔")
-    #print("📌 Clases del modelo:", model.names)
-#except Exception as e:
- #   print("❌ NO se pudo cargar YOLOv5:", e)
-  #  sys.exit(1)
 
-
-# Creamos un archivo export.py temporal para resolver la dependencia faltante
 export_code = """
 def export_formats():
     return ['torchscript', 'onnx', 'coreml', 'saved_model', 'pb', 'tflite', 
@@ -169,19 +152,15 @@ def export_formats():
 export_formats = export_formats()
 """
 
-# Create export module in the correct location BEFORE we try to load the model
 yolo_dir = os.path.join(BASE_DIR, "yolov5")
 export_file_path = os.path.join(yolo_dir, "export.py")
 with open(export_file_path, 'w') as f:
     f.write(export_code)
-# Initialize model variable
 model = None
 
-# Define classes early if it might not be defined yet
 if 'classes' not in locals():
     classes = {}
 
-# Define DummyModel as a fallback
 class DummyModel:
     def __init__(self):
         self.conf = 0.25
@@ -191,13 +170,12 @@ class DummyModel:
     def eval(self):
         pass
 
-# If no model was loaded earlier, use the DummyModel
 if model is None:
     model = DummyModel()
     print("⚠️ Usando modelo de respaldo")
 
 try:
-    # Try loading the model now that export.py should be accessible
+
     model = DetectMultiBackend(str(MODEL_PATH))
     model.eval()
     print("✅ Modelo YOLOv5 cargado correctamente")
@@ -234,8 +212,6 @@ else:
     print(f"❌ ERROR: No se encontró el archivo de clases en {DATA_PATH}")
     classes = []
 
-
-#pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 TESSDATA_DIR = '/usr/share/tesseract-ocr/5/tessdata/'
 os.environ['TESSDATA_PREFIX'] = TESSDATA_DIR
 print(f"Tesseract versión: {pytesseract.get_tesseract_version()}")
@@ -255,19 +231,13 @@ else:
         classes = yaml.safe_load(file).get('names', {})
      print(f"Clases cargadas desde YAML: {classes}")
 
-
-
-             #________________modo solo prueba_________________
-             #________________modo solo prueba_________________
             
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True, stride=32):
-        # Get current shape
-        shape = img.shape[:2]  # current shape [height, width]
+        shape = img.shape[:2]  
         
         if isinstance(new_shape, int):
             new_shape = (new_shape, new_shape)
     
-        # Scale ratio (new / old)
         r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
         if not scaleup:
             r = min(r, 1.0)

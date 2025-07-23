@@ -55,6 +55,7 @@ Thumbs.db
 # entornos virtuales
 .venv/
 env/
+venv-linux/
 
 # artefactos de Python
 __pycache__/
