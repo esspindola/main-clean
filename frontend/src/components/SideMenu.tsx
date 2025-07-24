@@ -248,8 +248,8 @@ const SideMenu: React.FC = () => {
         {/* Logo/Brand */}
         <div className="flex items-center justify-center h-16 px-6 border-b border-divider">
           <img 
-            src="/image/logo.png" 
-            alt="FrontPOSw Logo" 
+            src="/images/logozato.png" 
+            alt="ZatoBox Logo" 
             className="h-10 w-auto"
           />
         </div>
@@ -293,8 +293,8 @@ const SideMenu: React.FC = () => {
         {/* Logo/Brand */}
         <div className="flex items-center justify-center h-16 px-6 border-b border-divider">
           <img 
-            src="/image/logo.png" 
-            alt="FrontPOSw Logo" 
+            src="/images/logozato.png" 
+            alt="ZatoBox Logo" 
             className="h-10 w-auto"
           />
         </div>
