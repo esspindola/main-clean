@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Download, Mail, ArrowLeft } from 'lucide-react';
+import { Check, Download, Mail } from 'lucide-react';
 
 interface PaymentSuccessScreenProps {
   isOpen: boolean;

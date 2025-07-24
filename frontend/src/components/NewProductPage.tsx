@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, Plus, X } from 'lucide-react';
-import { productsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 interface VariantValue {

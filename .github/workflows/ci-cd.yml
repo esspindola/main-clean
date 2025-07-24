@@ -128,17 +128,19 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
+    env:
+      BACKEND_PORT: 4444
     
     services:
       node:
         image: node:18
         options: >-
-          --health-cmd "curl -f http://localhost:${{ env.BACKEND_PORT }}/health"
+          --health-cmd "curl -f http://localhost:4444/health"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
-          - ${{ env.BACKEND_PORT }}:${{ env.BACKEND_PORT }}
+          - 4444:4444
     
     steps:
     - name: Checkout code
@@ -162,12 +164,12 @@ jobs:
         
     - name: Test backend health
       run: |
-        curl -f http://localhost:${{ env.BACKEND_PORT }}/health
+        curl -f http://localhost:4444/health
         
     - name: Test API endpoints
       run: |
         # Test registration
-        curl -X POST http://localhost:${{ env.BACKEND_PORT }}/api/auth/register \
+        curl -X POST http://localhost:4444/api/auth/register \
           -H "Content-Type: application/json" \
           -d '{"email":"test@test.com","password":"test123","fullName":"Test User"}' \
           -w "\nHTTP Status: %{http_code}\n"

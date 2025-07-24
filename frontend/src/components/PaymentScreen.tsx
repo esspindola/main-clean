@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CreditCard, Smartphone, Bitcoin, Banknote, Calculator } from 'lucide-react';
+import { ArrowLeft, CreditCard, Smartphone, Bitcoin, Banknote } from 'lucide-react';
 
 interface PaymentScreenProps {
   isOpen: boolean;
