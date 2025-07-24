@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, RefreshCw, ShoppingCart } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import ProductCard from './ProductCard';
 import SalesDrawer from './SalesDrawer';
 import PaymentScreen from './PaymentScreen';

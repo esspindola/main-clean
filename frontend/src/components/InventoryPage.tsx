@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Printer, Plus, Package, MoreVertical, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Search, Printer, Plus, Package, ChevronDown } from 'lucide-react';
 import { productsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
