@@ -10,6 +10,7 @@ import EditProductPage from './components/EditProductPage';
 import OCRResultPage from './components/OCRResultPage';
 import SmartInventoryPage from './components/SmartInventoryPage';
 import ProfilePage from './components/ProfilePage';
+import SettingsPage from './components/SettingsPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import PluginStorePage from './components/PluginStorePage';
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/ocr-result" element={<OCRResultPage />} />
                     <Route path="/pos-integration" element={<div className="p-8"><h1 className="text-2xl font-bold">POS Integration</h1><p className="mt-4">POS system integration module is active and ready to use.</p></div>} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/plugin-store" element={<PluginStorePage />} />
                     {/* Redirect invalid routes to Home */}
                     <Route path="*" element={<Navigate to="/" replace />} />

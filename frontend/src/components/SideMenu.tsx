@@ -130,7 +130,7 @@ const SideMenu: React.FC = () => {
     {
       name: 'Settings',
       icon: Settings,
-      path: '/profile',
+      path: '/settings',
       description: 'Settings'
     }
   ];
