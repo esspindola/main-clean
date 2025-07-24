@@ -1,361 +1,239 @@
-# <div align="center"><img src="shared/images/logozato.png" alt="ZatoBox Logo" height="200"/><br/></div>
+# 🚀 ZatoBox v2.0 - Sistema de Punto de Venta Inteligente
 
-<div align="center">
+Un sistema completo de punto de venta con inventario inteligente, OCR, y gestión avanzada de productos.
 
-# 🚀 ZatoBox - Sistema de Gestión de Inventario y Ventas
+## ✨ Características Principales
 
-**Versión 2.0 - Completamente Optimizada y Automatizada**
+- 🛍️ **Gestión de Productos**: CRUD completo con imágenes
+- 📊 **Inventario Inteligente**: Control de stock y movimientos
+- 🔍 **OCR Avanzado**: Escaneo de documentos y facturas
+- 💳 **Sistema de Pagos**: Múltiples métodos de pago
+- 📈 **Reportes de Ventas**: Análisis detallado
+- 🔐 **Autenticación Segura**: JWT con roles de usuario
+- 📱 **Interfaz Moderna**: React + TypeScript + Tailwind CSS
+- ⚡ **Backend Robusto**: Node.js + Express + SQLite
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue.svg)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
+## 🛠️ Tecnologías Utilizadas
 
-**Sistema completo de gestión de inventario, ventas y administración de productos con interfaz moderna y funcionalidades avanzadas.**
+### Frontend
+- **React 18** - Biblioteca de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool rápido
+- **Tailwind CSS** - Framework CSS
+- **React Router** - Navegación
+- **Lucide React** - Iconos
+- **Vitest** - Testing
 
-</div>
+### Backend
+- **Node.js** - Runtime de JavaScript
+- **Express.js** - Framework web
+- **SQLite** - Base de datos
+- **JWT** - Autenticación
+- **Multer** - Upload de archivos
+- **CORS** - Cross-origin requests
+- **Jest** - Testing
 
----
+## 🚀 Instalación y Configuración
 
-## 📋 **Tabla de Contenidos**
+### Prerrequisitos
+- **Node.js** v18 o superior
+- **npm** v8 o superior
 
-- [🎯 Características](#-características)
-- [🏗️ Arquitectura](#️-arquitectura)
-- [🚀 Instalación Rápida](#-instalación-rápida)
-- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
-- [🔧 Scripts de Automatización](#-scripts-de-automatización)
-- [📚 Documentación](#-documentación)
-- [🛠️ Desarrollo](#️-desarrollo)
-- [🚀 Despliegue](#-despliegue)
-- [📊 Métricas de Optimización](#-métricas-de-optimización)
-- [🤝 Contribución](#-contribución)
-- [📄 Licencia](#-licencia)
+### Instalación Rápida
 
----
-
-## 🎯 **Características**
-
-### ✨ **Funcionalidades Principales**
-- 🔐 **Autenticación JWT** - Sistema seguro de login/registro
-- 📦 **Gestión de Productos** - CRUD completo con imágenes
-- 📊 **Inventario Inteligente** - Control de stock y movimientos
-- 💰 **Sistema de Ventas** - Proceso completo de ventas
-- 📱 **Interfaz Responsiva** - Diseño moderno y adaptable
-- 🖼️ **Subida de Imágenes** - Drag & drop con validación
-- 🔍 **Búsqueda Avanzada** - Filtros y búsqueda en tiempo real
-- 📈 **Dashboard** - Estadísticas y métricas en tiempo real
-
-### 🚀 **Características Técnicas**
-- ⚡ **Rendimiento Optimizado** - 70-150MB de reducción de tamaño
-- 🔧 **Automatización Completa** - Scripts para todas las tareas
-- 📦 **Dependencias Limpias** - 11 dependencias no utilizadas eliminadas
-- 🏗️ **Estructura Modular** - Separación clara frontend/backend
-- 🛡️ **Seguridad Robusta** - Validación y autenticación avanzada
-- 📱 **PWA Ready** - Preparado para Progressive Web App
-
----
-
-## 🏗️ **Arquitectura**
-
-### **Stack Tecnológico**
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
-- **Backend**: Node.js + Express + JWT + Multer
-- **Base de Datos**: JSON files (in-memory)
-- **Autenticación**: JWT tokens
-- **Subida de Archivos**: Multer + static serving
-
-### **Estructura Optimizada**
-```
-ZatoBox/
-├── 📁 frontend/                # React + TypeScript
-│   ├── 📁 src/
-│   │   ├── 📁 components/      # Componentes React
-│   │   ├── 📁 contexts/        # Contextos React
-│   │   ├── 📁 services/        # Servicios API
-│   │   └── 📁 config/          # Configuración
-│   ├── 📁 public/              # Archivos públicos
-│   └── package.json            # Dependencias frontend
-│
-├── 📁 backend/                 # Node.js + Express
-│   ├── 📁 src/
-│   │   ├── 📁 routes/          # Rutas API
-│   │   ├── 📁 middleware/      # Middleware
-│   │   └── 📁 utils/           # Utilidades
-│   ├── 📁 uploads/             # Archivos subidos
-│   └── package.json            # Dependencias backend
-│
-├── 📁 shared/                  # Recursos compartidos
-│   ├── 📁 images/              # Imágenes del proyecto
-│   ├── 📁 assets/              # Otros recursos
-│   └── 📁 types/               # Tipos compartidos
-│
-├── 📁 docs/                    # Documentación
-├── 📁 scripts/                 # Scripts de automatización
-└── package.json                # Configuración raíz
-```
-
----
-
-## 🚀 **Instalación Rápida**
-
-### **Prerrequisitos**
-- Node.js 18+ 
-- npm 8+
-
-### **Instalación Automática**
+1. **Clonar el repositorio**
 ```bash
-# Clonar el repositorio
-git clone https://github.com/ZatoBox/main.git
-cd ZatoBox
+git clone https://github.com/tu-usuario/zatobox.git
+cd zatobox
+```
 
-# Instalación automática (recomendado)
-npm run setup
+2. **Instalar dependencias**
+```bash
+npm install
+```
 
-# O instalación manual
+3. **Ejecutar el proyecto**
+
+#### Opción A: Script Automático (Recomendado)
+```powershell
+# Windows PowerShell
+.\start-project.ps1
+```
+
+#### Opción B: Comandos Manuales
+```bash
+# Terminal 1 - Backend
+npm run dev:backend
+
+# Terminal 2 - Frontend
+npm run dev:frontend
+```
+
+#### Opción C: Ambos Servicios
+```bash
+npm run dev
+```
+
+## 📱 Acceso a la Aplicación
+
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:4444
+- **Health Check**: http://localhost:4444/health
+
+## 🔑 Credenciales de Prueba
+
+### Administrador
+- **Email**: `admin@frontposw.com`
+- **Password**: `admin12345678`
+
+### Usuario Regular
+- **Email**: `user@frontposw.com`
+- **Password**: `user12345678`
+
+## 🧪 Testing
+
+### Frontend Tests
+```bash
+cd frontend
+npm run test
+```
+
+### Backend Tests
+```bash
+cd backend
+npm run test
+```
+
+### Tests Completos
+```bash
+npm run test
+```
+
+## 📁 Estructura del Proyecto
+
+```
+FrontPOSw-main/
+├── frontend/                 # Aplicación React
+│   ├── src/
+│   │   ├── components/       # Componentes React
+│   │   ├── contexts/         # Contextos de React
+│   │   ├── config/           # Configuración
+│   │   ├── services/         # Servicios API
+│   │   └── test/             # Tests del frontend
+│   ├── package.json
+│   └── vite.config.ts
+├── backend/                  # Servidor Node.js
+│   ├── src/
+│   │   ├── models/           # Modelos de datos
+│   │   ├── routes/           # Rutas API
+│   │   ├── middleware/       # Middleware
+│   │   └── utils/            # Utilidades
+│   ├── test-server.js        # Servidor de desarrollo
+│   └── package.json
+├── docs/                     # Documentación
+├── scripts/                  # Scripts de automatización
+├── start-project.ps1         # Script de inicio
+├── stop-project.ps1          # Script de parada
+└── package.json              # Configuración raíz
+```
+
+## 🔧 Scripts Disponibles
+
+### Scripts Principales
+```bash
+npm run dev              # Inicia frontend y backend
+npm run dev:frontend     # Solo frontend
+npm run dev:backend      # Solo backend
+npm run build            # Build de producción
+npm run test             # Tests completos
+npm run lint             # Verificación de código
+```
+
+### Scripts de Desarrollo
+```bash
+npm run install:all      # Instala todas las dependencias
+npm run clean            # Limpia node_modules
+npm run reset            # Reset completo del proyecto
+```
+
+## 🐛 Solución de Problemas
+
+### Puerto 4444 en uso
+```powershell
+# Detener procesos que usan el puerto
+.\stop-project.ps1
+
+# O manualmente
+Get-Process -Name "node" | Stop-Process -Force
+```
+
+### Errores de CORS
+- Verificar que el backend esté ejecutándose en puerto 4444
+- Verificar configuración CORS en `backend/test-server.js`
+- Usar el archivo `test-cors.html` para verificar comunicación
+
+### Dependencias no encontradas
+```bash
+# Reinstalar dependencias
+npm run clean
 npm run install:all
 ```
 
-### **Iniciar Desarrollo**
-```bash
-# Iniciar frontend y backend simultáneamente
-npm run dev
+## 📊 API Endpoints
 
-# O por separado
-npm run dev:frontend  # Frontend en http://localhost:5173
-npm run dev:backend   # Backend en http://localhost:4444
-```
+### Autenticación
+- `POST /api/auth/login` - Iniciar sesión
+- `POST /api/auth/register` - Registrar usuario
+- `POST /api/auth/logout` - Cerrar sesión
+- `GET /api/auth/profile` - Perfil de usuario
 
-### **Credenciales por Defecto**
-- **Email**: admin@zatobox.com
-- **Contraseña**: admin12345678
+### Productos
+- `GET /api/products` - Listar productos
+- `POST /api/products` - Crear producto
+- `PUT /api/products/:id` - Actualizar producto
+- `DELETE /api/products/:id` - Eliminar producto
 
----
+### Ventas
+- `GET /api/sales` - Listar ventas
+- `POST /api/sales` - Crear venta
+- `GET /api/sales/:id` - Obtener venta
 
-## 📁 **Estructura del Proyecto**
+### Inventario
+- `GET /api/inventory` - Estado del inventario
+- `POST /api/inventory/movements` - Registrar movimiento
 
-### **Frontend (`frontend/`)**
-```
-frontend/
-├── src/
-│   ├── components/     # Componentes React
-│   ├── contexts/       # Contextos (Auth, Plugin)
-│   ├── services/       # Servicios API
-│   ├── config/         # Configuración
-│   └── main.tsx        # Punto de entrada
-├── public/             # Archivos públicos
-├── dist/               # Build de producción
-└── package.json        # Dependencias
-```
+### OCR
+- `POST /api/ocr/upload` - Subir documento para OCR
+- `GET /api/ocr/history` - Historial de OCR
+- `GET /api/ocr/status/:jobId` - Estado del procesamiento
 
-### **Backend (`backend/`)**
-```
-backend/
-├── src/
-│   ├── routes/         # Rutas API
-│   │   ├── auth.js     # Autenticación
-│   │   ├── products.js # Productos
-│   │   ├── sales.js    # Ventas
-│   │   └── inventory.js # Inventario
-│   ├── middleware/     # Middleware
-│   └── utils/          # Utilidades
-├── uploads/            # Archivos subidos
-└── package.json        # Dependencias
-```
+## 🤝 Contribución
 
-### **Recursos Compartidos (`shared/`)**
-```
-shared/
-├── images/             # Imágenes del proyecto
-├── assets/             # Otros recursos
-└── types/              # Tipos TypeScript compartidos
-```
-
----
-
-## 🔧 **Scripts de Automatización**
-
-### **Scripts Principales**
-```bash
-# Instalación y configuración
-npm run setup          # Instalación automática completa
-npm run install:all    # Instalar todas las dependencias
-
-# Desarrollo
-npm run dev            # Iniciar frontend + backend
-npm run dev:frontend   # Solo frontend
-npm run dev:backend    # Solo backend
-
-# Build y despliegue
-npm run build          # Build de producción
-npm run deploy         # Despliegue automatizado
-
-# Utilidades
-npm run clean          # Limpiar node_modules y dist
-npm run help           # Mostrar comandos disponibles
-```
-
-### **Scripts Detallados**
-```bash
-# Despliegue por ambiente
-npm run deploy development  # Desarrollo
-npm run deploy staging      # Staging
-npm run deploy production   # Producción
-
-# Opciones de despliegue
-npm run deploy production --build    # Build + deploy
-npm run deploy production --backup   # Backup + deploy
-npm run deploy production --restart  # Deploy + restart
-```
-
----
-
-## 📚 **Documentación**
-
-### **Documentación Disponible**
-- 📖 **[Guía de Conexiones](docs/CONEXIONES_BACKEND_FRONTEND.md)** - Backend/Frontend
-- 🏗️ **[Arquitectura](docs/MAQUETADO.md)** - Estructura del proyecto
-- 🚀 **[Guía de Instalación](docs/CONNECTION_GUIDE.md)** - Setup rápido
-- 📊 **[Progreso de Optimización](docs/pruebas/analisis/progreso-limpieza.md)** - Métricas detalladas
-
-### **Documentación por Áreas**
-```
-docs/
-├── api/               # Documentación de API
-├── setup/             # Guías de instalación
-├── architecture/      # Documentación de arquitectura
-└── README.md          # Índice de documentación
-```
-
----
-
-## 🛠️ **Desarrollo**
-
-### **Configuración de Desarrollo**
-```bash
-# Variables de entorno (backend/.env)
-PORT=4444
-JWT_SECRET=your-secret-key
-CORS_ORIGIN=http://localhost:5173
-```
-
-### **Comandos de Desarrollo**
-```bash
-# Frontend
-cd frontend
-npm run dev          # Desarrollo
-npm run build        # Build
-npm run preview      # Preview build
-
-# Backend
-cd backend
-npm run dev          # Desarrollo con nodemon
-node test-server.js  # Producción
-```
-
-### **Estructura de API**
-```
-POST   /api/auth/register     # Registro de usuario
-POST   /api/auth/login        # Login de usuario
-GET    /api/products          # Listar productos
-POST   /api/products          # Crear producto
-PUT    /api/products/:id      # Actualizar producto
-DELETE /api/products/:id      # Eliminar producto
-GET    /api/sales             # Listar ventas
-POST   /api/sales             # Crear venta
-GET    /api/inventory         # Movimientos de inventario
-```
-
----
-
-## 🚀 **Despliegue**
-
-### **Despliegue Automático**
-```bash
-# Despliegue completo con build
-npm run deploy production --build --backup --restart
-
-# Despliegue manual
-npm run build
-cd deploy-prod
-./start.sh
-```
-
-### **Configuración de Producción**
-```bash
-# Variables de entorno de producción
-NODE_ENV=production
-PORT=4444
-JWT_SECRET=production-secret-key
-CORS_ORIGIN=https://yourdomain.com
-```
-
-### **Monitoreo**
-```bash
-# Ver logs del servidor
-tail -f deploy-prod/server.log
-
-# Verificar estado
-curl http://localhost:4444/health
-```
-
----
-
-## 📊 **Métricas de Optimización**
-
-### **Optimización Completada** ✅
-- **Dependencias eliminadas**: 11 de 35 (31% reducción)
-- **Reducción de tamaño**: ~70-150 MB menos
-- **Archivos eliminados**: 7 archivos/carpetas innecesarios
-- **Tiempo de optimización**: ~60 minutos
-- **Funcionalidad preservada**: 100%
-
-### **Beneficios Logrados**
-- ⚡ **Instalación 50% más rápida**
-- 🏗️ **Build 30% más rápido**
-- 💾 **70-150MB menos de espacio**
-- 🔧 **Mantenimiento más fácil**
-- 🧹 **Estructura completamente limpia**
-- 🤖 **Automatización completa**
-
-### **Scripts de Automatización**
-- ✅ **Instalación automática**: `setup.sh`
-- ✅ **Build automatizado**: `build.sh`
-- ✅ **Despliegue automatizado**: `deploy.sh`
-- ✅ **Configuración centralizada**: `package.json` raíz
-
----
-
-## 🤝 **Contribución**
-
-### **Cómo Contribuir**
 1. Fork el proyecto
 2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-### **Estándares de Código**
-- Usar TypeScript para el frontend
-- Seguir las convenciones de ESLint
-- Documentar funciones y componentes
-- Mantener la estructura modular
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE.txt` para más detalles.
+
+## 🆘 Soporte
+
+- **Documentación**: Revisa la carpeta `docs/`
+- **Issues**: Reporta bugs en GitHub Issues
+- **Discusiones**: Únete a las discusiones en GitHub
+
+## 🎯 Roadmap
+
+- [ ] Integración con pasarelas de pago
+- [ ] App móvil nativa
+- [ ] Reportes avanzados
+- [ ] Integración con contabilidad
+- [ ] Múltiples sucursales
+- [ ] API pública
 
 ---
 
-## 📄 **Licencia**
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.txt](LICENSE.txt) para detalles.
-
----
-
-<div align="center">
-
-**ZatoBox v2.0** - Sistema de Gestión de Inventario y Ventas
-
-**Completamente optimizado, automatizado y listo para producción** 🚀
-
-[![GitHub](https://img.shields.io/badge/GitHub-ZatoBox-black.svg)](https://github.com/ZatoBox/main)
-[![Issues](https://img.shields.io/badge/Issues-Welcome-green.svg)](https://github.com/ZatoBox/main/issues)
-[![PRs](https://img.shields.io/badge/PRs-Welcome-blue.svg)](https://github.com/ZatoBox/main/pulls)
-
-</div> 
+**ZatoBox v2.0** - Transformando el comercio digital 🚀 

@@ -97,5 +97,14 @@
     "role": "user",
     "phone": "",
     "address": ""
+  },
+  {
+    "id": 12,
+    "email": "test@example.com",
+    "password": "test12345678",
+    "fullName": "Usuario de Prueba",
+    "role": "user",
+    "phone": "",
+    "address": ""
   }
 ]
