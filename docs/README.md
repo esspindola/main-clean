@@ -1,52 +1,51 @@
-# 📚 Documentación ZatoBox v2.0
+# 📚 ZatoBox v2.0 - Documentación Central
 
-Bienvenido a la documentación completa de **ZatoBox v2.0**, el sistema de punto de venta inteligente más avanzado.
+Bienvenido a la documentación central de **ZatoBox v2.0**, el sistema de punto de venta inteligente más avanzado.
 
-## 📖 Índice de Documentación
+## 🌍 Idiomas Disponibles
 
-### 🚀 Guías de Inicio
-- **[Guía de Instalación](./guia-instalacion.md)** - Instalación paso a paso
-- **[Configuración Inicial](./configuracion-inicial.md)** - Configuración básica del sistema
-- **[Primeros Pasos](./primeros-pasos.md)** - Tutorial de uso básico
+### 🇪🇸 Español
+- **[📖 Documentación en Español](./spanish/README.md)** - Documentación completa en español
+- **[🏗️ Arquitectura](./technical/architecture.md)** - Arquitectura del sistema
+- **[📡 API Reference](./references/api-reference.md)** - Referencia de la API
 
-### 🔧 Guías Técnicas
-- **[Arquitectura del Sistema](./arquitectura.md)** - Estructura y diseño del proyecto
-- **[API Reference](./api-reference.md)** - Documentación completa de la API
-- **[Base de Datos](./base-datos.md)** - Esquemas y modelos de datos
-- **[Configuración de Desarrollo](./desarrollo.md)** - Setup del entorno de desarrollo
+### 🇺🇸 English
+- **[📖 Documentation in English](./english/README.md)** - Complete documentation in English
+- **[🏗️ Architecture](./technical/architecture.md)** - System architecture
+- **[📡 API Reference](./references/api-reference.md)** - API reference
 
-### 📱 Guías de Usuario
-- **[Manual de Usuario](./manual-usuario.md)** - Guía completa para usuarios finales
-- **[Gestión de Productos](./productos.md)** - Cómo gestionar el catálogo
-- **[Inventario](./inventario.md)** - Control de stock y movimientos
-- **[Ventas](./ventas.md)** - Proceso de ventas y pagos
-- **[Reportes](./reportes.md)** - Generación y análisis de reportes
+## 📁 Estructura de Documentación
 
-### 🔌 Módulos y Plugins
-- **[Smart Inventory](./smart-inventory.md)** - IA para gestión de inventario
-- **[OCR Module](./ocr-module.md)** - Procesamiento de documentos
-- **[POS Integration](./pos-integration.md)** - Integración con sistemas POS
-- **[Plugin Store](./plugin-store.md)** - Gestión de módulos
+```
+docs/
+├── 📖 README.md                    # Este archivo - Índice principal
+├── 🇪🇸 spanish/                     # Documentación en español
+│   └── README.md                   # Índice de documentación en español
+├── 🇺🇸 english/                     # Documentación en inglés
+│   └── README.md                   # Documentation index in English
+├── 🏗️ technical/                   # Documentación técnica
+│   ├── architecture.md             # Arquitectura del sistema
+│   └── backend-frontend-connections.md # Conexiones backend-frontend
+├── 📡 references/                  # Referencias técnicas
+│   └── api-reference.md            # Referencia completa de la API
+├── 📚 guides/                      # Guías de usuario (próximamente)
+└── 🔧 references/                  # Referencias adicionales (próximamente)
+```
 
-### ⚙️ Administración
-- **[Configuración del Sistema](./configuracion-sistema.md)** - Panel de configuración
-- **[Seguridad](./seguridad.md)** - Configuración de seguridad
-- **[Backup y Restauración](./backup.md)** - Gestión de datos
-- **[Mantenimiento](./mantenimiento.md)** - Tareas de mantenimiento
+## 🚀 Acceso Rápido
 
-### 🛠️ Desarrollo
-- **[Guía de Contribución](./contribucion.md)** - Cómo contribuir al proyecto
-- **[Testing](./testing.md)** - Guía de testing
-- **[Deployment](./deployment.md)** - Despliegue en producción
-- **[Troubleshooting](./troubleshooting.md)** - Solución de problemas
+### 📖 Documentación General
+- **[Español](./spanish/README.md)** - Guías completas en español
+- **[English](./english/README.md)** - Complete guides in English
 
-### 📊 Referencias
-- **[Changelog](./changelog.md)** - Historial de cambios
-- **[FAQ](./faq.md)** - Preguntas frecuentes
-- **[Glosario](./glosario.md)** - Términos técnicos
-- **[Enlaces Útiles](./enlaces.md)** - Recursos adicionales
+### 🏗️ Documentación Técnica
+- **[Arquitectura del Sistema](./technical/architecture.md)** - Diseño y estructura
+- **[Conexiones Backend-Frontend](./technical/backend-frontend-connections.md)** - Integración de servicios
 
-## 🎯 Información Rápida
+### 📡 Referencias de API
+- **[API Reference](./references/api-reference.md)** - Documentación completa de endpoints
+
+## 🎯 Información del Proyecto
 
 ### 📋 Estado del Proyecto
 - **Versión**: 2.0.0
@@ -59,12 +58,6 @@ Bienvenido a la documentación completa de **ZatoBox v2.0**, el sistema de punto
 - **[Demo en Vivo](http://localhost:5173)** (después de iniciar)
 - **[API Health Check](http://localhost:4444/health)**
 - **[Issues](https://github.com/tu-usuario/zatobox/issues)**
-
-### 📞 Soporte
-- **Documentación**: Esta carpeta
-- **Issues**: GitHub Issues
-- **Discusiones**: GitHub Discussions
-- **Wiki**: GitHub Wiki
 
 ## 🚀 Inicio Rápido
 
@@ -99,6 +92,13 @@ npm run dev
 - ✅ **Testing completo** con Vitest + Jest
 - ✅ **CI/CD** con GitHub Actions
 - ✅ **Documentación completa** y actualizada
+
+## 📞 Soporte
+
+- **Documentación**: Esta carpeta
+- **Issues**: GitHub Issues
+- **Discusiones**: GitHub Discussions
+- **Wiki**: GitHub Wiki
 
 ---
 
