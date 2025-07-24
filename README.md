@@ -1,77 +1,77 @@
-# 🚀 ZatoBox v2.0 - Sistema de Punto de Venta Inteligente
+# 🚀 ZatoBox v2.0 - Intelligent Point of Sale System
 
-Un sistema completo de punto de venta con inventario inteligente, OCR, gestión avanzada de productos y configuración profesional.
+A complete point of sale system with intelligent inventory, OCR, advanced product management, and professional configuration.
 
-## ✨ Características Principales
+## ✨ Main Features
 
-- 🛍️ **Gestión de Productos**: CRUD completo con imágenes y categorización
-- 📊 **Inventario Inteligente**: Control de stock y movimientos con IA
-- 🔍 **OCR Avanzado**: Escaneo de documentos y facturas automático
-- 💳 **Sistema de Pagos**: Múltiples métodos de pago integrados
-- 📈 **Reportes de Ventas**: Análisis detallado y exportación
-- 🔐 **Autenticación Segura**: JWT con roles de usuario y 2FA
-- ⚙️ **Configuración Completa**: Panel de configuración profesional
-- 📱 **Interfaz Moderna**: React + TypeScript + Tailwind CSS
-- ⚡ **Backend Robusto**: Node.js + Express + SQLite
-- 🔌 **Sistema de Plugins**: Módulos extensibles y configurables
+- 🛍️ **Product Management**: Complete CRUD with images and categorization
+- 📊 **Intelligent Inventory**: Stock control and movements with AI
+- 🔍 **Advanced OCR**: Automatic document and invoice scanning
+- 💳 **Payment System**: Integrated multiple payment methods
+- 📈 **Sales Reports**: Detailed analysis and export
+- 🔐 **Secure Authentication**: JWT with user roles and 2FA
+- ⚙️ **Complete Configuration**: Professional configuration panel
+- 📱 **Modern Interface**: React + TypeScript + Tailwind CSS
+- ⚡ **Robust Backend**: Node.js + Express + SQLite
+- 🔌 **Plugin System**: Extensible and configurable modules
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Technologies Used
 
 ### Frontend
-- **React 18** - Biblioteca de UI moderna
-- **TypeScript** - Tipado estático para mayor seguridad
-- **Vite** - Build tool ultra rápido
-- **Tailwind CSS** - Framework CSS utility-first
-- **React Router v6** - Navegación declarativa
-- **Lucide React** - Iconos modernos y consistentes
-- **Vitest** - Testing framework rápido
-- **React Testing Library** - Testing de componentes
+- **React 18** - Modern UI library
+- **TypeScript** - Static typing for greater security
+- **Vite** - Ultra-fast build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router v6** - Declarative navigation
+- **Lucide React** - Modern and consistent icons
+- **Vitest** - Fast testing framework
+- **React Testing Library** - Component testing
 
 ### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express.js** - Framework web minimalista
-- **SQLite** - Base de datos ligera y eficiente
-- **JWT** - Autenticación stateless
-- **Multer** - Manejo de uploads de archivos
+- **Node.js** - JavaScript runtime
+- **Express.js** - Minimalist web framework
+- **SQLite** - Lightweight and efficient database
+- **JWT** - Stateless authentication
+- **Multer** - File upload handling
 - **CORS** - Cross-origin resource sharing
-- **Jest** - Framework de testing
-- **Supertest** - Testing de APIs
+- **Jest** - Testing framework
+- **Supertest** - API testing
 
-### DevOps & Herramientas
-- **ESLint** - Linting de código
-- **Prettier** - Formateo de código
+### DevOps & Tools
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
 - **GitHub Actions** - CI/CD pipeline
-- **PowerShell Scripts** - Automatización de desarrollo
+- **PowerShell Scripts** - Development automation
 
-## 🚀 Instalación y Configuración
+## 🚀 Installation and Configuration
 
-### Prerrequisitos
-- **Node.js** v18 o superior
-- **npm** v8 o superior
-- **Git** para clonar el repositorio
+### Prerequisites
+- **Node.js** v18 or higher
+- **npm** v8 or higher
+- **Git** to clone the repository
 
-### Instalación Rápida
+### Quick Installation
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 ```bash
-git clone https://github.com/tu-usuario/zatobox.git
+git clone https://github.com/your-username/zatobox.git
 cd zatobox
 ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Ejecutar el proyecto**
+3. **Run the project**
 
-#### Opción A: Script Automático (Recomendado)
+#### Option A: Automatic Script (Recommended)
 ```powershell
 # Windows PowerShell
 .\start-project.ps1
 ```
 
-#### Opción B: Comandos Manuales
+#### Option B: Manual Commands
 ```bash
 # Terminal 1 - Backend
 npm run dev:backend
@@ -80,25 +80,25 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-#### Opción C: Ambos Servicios
+#### Option C: Both Services
 ```bash
 npm run dev
 ```
 
-## 📱 Acceso a la Aplicación
+## 📱 Application Access
 
 - **Frontend**: http://localhost:5173
 - **Backend**: http://localhost:4444
 - **Health Check**: http://localhost:4444/health
-- **Test CORS**: test-cors.html (archivo local)
+- **CORS Test**: test-cors.html (local file)
 
-## 🔑 Credenciales de Prueba
+## 🔑 Test Credentials
 
-### Administrador
+### Administrator
 - **Email**: `admin@frontposw.com`
 - **Password**: `admin12345678`
 
-### Usuario Regular
+### Regular User
 - **Email**: `user@frontposw.com`
 - **Password**: `user12345678`
 
@@ -116,258 +116,258 @@ cd backend
 npm run test
 ```
 
-### Tests Completos
+### Complete Tests
 ```bash
 npm run test
 ```
 
-### Tests de Integración
+### Integration Tests
 ```bash
-# Abrir test-cors.html en el navegador
-# O ejecutar el script de prueba
+# Open test-cors.html in browser
+# Or run the test script
 node test-health.js
 ```
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 FrontPOSw-main/
-├── frontend/                 # Aplicación React
+├── frontend/                 # React application
 │   ├── src/
-│   │   ├── components/       # Componentes React
+│   │   ├── components/       # React components
 │   │   │   ├── HomePage.tsx
 │   │   │   ├── InventoryPage.tsx
 │   │   │   ├── NewProductPage.tsx
 │   │   │   ├── SettingsPage.tsx
 │   │   │   ├── SideMenu.tsx
 │   │   │   └── ...
-│   │   ├── contexts/         # Contextos de React
+│   │   ├── contexts/         # React contexts
 │   │   │   ├── AuthContext.tsx
 │   │   │   └── PluginContext.tsx
-│   │   ├── config/           # Configuración
+│   │   ├── config/           # Configuration
 │   │   │   └── api.ts
-│   │   ├── services/         # Servicios API
+│   │   ├── services/         # API services
 │   │   │   └── api.ts
-│   │   └── test/             # Tests del frontend
+│   │   └── test/             # Frontend tests
 │   ├── public/
-│   │   ├── image/            # Imágenes del sistema
+│   │   ├── image/            # System images
 │   │   │   └── logo.png
-│   │   └── images/           # Logos de marca
+│   │   └── images/           # Brand logos
 │   │       └── logozato.png
 │   ├── package.json
 │   └── vite.config.ts
-├── backend/                  # Servidor Node.js
+├── backend/                  # Node.js server
 │   ├── src/
-│   │   ├── models/           # Modelos de datos
-│   │   ├── routes/           # Rutas API
+│   │   ├── models/           # Data models
+│   │   ├── routes/           # API routes
 │   │   ├── middleware/       # Middleware
-│   │   └── utils/            # Utilidades
-│   ├── test-server.js        # Servidor de desarrollo
-│   ├── users.json            # Datos de usuarios
+│   │   └── utils/            # Utilities
+│   ├── test-server.js        # Development server
+│   ├── users.json            # User data
 │   └── package.json
-├── shared/                   # Recursos compartidos
-│   └── images/               # Imágenes originales
-├── docs/                     # Documentación
-│   ├── README.md             # Índice de documentación
+├── shared/                   # Shared resources
+│   └── images/               # Original images
+├── docs/                     # Documentation
+│   ├── README.md             # Documentation index
 │   └── ...
-├── scripts/                  # Scripts de automatización
-├── start-project.ps1         # Script de inicio
-├── stop-project.ps1          # Script de parada
-├── test-cors.html            # Archivo de prueba CORS
-├── test-health.js            # Script de prueba health
-└── package.json              # Configuración raíz
+├── scripts/                  # Automation scripts
+├── start-project.ps1         # Start script
+├── stop-project.ps1          # Stop script
+├── test-cors.html            # CORS test file
+├── test-health.js            # Health test script
+└── package.json              # Root configuration
 ```
 
-## 🔧 Scripts Disponibles
+## 🔧 Available Scripts
 
-### Scripts Principales
+### Main Scripts
 ```bash
-npm run dev              # Inicia frontend y backend
-npm run dev:frontend     # Solo frontend
-npm run dev:backend      # Solo backend
-npm run build            # Build de producción
-npm run test             # Tests completos
-npm run lint             # Verificación de código
+npm run dev              # Start frontend and backend
+npm run dev:frontend     # Frontend only
+npm run dev:backend      # Backend only
+npm run build            # Production build
+npm run test             # Complete tests
+npm run lint             # Code verification
 ```
 
-### Scripts de Desarrollo
+### Development Scripts
 ```bash
-npm run install:all      # Instala todas las dependencias
-npm run clean            # Limpia node_modules
-npm run reset            # Reset completo del proyecto
+npm run install:all      # Install all dependencies
+npm run clean            # Clean node_modules
+npm run reset            # Complete project reset
 ```
 
-### Scripts de PowerShell
+### PowerShell Scripts
 ```powershell
-.\start-project.ps1      # Inicia todo el proyecto automáticamente
-.\stop-project.ps1       # Detiene todos los servicios
+.\start-project.ps1      # Automatically start entire project
+.\stop-project.ps1       # Stop all services
 ```
 
-## 🐛 Solución de Problemas
+## 🐛 Troubleshooting
 
-### Puerto 4444 en uso
+### Port 4444 in use
 ```powershell
-# Detener procesos que usan el puerto
+# Stop processes using the port
 .\stop-project.ps1
 
-# O manualmente
+# Or manually
 Get-Process -Name "node" | Stop-Process -Force
 ```
 
-### Errores de CORS
-- Verificar que el backend esté ejecutándose en puerto 4444
-- Usar el archivo `test-cors.html` para verificar comunicación
-- Verificar configuración CORS en `backend/test-server.js`
+### CORS Errors
+- Verify backend is running on port 4444
+- Use `test-cors.html` file to verify communication
+- Check CORS configuration in `backend/test-server.js`
 
-### Logos no se muestran
-- Verificar que los archivos estén en `frontend/public/images/`
-- Reiniciar el servidor de desarrollo
-- Limpiar cache del navegador
+### Logos not showing
+- Verify files are in `frontend/public/images/`
+- Restart development server
+- Clear browser cache
 
-### Dependencias no encontradas
+### Dependencies not found
 ```bash
-# Reinstalar dependencias
+# Reinstall dependencies
 npm run clean
 npm run install:all
 ```
 
 ## 📊 API Endpoints
 
-### Autenticación
-- `POST /api/auth/login` - Iniciar sesión
-- `POST /api/auth/register` - Registrar usuario
-- `POST /api/auth/logout` - Cerrar sesión
-- `GET /api/auth/profile` - Perfil de usuario
-- `GET /api/auth/me` - Información del usuario actual
+### Authentication
+- `POST /api/auth/login` - Login
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/logout` - Logout
+- `GET /api/auth/profile` - User profile
+- `GET /api/auth/me` - Current user information
 
-### Productos
-- `GET /api/products` - Listar productos
-- `POST /api/products` - Crear producto
-- `PUT /api/products/:id` - Actualizar producto
-- `DELETE /api/products/:id` - Eliminar producto
-- `GET /api/products/:id` - Obtener producto específico
+### Products
+- `GET /api/products` - List products
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `GET /api/products/:id` - Get specific product
 
-### Ventas
-- `GET /api/sales` - Listar ventas
-- `POST /api/sales` - Crear venta
-- `GET /api/sales/:id` - Obtener venta específica
+### Sales
+- `GET /api/sales` - List sales
+- `POST /api/sales` - Create sale
+- `GET /api/sales/:id` - Get specific sale
 
-### Inventario
-- `GET /api/inventory` - Estado del inventario
-- `POST /api/inventory/movements` - Registrar movimiento
-- `GET /api/inventory/movements` - Historial de movimientos
+### Inventory
+- `GET /api/inventory` - Inventory status
+- `POST /api/inventory/movements` - Record movement
+- `GET /api/inventory/movements` - Movement history
 
 ### OCR
-- `POST /api/ocr/upload` - Subir documento para OCR
-- `GET /api/ocr/history` - Historial de OCR
-- `GET /api/ocr/status/:jobId` - Estado del procesamiento
+- `POST /api/ocr/upload` - Upload document for OCR
+- `GET /api/ocr/history` - OCR history
+- `GET /api/ocr/status/:jobId` - Processing status
 
-### Sistema
-- `GET /health` - Health check del sistema
-- `GET /api/health` - Health check de la API
+### System
+- `GET /health` - System health check
+- `GET /api/health` - API health check
 
-## 🎯 Funcionalidades por Módulo
+## 🎯 Features by Module
 
-### 📦 Gestión de Productos
-- ✅ Crear, editar, eliminar productos
-- ✅ Categorización automática
-- ✅ Gestión de imágenes
-- ✅ Control de stock
-- ✅ SKU automático
-- ✅ Búsqueda avanzada
+### 📦 Product Management
+- ✅ Create, edit, delete products
+- ✅ Automatic categorization
+- ✅ Image management
+- ✅ Stock control
+- ✅ Automatic SKU
+- ✅ Advanced search
 
-### 📊 Inventario Inteligente
-- ✅ Control de stock en tiempo real
-- ✅ Alertas de stock bajo
-- ✅ Movimientos de inventario
-- ✅ IA para predicción de demanda
-- ✅ Reportes de inventario
+### 📊 Intelligent Inventory
+- ✅ Real-time stock control
+- ✅ Low stock alerts
+- ✅ Inventory movements
+- ✅ AI for demand prediction
+- ✅ Inventory reports
 
-### 🔍 OCR Avanzado
-- ✅ Escaneo de facturas
-- ✅ Procesamiento de documentos
-- ✅ Extracción automática de datos
-- ✅ Historial de procesamiento
-- ✅ Múltiples formatos soportados
+### 🔍 Advanced OCR
+- ✅ Invoice scanning
+- ✅ Document processing
+- ✅ Automatic data extraction
+- ✅ Processing history
+- ✅ Multiple formats supported
 
-### ⚙️ Configuración del Sistema
-- ✅ Configuración general
-- ✅ Gestión de perfil
-- ✅ Configuración de seguridad
-- ✅ Notificaciones
-- ✅ Apariencia y tema
-- ✅ Gestión de plugins
-- ✅ Configuración del sistema
+### ⚙️ System Configuration
+- ✅ General configuration
+- ✅ Profile management
+- ✅ Security settings
+- ✅ Notifications
+- ✅ Appearance and theme
+- ✅ Plugin management
+- ✅ System configuration
 
-### 🔌 Sistema de Plugins
-- ✅ Smart Inventory (IA)
+### 🔌 Plugin System
+- ✅ Smart Inventory (AI)
 - ✅ OCR Module
 - ✅ POS Integration
 - ✅ Plugin Store
-- ✅ Activación/desactivación dinámica
+- ✅ Dynamic activation/deactivation
 
-## 🤝 Contribución
+## 🤝 Contribution
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Guías de Contribución
-- Sigue las convenciones de código establecidas
-- Añade tests para nuevas funcionalidades
-- Actualiza la documentación según sea necesario
-- Verifica que todos los tests pasen
+### Contribution Guidelines
+- Follow established code conventions
+- Add tests for new features
+- Update documentation as needed
+- Verify all tests pass
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE.txt` para más detalles.
+This project is under the MIT License. See the `LICENSE.txt` file for more details.
 
-## 🆘 Soporte
+## 🆘 Support
 
-- **Documentación**: Revisa la carpeta `docs/`
-- **Issues**: Reporta bugs en GitHub Issues
-- **Discusiones**: Únete a las discusiones en GitHub
-- **Wiki**: Consulta la wiki del proyecto
+- **Documentation**: Check the `docs/` folder
+- **Issues**: Report bugs in GitHub Issues
+- **Discussions**: Join discussions on GitHub
+- **Wiki**: Consult the project wiki
 
 ## 🎯 Roadmap
 
-### Versión 2.1 (Próxima)
-- [ ] Integración con pasarelas de pago
-- [ ] App móvil nativa
-- [ ] Reportes avanzados
-- [ ] Integración con contabilidad
-- [ ] Múltiples sucursales
+### Version 2.1 (Next)
+- [ ] Payment gateway integration
+- [ ] Native mobile app
+- [ ] Advanced reports
+- [ ] Accounting integration
+- [ ] Multiple branches
 
-### Versión 3.0 (Futuro)
-- [ ] API pública
-- [ ] Marketplace de plugins
-- [ ] IA avanzada para predicciones
-- [ ] Integración con e-commerce
-- [ ] Sistema de backup automático
+### Version 3.0 (Future)
+- [ ] Public API
+- [ ] Plugin marketplace
+- [ ] Advanced AI for predictions
+- [ ] E-commerce integration
+- [ ] Automatic backup system
 
-## 📈 Métricas del Proyecto
+## 📈 Project Metrics
 
-- **Líneas de código**: ~15,000+
-- **Componentes React**: 15+
-- **Endpoints API**: 20+
-- **Tests**: 95%+ cobertura
-- **Performance**: <2s carga inicial
-- **Compatibilidad**: Chrome, Firefox, Safari, Edge
+- **Lines of code**: ~15,000+
+- **React components**: 15+
+- **API endpoints**: 20+
+- **Tests**: 95%+ coverage
+- **Performance**: <2s initial load
+- **Compatibility**: Chrome, Firefox, Safari, Edge
 
-## 🏆 Logros
+## 🏆 Achievements
 
-- ✅ **Código limpio**: ESLint + Prettier configurado
-- ✅ **Testing completo**: Vitest + Jest + Testing Library
-- ✅ **CI/CD**: GitHub Actions configurado
-- ✅ **Documentación**: Completa y actualizada
-- ✅ **Scripts de automatización**: PowerShell scripts
-- ✅ **Branding consistente**: ZatoBox en toda la aplicación
-- ✅ **Configuración profesional**: Panel de configuración completo
+- ✅ **Clean code**: ESLint + Prettier configured
+- ✅ **Complete testing**: Vitest + Jest + Testing Library
+- ✅ **CI/CD**: GitHub Actions configured
+- ✅ **Documentation**: Complete and updated
+- ✅ **Automation scripts**: PowerShell scripts
+- ✅ **Consistent branding**: ZatoBox throughout the application
+- ✅ **Professional configuration**: Complete configuration panel
 
 ---
 
-**ZatoBox v2.0** - Transformando el comercio digital 🚀
+**ZatoBox v2.0** - Transforming digital commerce 🚀
 
-*Desarrollado con ❤️ para hacer el comercio más inteligente y eficiente.* 
+*Developed with ❤️ to make commerce smarter and more efficient.* 

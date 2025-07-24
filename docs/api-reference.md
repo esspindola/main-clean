@@ -1,6 +1,6 @@
 # 📡 API Reference - ZatoBox v2.0
 
-## 📋 Información General
+## 📋 General Information
 
 ### Base URL
 ```
@@ -8,15 +8,15 @@ Development: http://localhost:4444
 Production: https://api.zatobox.com
 ```
 
-### Autenticación
-La API utiliza **JWT (JSON Web Tokens)** para autenticación. Incluye el token en el header `Authorization`:
+### Authentication
+The API uses **JWT (JSON Web Tokens)** for authentication. Include the token in the `Authorization` header:
 
 ```
 Authorization: Bearer <your-jwt-token>
 ```
 
-### Formato de Respuesta
-Todas las respuestas siguen este formato:
+### Response Format
+All responses follow this format:
 
 ```json
 {
@@ -27,19 +27,19 @@ Todas las respuestas siguen este formato:
 }
 ```
 
-### Códigos de Estado HTTP
-- `200` - OK: Operación exitosa
-- `201` - Created: Recurso creado
-- `400` - Bad Request: Datos inválidos
-- `401` - Unauthorized: No autenticado
-- `403` - Forbidden: No autorizado
-- `404` - Not Found: Recurso no encontrado
-- `500` - Internal Server Error: Error del servidor
+### HTTP Status Codes
+- `200` - OK: Successful operation
+- `201` - Created: Resource created
+- `400` - Bad Request: Invalid data
+- `401` - Unauthorized: Not authenticated
+- `403` - Forbidden: Not authorized
+- `404` - Not Found: Resource not found
+- `500` - Internal Server Error: Server error
 
-## 🔐 Autenticación
+## 🔐 Authentication
 
 ### POST /api/auth/login
-Iniciar sesión de usuario.
+User login.
 
 **Request Body:**
 ```json
@@ -67,7 +67,7 @@ Iniciar sesión de usuario.
 ```
 
 ### POST /api/auth/register
-Registrar nuevo usuario.
+Register new user.
 
 **Request Body:**
 ```json
@@ -96,7 +96,7 @@ Registrar nuevo usuario.
 ```
 
 ### POST /api/auth/logout
-Cerrar sesión.
+Logout.
 
 **Headers:**
 ```
@@ -112,7 +112,7 @@ Authorization: Bearer <token>
 ```
 
 ### GET /api/auth/me
-Obtener información del usuario actual.
+Get current user information.
 
 **Headers:**
 ```
@@ -133,10 +133,10 @@ Authorization: Bearer <token>
 }
 ```
 
-## 📦 Productos
+## 📦 Products
 
 ### GET /api/products
-Obtener lista de productos.
+Get product list.
 
 **Headers:**
 ```
@@ -144,11 +144,11 @@ Authorization: Bearer <token>
 ```
 
 **Query Parameters:**
-- `page` (number): Número de página (default: 1)
-- `limit` (number): Elementos por página (default: 10)
-- `search` (string): Búsqueda por nombre
-- `category` (string): Filtrar por categoría
-- `status` (string): Filtrar por estado
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 10)
+- `search` (string): Search by name
+- `category` (string): Filter by category
+- `status` (string): Filter by status
 
 **Response:**
 ```json
@@ -181,7 +181,7 @@ Authorization: Bearer <token>
 ```
 
 ### POST /api/products
-Crear nuevo producto.
+Create new product.
 
 **Headers:**
 ```
@@ -221,7 +221,7 @@ images: [File1, File2, ...]
 ```
 
 ### GET /api/products/:id
-Obtener producto específico.
+Get specific product.
 
 **Headers:**
 ```
@@ -249,7 +249,7 @@ Authorization: Bearer <token>
 ```
 
 ### PUT /api/products/:id
-Actualizar producto.
+Update product.
 
 **Headers:**
 ```
@@ -289,7 +289,7 @@ images: [File1, File2, ...]
 ```
 
 ### DELETE /api/products/:id
-Eliminar producto.
+Delete product.
 
 **Headers:**
 ```
@@ -304,10 +304,10 @@ Authorization: Bearer <token>
 }
 ```
 
-## 💰 Ventas
+## 💰 Sales
 
 ### GET /api/sales
-Obtener lista de ventas.
+Get sales list.
 
 **Headers:**
 ```
@@ -315,11 +315,11 @@ Authorization: Bearer <token>
 ```
 
 **Query Parameters:**
-- `page` (number): Número de página
-- `limit` (number): Elementos por página
-- `startDate` (string): Fecha de inicio (ISO)
-- `endDate` (string): Fecha de fin (ISO)
-- `status` (string): Filtrar por estado
+- `page` (number): Page number
+- `limit` (number): Items per page
+- `startDate` (string): Start date (ISO)
+- `endDate` (string): End date (ISO)
+- `status` (string): Filter by status
 
 **Response:**
 ```json
@@ -355,7 +355,7 @@ Authorization: Bearer <token>
 ```
 
 ### POST /api/sales
-Crear nueva venta.
+Create new sale.
 
 **Headers:**
 ```
@@ -405,7 +405,7 @@ Content-Type: application/json
 ```
 
 ### GET /api/sales/:id
-Obtener venta específica.
+Get specific sale.
 
 **Headers:**
 ```
@@ -438,10 +438,10 @@ Authorization: Bearer <token>
 }
 ```
 
-## 📊 Inventario
+## 📊 Inventory
 
 ### GET /api/inventory
-Obtener estado del inventario.
+Get inventory status.
 
 **Headers:**
 ```
@@ -469,7 +469,7 @@ Authorization: Bearer <token>
 ```
 
 ### GET /api/inventory/movements
-Obtener movimientos de inventario.
+Get inventory movements.
 
 **Headers:**
 ```
@@ -477,10 +477,10 @@ Authorization: Bearer <token>
 ```
 
 **Query Parameters:**
-- `page` (number): Número de página
-- `limit` (number): Elementos por página
-- `productId` (number): Filtrar por producto
-- `type` (string): Tipo de movimiento (in/out)
+- `page` (number): Page number
+- `limit` (number): Items per page
+- `productId` (number): Filter by product
+- `type` (string): Movement type (in/out)
 
 **Response:**
 ```json
@@ -510,7 +510,7 @@ Authorization: Bearer <token>
 ```
 
 ### POST /api/inventory/movements
-Registrar movimiento de inventario.
+Record inventory movement.
 
 **Headers:**
 ```
@@ -550,7 +550,7 @@ Content-Type: application/json
 ## 🔍 OCR
 
 ### POST /api/ocr/upload
-Subir documento para procesamiento OCR.
+Upload document for OCR processing.
 
 **Headers:**
 ```
@@ -578,7 +578,7 @@ type: "invoice" | "receipt" | "document"
 ```
 
 ### GET /api/ocr/status/:jobId
-Obtener estado del procesamiento OCR.
+Get OCR processing status.
 
 **Headers:**
 ```
@@ -611,7 +611,7 @@ Authorization: Bearer <token>
 ```
 
 ### GET /api/ocr/history
-Obtener historial de OCR.
+Get OCR history.
 
 **Headers:**
 ```
@@ -619,9 +619,9 @@ Authorization: Bearer <token>
 ```
 
 **Query Parameters:**
-- `page` (number): Número de página
-- `limit` (number): Elementos por página
-- `status` (string): Filtrar por estado
+- `page` (number): Page number
+- `limit` (number): Items per page
+- `status` (string): Filter by status
 
 **Response:**
 ```json
@@ -651,7 +651,7 @@ Authorization: Bearer <token>
 ## 🔌 Plugins
 
 ### GET /api/plugins
-Obtener lista de plugins disponibles.
+Get available plugins list.
 
 **Headers:**
 ```
@@ -681,7 +681,7 @@ Authorization: Bearer <token>
 ```
 
 ### POST /api/plugins/:id/toggle
-Activar/desactivar plugin.
+Activate/deactivate plugin.
 
 **Headers:**
 ```
@@ -711,7 +711,7 @@ Content-Type: application/json
 ## 🏥 Health Checks
 
 ### GET /health
-Health check básico del sistema.
+Basic system health check.
 
 **Response:**
 ```json
@@ -724,7 +724,7 @@ Health check básico del sistema.
 ```
 
 ### GET /api/health
-Health check detallado de la API.
+Detailed API health check.
 
 **Response:**
 ```json
@@ -745,9 +745,9 @@ Health check detallado de la API.
 }
 ```
 
-## 🚨 Códigos de Error
+## 🚨 Error Codes
 
-### Errores Comunes
+### Common Errors
 
 **400 - Bad Request**
 ```json
@@ -798,7 +798,7 @@ Health check detallado de la API.
 }
 ```
 
-## 📝 Ejemplos de Uso
+## 📝 Usage Examples
 
 ### JavaScript/Node.js
 ```javascript
@@ -865,6 +865,6 @@ curl -X POST http://localhost:4444/api/products \
 
 ---
 
-**ZatoBox v2.0 API** - Documentación completa 📡
+**ZatoBox v2.0 API** - Complete documentation 📡
 
-*Para más información, consulta la documentación de desarrollo.* 
+*For more information, consult the development documentation.* 
