@@ -1,4 +1,5 @@
-version: '3.8'
+# Docker Compose para OCR Backend
+# Versión actualizada sin tag obsoleto
 
 services:
   ocr-backend:

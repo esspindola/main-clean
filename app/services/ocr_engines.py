@@ -6,7 +6,14 @@ Advanced OCR processing with multiple engines for maximum accuracy
 import cv2
 import numpy as np
 import pytesseract
-import easyocr
+# EasyOCR import made optional to prevent startup issues
+try:
+    import easyocr
+    EASYOCR_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ EasyOCR not available: {e}")
+    EASYOCR_AVAILABLE = False
+    easyocr = None
 import logging
 from typing import Dict, List, Optional, Tuple, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -35,20 +42,27 @@ class OCREngineManager:
     
     def _initialize_engines(self):
         """Initialize OCR engines."""
-        try:
-            # Initialize EasyOCR with Spanish and Englis
-            self.easyocr_reader = easyocr.Reader(['es', 'en'], gpu=False)
-            logger.info("OCR engines initialized successfully")
-            
+        self.easyocr_reader = None
         
+        if EASYOCR_AVAILABLE:
             try:
-                version = pytesseract.get_tesseract_version()
-                logger.info(f"Tesseract version: {version}")
+                # Initialize EasyOCR with Spanish and English
+                self.easyocr_reader = easyocr.Reader(['es', 'en'], gpu=False)
+                logger.info("EasyOCR initialized successfully")
             except Exception as e:
-                logger.warning(f"Tesseract check failed: {e}")
+                logger.error(f"EasyOCR initialization failed: {e}")
+                self.easyocr_reader = None
+        else:
+            logger.warning("EasyOCR not available, using Tesseract only")
+            
+        # Test Tesseract
+        try:
+            version = pytesseract.get_tesseract_version()
+            logger.info(f"Tesseract version: {version}")
         except Exception as e:
-            logger.error(f"OCR engine initialization failed: {e}")
-            raise
+            logger.warning(f"Tesseract check failed: {e}")
+        
+        logger.info("OCR engines initialization completed")
     
     def extract_text_multi_engine(self, image: np.ndarray, detections: List[Dict], 
                                  table_regions: List[Dict]) -> Dict[str, Any]:
@@ -253,7 +267,7 @@ class OCREngineManager:
             text = ocr_data['text'][i].strip()
             conf = float(ocr_data['conf'][i])
             
-            if text and conf > 30:  # Filter low confidence
+            if text and conf > 30:  
                 x = ocr_data['left'][i]
                 y = ocr_data['top'][i]
                 w = ocr_data['width'][i]
@@ -261,7 +275,7 @@ class OCREngineManager:
                 
                 results.append({
                     'text': text,
-                    'confidence': conf / 100.0,  # Normalize to 0-1
+                    'confidence': conf / 100.0,  
                     'bbox': {
                         'xmin': x, 'ymin': y, 
                         'xmax': x + w, 'ymax': y + h
@@ -279,7 +293,7 @@ class OCREngineManager:
             if self.easyocr_reader is None:
                 return []
             
-            # Convert to RGB if needed
+            
             if len(image.shape) == 3:
                 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             else:
@@ -289,7 +303,7 @@ class OCREngineManager:
             
             results = []
             for bbox_points, text, confidence in ocr_results:
-                if confidence > 0.3:  # Filter low confidence
+                if confidence > 0.3:  
                     # Convert bbox points to rectangle
                     xs = [point[0] for point in bbox_points]
                     ys = [point[1] for point in bbox_points]
@@ -315,13 +329,13 @@ class OCREngineManager:
     def _enhance_region_for_ocr(self, region: np.ndarray, class_name: str) -> np.ndarray:
         """Apply class-specific enhancement for OCR."""
         try:
-            # Convert to grayscale if needed
+            
             if len(region.shape) == 3:
                 gray = cv2.cvtColor(region, cv2.COLOR_BGR2GRAY)
             else:
                 gray = region.copy()
             
-            # Class-specific preprocessing
+        
             if class_name in ['numero_factura', 'R.U.C']:
                 # For numbers and IDs, use strong binarization
                 enhanced = cv2.adaptiveThreshold(
@@ -348,7 +362,7 @@ class OCREngineManager:
         """Extract text from region using multiple engines."""
         results = []
         
-        # Try both engines
+        
         tesseract_results = self._tesseract_ocr(region, 'region')
         easyocr_results = self._easyocr_ocr(region, 'region')
         
@@ -360,7 +374,7 @@ class OCREngineManager:
     def _process_table_region(self, table_region: np.ndarray, table_id: int) -> List[Dict]:
         """Process table region with structure-aware OCR."""
         try:
-            # Detect table structure (rows and columns)
+    
             rows, cols = self._detect_table_structure(table_region)
             
             results = []
@@ -398,16 +412,14 @@ class OCREngineManager:
     
     def _detect_table_structure(self, table_image: np.ndarray) -> Tuple[List, List]:
         """Detect table structure (rows and columns)."""
-        # Simplified table structure detection
-        # In production, this would be more sophisticated
+    
         gray = cv2.cvtColor(table_image, cv2.COLOR_BGR2GRAY) if len(table_image.shape) == 3 else table_image
         
-        # Detect horizontal and vertical lines
+    
         horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
         vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 40))
         
-        # This is a simplified implementation
-        # Return dummy structure for now
+        
         rows = [[(0, 0, table_image.shape[1], table_image.shape[0])]]
         cols = []
         
@@ -428,7 +440,7 @@ class OCREngineManager:
             if text:
                 return {
                     'text': text,
-                    'confidence': 0.8,  # Simplified confidence
+                    'confidence': 0.8,  
                     'engine': 'tesseract'
                 }
             
@@ -443,19 +455,19 @@ class OCREngineManager:
         try:
             all_results = []
             
-            # Collect all OCR results
+            
             for result_type, results in ocr_results.items():
                 if isinstance(results, list):
                     all_results.extend(results)
             
-            # Remove duplicates and merge overlapping results
+            
             consolidated = self._merge_overlapping_results(all_results)
             
-            # Calculate average confidence
+        
             confidences = [r.get('confidence', 0) for r in consolidated]
             avg_confidence = sum(confidences) / len(confidences) if confidences else 0.0
             
-            # Group results for structured processing
+        
             structured_rows = self._group_into_rows(consolidated, image_shape)
             
             return {
@@ -481,13 +493,13 @@ class OCREngineManager:
         merged = []
         
         for result in results:
-            # Check if this result overlaps significantly with any merged result
+    
             overlapped = False
             
             for merged_result in merged:
                 if self._calculate_overlap(result.get('bbox', {}), 
                                          merged_result.get('bbox', {})) > 0.5:
-                    # Merge with higher confidence result
+                    
                     if result.get('confidence', 0) > merged_result.get('confidence', 0):
                         merged_result.update(result)
                     overlapped = True
@@ -534,9 +546,9 @@ class OCREngineManager:
             bbox = result.get('bbox', {})
             y_center = (bbox.get('ymin', 0) + bbox.get('ymax', 0)) / 2
             
-            # Find appropriate row (within tolerance)
+            # Find appropriate row 
             row_key = None
-            tolerance = image_shape[0] * 0.02  # 2% of image height
+            tolerance = image_shape[0] * 0.02  
             
             for existing_y in rows.keys():
                 if abs(y_center - existing_y) < tolerance:
@@ -548,14 +560,14 @@ class OCREngineManager:
             
             rows[row_key].append(result)
         
-        # Convert to structured format
+        
         structured_rows = []
         
         for y_pos, row_results in sorted(rows.items()):
-            # Sort by X coordinate within row
+        
             row_results.sort(key=lambda x: x.get('bbox', {}).get('xmin', 0))
             
-            # Classify columns (description, quantity, price)
+            
             row_data = self._classify_row_columns(row_results, image_shape[1])
             
             if row_data:
@@ -568,7 +580,7 @@ class OCREngineManager:
         if not row_results:
             return None
         
-        # Define column boundaries (can be made adaptive)
+    
         desc_boundary = image_width * 0.6
         qty_boundary = image_width * 0.8
         
@@ -586,7 +598,7 @@ class OCREngineManager:
             
             total_confidence += confidence
             
-            # Classify based on position and content
+            
             if self._is_price_text(text):
                 price_parts.append(text)
             elif self._is_quantity_text(text):
@@ -619,5 +631,5 @@ class OCREngineManager:
     
     def _is_total_price(self, text: str) -> bool:
         """Check if text represents a total price (vs unit price)."""
-        # Simple heuristic - could be improved
+    
         return '$' in text or '€' in text

@@ -24,12 +24,13 @@ def create_app(config_class=Config):
     setup_logging(app)
     logger = logging.getLogger(__name__)
     
-    # Initialize CORS
+    # Initialize CORS with comprehensive settings
     CORS(app, 
          origins=app.config['CORS_ORIGINS'],
          supports_credentials=True,
-         allow_headers=["Content-Type", "Authorization"],
-         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+         expose_headers=["Content-Range", "X-Content-Range"])
     
     # Initialize Swagger API documentation
     api = Api(app,
@@ -53,14 +54,24 @@ def create_app(config_class=Config):
     from app.api.v1.invoice import invoice_ns
     from app.api.v1.health import health_ns
     from app.api.v1.orders import orders_ns
+    from app.api.v1.database import db_ns
     
     api.add_namespace(health_ns, path='/health')
     api.add_namespace(invoice_ns, path='/invoice')
     api.add_namespace(orders_ns, path='/orders')
+    api.add_namespace(db_ns, path='/database')
     
     # Initialize core services
     from app.core.ml_models import ModelManager
     app.model_manager = ModelManager()
+    
+    # Load ML models on startup
+    try:
+        app.model_manager.load_models()
+        logger.info("ML models loaded successfully during app initialization")
+    except Exception as e:
+        logger.error(f"Failed to load ML models during startup: {e}")
+        # Continue with dummy models for debugging
     
     # Add simple health check route for Docker
     @app.route('/health')

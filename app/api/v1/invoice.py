@@ -109,6 +109,8 @@ class ProcessInvoice(Resource):
         """
         start_time = time.time()
         
+        logger.info("🔥🔥🔥 EMERGENCY FIX VERSION - PROCESSING INVOICE 🔥🔥🔥")
+        
         try:
         
             args = upload_parser.parse_args()
@@ -143,21 +145,234 @@ class ProcessInvoice(Resource):
                 rotation_correction=rotation_correction,
                 confidence_threshold=confidence_threshold
             )
-            
+
             result = processor.process_document(file)
+            
+            logger.info("🎯 EXTRACTING FINAL PROCESSED DATA...")
+            
+            metadata = result.get('metadata', {})
+            line_items = result.get('line_items', [])
+            detections = result.get('detections', [])
+            processed_image = result.get('processed_image')
+            
+            logger.info(f"📊 API RECEIVED DATA: metadata={len(metadata)}, items={len(line_items)}")
+            logger.info("📋 API METADATA RECEIVED:")
+            for field, value in metadata.items():
+                logger.info(f"  🔸 {field}: '{value}'")
+            
+    
+            def extract_clean_value(field_name, raw_value):
+                """Extraer valor limpio de cualquier formato"""
+                logger.info(f"🔧 CLEANING {field_name}: {type(raw_value)} -> {str(raw_value)[:100]}...")
+                
+                
+                if isinstance(raw_value, dict) and 'value' in raw_value:
+                    clean_val = raw_value['value']
+                    logger.info(f"  ✅ DICT: {field_name} = '{clean_val}'")
+                    return clean_val if clean_val else 'No detectado'
+                
+                
+                elif isinstance(raw_value, str) and "'value':" in raw_value:
+                    try:
+                        
+                        import ast
+                        parsed = ast.literal_eval(raw_value)
+                        clean_val = parsed.get('value', 'No detectado')
+                        logger.info(f"  ✅ AST PARSED: {field_name} = '{clean_val}'")
+                        return clean_val
+                    except Exception as e1:
+                        try:
+                    
+                            import re
+                            match = re.search(r"'value':\s*'([^']*)'", raw_value)
+                            if match:
+                                clean_val = match.group(1)
+                                logger.info(f"  ✅ REGEX PARSED: {field_name} = '{clean_val}'")
+                                return clean_val
+                            else:
+                        
+                                import json
+                                json_str = raw_value.replace("'", '"')
+                                parsed = json.loads(json_str)
+                                clean_val = parsed.get('value', 'No detectado')
+                                logger.info(f"  ✅ JSON PARSED: {field_name} = '{clean_val}'")
+                                return clean_val
+                        except Exception as e2:
+                            logger.error(f"  ❌ ALL PARSING FAILED for {field_name}: {e1}, {e2}")
+                            return 'No detectado'
+                
+            
+                elif isinstance(raw_value, str) and raw_value.strip():
+                    logger.info(f"  ✅ DIRECT STRING: {field_name} = '{raw_value}'")
+                    return raw_value.strip()
+                
+                
+                else:
+                    logger.info(f"  ⚠️ EMPTY VALUE: {field_name} = 'No detectado'")
+                    return 'No detectado'
+            
+            
+            clean_metadata = {}
+            for field, value in metadata.items():
+                clean_metadata[field] = extract_clean_value(field, value)
+            
+    
+            metadata = clean_metadata
+            logger.info("🎯 FINAL CLEAN METADATA:")
+            for field, value in metadata.items():
+                logger.info(f"  🔹 {field}: '{value}'")
+            
+        
+            if not metadata or all(v is None or v == '' for v in metadata.values()):
+                logger.warning("⚠️ No metadata found, forcing direct robust extraction...")
+                
+            
+                try:
+                    file.seek(0)
+                    from pdf2image import convert_from_bytes
+                    import cv2
+                    import numpy as np
+                    
+                    if file.filename.lower().endswith('.pdf'):
+                        pdf_images = convert_from_bytes(file.read(), dpi=300, fmt='RGB')
+                        if pdf_images:
+                            image_array = np.array(pdf_images[0])
+                            image_bgr = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
+                    else:
+                        from PIL import Image
+                        file.seek(0)
+                        pil_image = Image.open(file.stream).convert('RGB')
+                        image_array = np.array(pil_image)
+                        image_bgr = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
+                    
+                
+                    import sys
+                    import os
+                    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+                    
+                    from robust_multi_engine_ocr import RobustMultiEngineOCR
+                    
+                    robust_system = RobustMultiEngineOCR(
+                        yolo_model=current_app.model_manager.yolo_model if hasattr(current_app, 'model_manager') else None,
+                        model_classes=current_app.model_manager.classes if hasattr(current_app, 'model_manager') else {}
+                    )
+                    
+                    robust_result = robust_system.process_invoice_robust(image_bgr)
+                    
+                    if robust_result.get('success'):
+                        extracted_metadata = robust_result.get('metadata', {})
+                        extracted_items = robust_result.get('line_items', [])
+                        
+                        logger.info(f"🚀 ROBUST EXTRACTION SUCCESS: {len(extracted_metadata)} fields, {len(extracted_items)} items")
+                        
+                        # Mapear directamente
+                        metadata = {
+                            'ruc': extracted_metadata.get('ruc', 'No detectado'),
+                            'invoice_number': extracted_metadata.get('invoice_number', 'No detectado'),
+                            'date': extracted_metadata.get('date', 'No detectado'),
+                            'company_name': extracted_metadata.get('company_name', 'No detectado'),
+                            'subtotal': extracted_metadata.get('subtotal', 'No detectado'),
+                            'iva': extracted_metadata.get('iva', 'No detectado'),
+                            'total': extracted_metadata.get('total', 'No detectado')
+                        }
+                        
+                        line_items = [{
+                            'description': item.get('description', 'No detectado'),
+                            'quantity': item.get('quantity', 'No detectado'),
+                            'unit_price': item.get('unit_price', 'No detectado'),
+                            'total_price': item.get('total_price', 'No detectado'),
+                            'confidence': item.get('confidence', 0.0)
+                        } for item in extracted_items]
+                        
+                        logger.info("✅ DIRECT ROBUST MAPPING COMPLETED")
+                        
+                
+                        for field, value in metadata.items():
+                            if value and value != 'No detectado':
+                                logger.info(f"📋 {field}: {value}")
+                    
+                except Exception as e:
+                    logger.error(f"❌ Direct robust extraction failed: {e}")
+                
+                    try:
+                        file.seek(0)
+                        import pytesseract
+                        import re
+                        
+                        # OCR directo del archivo
+                        if file.filename.lower().endswith('.pdf'):
+                            pdf_images = convert_from_bytes(file.read(), dpi=300)
+                            if pdf_images:
+                                text = pytesseract.image_to_string(pdf_images[0], lang='spa+eng')
+                        else:
+                            file.seek(0)
+                            pil_image = Image.open(file.stream)
+                            text = pytesseract.image_to_string(pil_image, lang='spa+eng')
+                        
+                        logger.info(f"📄 EMERGENCY OCR: {len(text)} characters extracted")
+                        
+                        # Patrones ecuatorianos directos
+                        emergency_patterns = {
+                            'ruc': r'(?:R\.?U\.?C\.?|RUC)[:\s]*(\d{10,13})',
+                            'company_name': r'([A-ZÁÉÍÓÚÑ][A-Za-záéíóúñ\s\.&,-]{15,60})',
+                            'invoice_number': r'(?:FACTURA|FACT)[:\s#]*(\d{3}-\d{3}-\d{9})',
+                            'date': r'(\d{2}[\/\-\.]\d{2}[\/\-\.]\d{4})',
+                            'subtotal': r'(?:SUBTOTAL)[:\s$]*(\d+[.,]\d{2})',
+                            'iva': r'(?:I\.?V\.?A\.?|12%)[:\s$]*(\d+[.,]\d{2})',
+                            'total': r'(?:TOTAL)[:\s$]*(\d+[.,]\d{2})'
+                        }
+                        
+                        emergency_metadata = {}
+                        for field, pattern in emergency_patterns.items():
+                            match = re.search(pattern, text, re.IGNORECASE)
+                            if match:
+                                value = match.group(1) if match.groups() else match.group(0)
+                                emergency_metadata[field] = value.strip()
+                                logger.info(f"🔍 EMERGENCY {field}: {value.strip()}")
+                        
+                        if emergency_metadata:
+                            metadata.update(emergency_metadata)
+                            logger.info("🆘 EMERGENCY EXTRACTION COMPLETED")
+                            
+                    except Exception as emergency_error:
+                        logger.error(f"❌ Emergency extraction failed: {emergency_error}")
             
             processing_time = time.time() - start_time
             
         
+            
+            extracted_fields = sum(1 for v in metadata.values() if v and v != 'No detectado' and v != '')
+            total_fields = len(metadata)
+            
             response = {
                 'success': True,
-                'message': 'Invoice processed successfully',
-                'metadata': result.get('metadata', {}),
-                'line_items': result.get('line_items', []),
-                'detections': result.get('detections', []),
-                'processed_image': result.get('processed_image'),
-                'processing_time': round(processing_time, 2)
+                'message': f'🔥 VERSION 2025-07-24 21:59 ACTIVE: {extracted_fields}/{total_fields} campos extraídos - {len(line_items or [])} productos detectados',
+                'metadata': metadata,
+                'line_items': line_items,
+                'detections': detections,
+                'processed_image': processed_image,
+                'processing_time': round(processing_time, 2),
+                'statistics': {
+                    'yolo_detections': result.get('yolo_detections', 0),
+                    'table_regions': result.get('table_regions', 0),
+                    'ocr_confidence': result.get('ocr_confidence', 0.0),
+                    'model_status': result.get('model_status', {}),
+                    'extracted_fields': extracted_fields,
+                    'total_fields': total_fields,
+                    'extraction_rate': f"{extracted_fields}/{total_fields}"
+                }
             }
+            
+        
+            try:
+                from app.database.invoice_db import get_invoice_db
+                db = get_invoice_db()
+                invoice_id = db.save_invoice(file.filename, response)
+                response['database_id'] = invoice_id
+                logger.info(f"💾 Factura guardada en BD con ID: {invoice_id}")
+            except Exception as db_error:
+                logger.error(f"❌ Error guardando en BD: {db_error}")
+                response['database_error'] = str(db_error)
             
             logger.info(f"Invoice processed successfully in {processing_time:.2f}s")
             return response, 200
@@ -282,7 +497,7 @@ class DebugInvoice(Resource):
             'simple_test': {}
         }
         
-        # Test Tesseract
+    
         try:
             version = pytesseract.get_tesseract_version()
             debug_info['ocr_engines']['tesseract'] = {
@@ -304,13 +519,13 @@ class DebugInvoice(Resource):
                 'error': str(e)
             }
         
-        # Test model detection
+        
         if hasattr(current_app, 'model_manager') and current_app.model_manager.is_loaded:
             try:
-                # Create test image más realista para facturas
+        
                 test_img = np.ones((800, 600, 3), dtype=np.uint8) * 255
                 
-                # Simular header de factura
+                
                 cv2.putText(test_img, 'EMPRESA S.A.', (50, 50), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
                 cv2.putText(test_img, 'RUC: 1791354400001', (50, 100), 
@@ -320,7 +535,7 @@ class DebugInvoice(Resource):
                 cv2.putText(test_img, 'FECHA: 15/02/2024', (50, 200), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
                 
-                # Simular tabla de items
+        
                 cv2.rectangle(test_img, (50, 250), (550, 450), (0, 0, 0), 2)
                 cv2.putText(test_img, 'DESCRIPCION', (60, 280), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
@@ -329,7 +544,7 @@ class DebugInvoice(Resource):
                 cv2.putText(test_img, 'PRECIO', (400, 280), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
                 
-                # Items
+        
                 cv2.putText(test_img, 'Producto A', (60, 320), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
                 cv2.putText(test_img, '2', (270, 320), 
@@ -337,7 +552,7 @@ class DebugInvoice(Resource):
                 cv2.putText(test_img, '$25.00', (410, 320), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
                 
-                # Totales
+    
                 cv2.putText(test_img, 'SUBTOTAL: $50.00', (350, 500), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
                 cv2.putText(test_img, 'IVA: $6.00', (350, 550), 
@@ -387,7 +602,7 @@ class SwitchModel(Resource):
             import shutil
             shutil.copy2(model_path, 'models/best.pt')
             
-            # Reload model manager
+        
             current_app.model_manager._load_yolo_model()
             
             return {

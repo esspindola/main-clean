@@ -6,7 +6,14 @@ Combines the best of the original backend.py with the current architecture
 import cv2
 import numpy as np
 import pandas as pd
-import easyocr
+
+try:
+    import easyocr
+    EASYOCR_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ EasyOCR not available: {e}")
+    EASYOCR_AVAILABLE = False
+    easyocr = None
 import pytesseract
 import logging
 from typing import List, Dict, Tuple, Optional
@@ -23,7 +30,16 @@ class EnhancedOCRService:
     """
     
     def __init__(self):
-        self.easyocr_reader = easyocr.Reader(['es'], gpu=False)
+        self.easyocr_reader = None
+        if EASYOCR_AVAILABLE:
+            try:
+                self.easyocr_reader = easyocr.Reader(['es', 'en'], gpu=False)
+                logger.info("EasyOCR initialized with Spanish and English")
+            except Exception as e:
+                logger.error(f"Failed to initialize EasyOCR: {e}")
+                self.easyocr_reader = None
+        else:
+            logger.warning("EasyOCR not available, using Tesseract only")
         
     def find_table_roi(self, img_bgr: np.ndarray) -> Optional[Tuple[int, int, int, int]]:
         """
@@ -58,22 +74,31 @@ class EnhancedOCRService:
 
     def easyocr_text_regions(self, image: np.ndarray) -> List[Dict]:
         """Extract text regions using EasyOCR"""
+        if not self.easyocr_reader:
+            logger.warning("EasyOCR not available, skipping")
+            return []
+            
         try:
             results = self.easyocr_reader.readtext(image)
             boxes = []
             
             for bbox, text, confidence in results:
-                if confidence > 0.3:  
+                if confidence > 0.2:  
+                    text = text.strip()
+                
+                    if len(text) < 1:
+                        continue
+                        
                     xs = [p[0] for p in bbox]
                     ys = [p[1] for p in bbox]
                     boxes.append({
-                        "text": text.strip(),
+                        "text": text,
                         "confidence": confidence,
                         "xmin": int(min(xs)),
                         "ymin": int(min(ys)),
                         "xmax": int(max(xs)),
                         "ymax": int(max(ys)),
-                        "class": "ocr"
+                        "class": "easyocr"
                     })
             
             logger.info(f"EasyOCR detected {len(boxes)} text regions")
@@ -102,16 +127,19 @@ class EnhancedOCRService:
                         text = data['text'][i].strip()
                         conf = int(data['conf'][i])
                         
-                        if text and conf > 30:  
-                            boxes.append({
-                                "text": text,
-                                "confidence": conf / 100.0, 
-                                "xmin": data['left'][i],
-                                "ymin": data['top'][i],
-                                "xmax": data['left'][i] + data['width'][i],
-                                "ymax": data['top'][i] + data['height'][i],
-                                "class": "tesseract"
-                            })
+                        if text and conf > 20:  
+                            # Clean text
+                            text = re.sub(r'[^\w\s\$\.,\-]', '', text).strip()
+                            if len(text) >= 1:  
+                                boxes.append({
+                                    "text": text,
+                                    "confidence": conf / 100.0, 
+                                    "xmin": data['left'][i],
+                                    "ymin": data['top'][i],
+                                    "xmax": data['left'][i] + data['width'][i],
+                                    "ymax": data['top'][i] + data['height'][i],
+                                    "class": "tesseract"
+                                })
                     break  
                 except Exception as config_error:
                     continue
@@ -136,16 +164,25 @@ class EnhancedOCRService:
         return sub_bboxes
 
     def assign_column(self, bb: Dict, x_desc_max: int, x_cant_max: int) -> str:
-        """Assign column type based on text content and position"""
+        """Enhanced column assignment using both content and position"""
         text = bb["text"].strip().lower()
         x_cent = (bb["xmin"] + bb["xmax"]) / 2
 
-
-        if any(indicator in text for indicator in ["$", "usd", "precio"]) or re.match(r'^\d+[.,]\d{2}$', text):
+        
+        if any(indicator in text for indicator in ["$", "usd", "precio", "total"]):
+            return "precio"
+            
+    
+        if re.match(r'^\d+[.,]\d{2}$', text) or (re.match(r'^\d+$', text) and len(text) >= 4):
             return "precio"
         
-        if re.match(r'^\d+$', text) and len(text) <= 3:
+        
+        if re.match(r'^\d+$', text) and len(text) <= 3 and int(text) < 1000:
             return "cantidad"
+            
+        if any(unit in text for unit in ["unid", "pza", "kg", "lt", "und", "pcs"]):
+            return "cantidad"
+        
         
         if x_cent < x_desc_max:
             return "descripcion"
@@ -224,40 +261,88 @@ class EnhancedOCRService:
 
         return extracted_rows
 
-    def get_all_bboxes(self, image_np: np.ndarray, yolo_detections: Optional[List[Dict]] = None) -> Tuple[List[Dict], bool]:
-        """Combine YOLO detections with OCR results"""
+    def extract_text_from_yolo_regions(self, image: np.ndarray, yolo_detections: List[Dict]) -> List[Dict]:
+        """Extract text from YOLO detected regions using both OCR engines"""
+        enriched_detections = []
         
+        for detection in yolo_detections:
+            
+            x1, y1 = int(detection.get('xmin', 0)), int(detection.get('ymin', 0))
+            x2, y2 = int(detection.get('xmax', 0)), int(detection.get('ymax', 0))
+            
+            if x2 > x1 and y2 > y1:
+                region = image[y1:y2, x1:x2]
+                
+                
+                region_texts = []
+                
+                # EasyOCR first
+                easy_boxes = self.easyocr_text_regions(region)
+                for box in easy_boxes:
+                    if box['confidence'] > 0.4:
+                        region_texts.append((box['text'], box['confidence']))
+                
+                # Tesseract as backup
+                if not region_texts:
+                    tess_boxes = self.tesseract_text_regions(region)
+                    for box in tess_boxes:
+                        if box['confidence'] > 0.3:
+                            region_texts.append((box['text'], box['confidence']))
+                
+                # Choose best text
+                if region_texts:
+                    best_text, best_conf = max(region_texts, key=lambda x: x[1])
+                    detection['extracted_text'] = best_text
+                    detection['ocr_confidence'] = best_conf
+                else:
+                    detection['extracted_text'] = ''
+                    detection['ocr_confidence'] = 0.0
+            
+            enriched_detections.append(detection)
+        
+        return enriched_detections
+    
+    def get_all_bboxes(self, image_np: np.ndarray, yolo_detections: Optional[List[Dict]] = None) -> Tuple[List[Dict], bool]:
+        """Combine YOLO detections with OCR results - enhanced version"""
+        
+       
         roi_coords = self.find_table_roi(image_np)
         has_roi = roi_coords is not None
         
+      
         if roi_coords:
             x, y, w, h = roi_coords
             ocr_target = image_np[y:y + h, x:x + w]
+            logger.info(f"Using table ROI: {roi_coords}")
         else:
             ocr_target = image_np
+            logger.info("Using full image for OCR")
 
-        # YOLO boxes
+      
         yolo_boxes = []
         if yolo_detections:
-            for detection in yolo_detections:
+            enriched_yolo = self.extract_text_from_yolo_regions(image_np, yolo_detections)
+            for detection in enriched_yolo:
                 yolo_boxes.append({
                     "class": detection.get("class_name", "unknown"),
-                    "text": "",
+                    "text": detection.get("extracted_text", ""),
                     "confidence": detection.get("confidence", 0.0),
+                    "ocr_confidence": detection.get("ocr_confidence", 0.0),
                     "xmin": int(detection.get("xmin", 0)),
                     "ymin": int(detection.get("ymin", 0)),
                     "xmax": int(detection.get("xmax", 0)),
                     "ymax": int(detection.get("ymax", 0)),
                 })
 
-       
+      
         image_rgb = cv2.cvtColor(ocr_target, cv2.COLOR_BGR2RGB)
         ocr_boxes = self.easyocr_text_regions(image_rgb)
         
-       
+      
         tesseract_boxes = self.tesseract_text_regions(ocr_target)
         ocr_boxes.extend(tesseract_boxes)
 
+       
         if roi_coords:
             x, y = roi_coords[:2]
             for box in ocr_boxes:
@@ -266,11 +351,11 @@ class EnhancedOCRService:
                 box["ymin"] += y
                 box["ymax"] += y
 
-       
         expanded = []
         for box in ocr_boxes:
             expanded.extend(self.split_and_classify_text(box))
 
+        logger.info(f"Combined {len(yolo_boxes)} YOLO boxes with {len(expanded)} OCR boxes")
         return yolo_boxes + expanded, has_roi
 
     def extract_invoice_data(self, image: np.ndarray, yolo_detections: Optional[List[Dict]] = None) -> List[Dict]:

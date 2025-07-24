@@ -21,8 +21,19 @@ class Config:
     
    
     CORS_ORIGINS = [
+        # Development servers
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:5173",  # Vite dev server
+        "http://127.0.0.1:5173",  # Vite dev server
+        "http://localhost:4444",  # Node.js backend
+        "http://127.0.0.1:4444",  # Node.js backend
+        # Docker and production
+        "http://localhost:8001",  # Docker OCR backend
+        "http://127.0.0.1:8001",  # Docker OCR backend
+        "http://localhost:8080",  # Docker nginx
+        "http://127.0.0.1:8080",  # Docker nginx
+        # External
         "https://web-navy-nine.vercel.app",
         "https://*.ngrok-free.app"
     ]
@@ -94,8 +105,6 @@ class TestingConfig(Config):
     DEBUG = True
     WTF_CSRF_ENABLED = False
 
-
-g
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,

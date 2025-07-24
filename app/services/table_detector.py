@@ -16,7 +16,7 @@ class TableDetector:
     Advanced table detection using computer vision techniques.
     
     Methods:
-    - Morphological operations for line detection
+    - Morphological operations for linedetection
     - Contour analysis for table boundary detection
     - Cell structure analysis
     - Table validation and filtering
@@ -40,7 +40,7 @@ class TableDetector:
         try:
             tables = []
             
-            # Convert to grayscale
+          
             if len(image.shape) == 3:
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             else:
@@ -79,19 +79,19 @@ class TableDetector:
                 gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 15, -2
             )
             
-            # Define morphological kernels for line detection
+           
             horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
             vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 40))
             
-            # Detect horizontal lines
+          
             horizontal_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel)
             horizontal_lines = cv2.dilate(horizontal_lines, horizontal_kernel, iterations=2)
             
-            # Detect vertical lines
+           
             vertical_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, vertical_kernel)
             vertical_lines = cv2.dilate(vertical_lines, vertical_kernel, iterations=2)
             
-            # Combine horizontal and vertical lines
+          
             table_mask = cv2.addWeighted(horizontal_lines, 0.5, vertical_lines, 0.5, 0.0)
             table_mask = cv2.dilate(table_mask, None, iterations=2)
             
@@ -130,28 +130,28 @@ class TableDetector:
         try:
             tables = []
             
-            # Apply Gaussian blur to reduce noise
+         
             blurred = cv2.GaussianBlur(gray_image, (5, 5), 0)
             
-            # Apply threshold
+          
             _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             
             # Find contours
             contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             
             for contour in contours:
-                # Filter contours by area
+              
                 area = cv2.contourArea(contour)
                 
                 if area > self.min_table_area:
                     # Get bounding rectangle
                     x, y, w, h = cv2.boundingRect(contour)
                     
-                    # Check if contour is rectangular (table-like)
+                  
                     aspect_ratio = w / h
                     extent = area / (w * h)
                     
-                    if 1.2 < aspect_ratio < 10 and extent > 0.7:  # Table-like properties
+                    if 1.2 < aspect_ratio < 10 and extent > 0.7: 
                         table_info = {
                             'bbox': (x, y, w, h),
                             'area': area,
@@ -174,33 +174,33 @@ class TableDetector:
         try:
             tables = []
             
-            # Apply edge detection
+           
             edges = cv2.Canny(gray_image, 50, 150, apertureSize=3)
             
-            # Detect lines using Hough transform
+           
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=50, 
                                    minLineLength=50, maxLineGap=10)
             
             if lines is not None:
-                # Separate horizontal and vertical lines
+              
                 horizontal_lines = []
                 vertical_lines = []
                 
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
                     
-                    # Calculate angle
+                  
                     angle = np.arctan2(y2 - y1, x2 - x1) * 180 / np.pi
                     
-                    if abs(angle) < 10 or abs(angle) > 170:  # Horizontal
+                    if abs(angle) < 10 or abs(angle) > 170: 
                         horizontal_lines.append(line[0])
-                    elif abs(abs(angle) - 90) < 10:  # Vertical
+                    elif abs(abs(angle) - 90) < 10:  
                         vertical_lines.append(line[0])
                 
-                # Find intersections to identify potential table regions
+              
                 intersections = self._find_line_intersections(horizontal_lines, vertical_lines)
                 
-                # Group intersections into table regions
+            
                 table_regions = self._group_intersections_to_tables(intersections, gray_image.shape)
                 
                 for region in table_regions:
@@ -232,7 +232,7 @@ class TableDetector:
             
             factors = []
             
-            # Factor 1: Line density
+           
             h_line_density = np.sum(h_lines > 0) / h_lines.size
             v_line_density = np.sum(v_lines > 0) / v_lines.size
             line_density_score = (h_line_density + v_line_density) / 2
@@ -315,7 +315,7 @@ class TableDetector:
             else:
                 return []
             
-            # Find peaks
+          
             peaks = []
             threshold = min_height
             
