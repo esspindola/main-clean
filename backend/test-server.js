@@ -60,52 +60,21 @@ let nextUserId = Math.max(...registeredUsers.map(u => u.id)) + 1;
 
 // Configurar CORS
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir requests sin origin (como aplicaciones móviles o Postman)
-    if (!origin) return callback(null, true);
-    
-    // Permitir todos los puertos de localhost para desarrollo
-    if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
-      return callback(null, true);
-    }
-    
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
-      'http://localhost:5176',
-      'http://localhost:5177',
-      'http://localhost:5178',
-      'http://localhost:5179',
-      'http://localhost:5180',
-      'http://localhost:5181',
-      'http://localhost:5182',
-      'http://localhost:5183',
-      'http://127.0.0.1:5173',
-      'http://127.0.0.1:5174',
-      'http://127.0.0.1:5175',
-      'http://127.0.0.1:5176',
-      'http://127.0.0.1:5177',
-      'http://127.0.0.1:5178',
-      'http://127.0.0.1:5179',
-      'http://127.0.0.1:5180',
-      'http://127.0.0.1:5181',
-      'http://127.0.0.1:5182',
-      'http://127.0.0.1:5183'
-    ];
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Permitir todos los orígenes en desarrollo
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   optionsSuccessStatus: 200
 }));
+
+// Middleware para manejar preflight requests
+app.options('*', cors());
+
+// Middleware para logging de requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
 
 app.use(express.json());
 
