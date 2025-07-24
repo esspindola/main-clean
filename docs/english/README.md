@@ -1,6 +1,6 @@
-# 📚 ZatoBox v2.0 Documentation
+# 📚 ZatoBox v2.0 Documentation - English
 
-Welcome to the complete documentation of **ZatoBox v2.0**, the most advanced intelligent point of sale system.
+Welcome to the complete documentation of **ZatoBox v2.0** in English, the most advanced intelligent point of sale system.
 
 ## 📖 Documentation Index
 
@@ -10,8 +10,8 @@ Welcome to the complete documentation of **ZatoBox v2.0**, the most advanced int
 - **[First Steps](./first-steps.md)** - Basic usage tutorial
 
 ### 🔧 Technical Guides
-- **[System Architecture](./architecture.md)** - Project structure and design
-- **[API Reference](./api-reference.md)** - Complete API documentation
+- **[System Architecture](../technical/architecture.md)** - Project structure and design
+- **[API Reference](../references/api-reference.md)** - Complete API documentation
 - **[Database](./database.md)** - Data schemas and models
 - **[Development Setup](./development.md)** - Development environment setup
 

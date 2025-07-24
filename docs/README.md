@@ -24,12 +24,16 @@ docs/
 ├── 🇺🇸 english/                     # Documentación en inglés
 │   └── README.md                   # Documentation index in English
 ├── 🏗️ technical/                   # Documentación técnica
+│   ├── README.md                   # Índice de documentación técnica
 │   ├── architecture.md             # Arquitectura del sistema
 │   └── backend-frontend-connections.md # Conexiones backend-frontend
 ├── 📡 references/                  # Referencias técnicas
+│   ├── README.md                   # Índice de referencias
 │   └── api-reference.md            # Referencia completa de la API
-├── 📚 guides/                      # Guías de usuario (próximamente)
-└── 🔧 references/                  # Referencias adicionales (próximamente)
+├── 📚 guides/                      # Guías de usuario
+│   └── README.md                   # Índice de guías
+└── 🔧 pruebas/                     # Análisis y pruebas
+    └── README.md                   # Documentación de pruebas
 ```
 
 ## 🚀 Acceso Rápido
@@ -44,6 +48,9 @@ docs/
 
 ### 📡 Referencias de API
 - **[API Reference](./references/api-reference.md)** - Documentación completa de endpoints
+
+### 📚 Guías de Usuario
+- **[Guías de Usuario](./guides/README.md)** - Tutoriales y manuales
 
 ## 🎯 Información del Proyecto
 
