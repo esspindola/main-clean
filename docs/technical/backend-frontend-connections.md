@@ -1,64 +1,64 @@
-# CONEXIONES BACKEND-FRONTEND - ZatoBox v2.0
+# BACKEND-FRONTEND CONNECTIONS - ZatoBox v2.0
 
-## 📋 RESUMEN DE CONEXIONES
+## 📋 CONNECTION SUMMARY
 
-### Backend (Puerto 4444)
-- **URL Base**: http://localhost:4444
-- **Archivo**: `backend/test-server.js`
-- **Persistencia**: Archivo JSON (`backend/users.json`)
-- **Almacenamiento de Imágenes**: `backend/uploads/products/`
-- **Estado**: ✅ Ejecutándose con validaciones mejoradas
+### Backend (Port 4444)
+- **Base URL**: http://localhost:4444
+- **File**: `backend/test-server.js`
+- **Persistence**: JSON file (`backend/users.json`)
+- **Image Storage**: `backend/uploads/products/`
+- **Status**: ✅ Running with improved validations
 
-### Frontend (Puerto 5173)
-- **URL Base**: http://localhost:5173
+### Frontend (Port 5173)
+- **Base URL**: http://localhost:5173
 - **Framework**: React + TypeScript + Vite
-- **Contexto de Auth**: `src/contexts/AuthContext.tsx`
-- **Estado**: ✅ Ejecutándose con mejoras implementadas
+- **Auth Context**: `src/contexts/AuthContext.tsx`
+- **Status**: ✅ Running with implemented improvements
 
 ---
 
-## 🆕 NUEVAS FUNCIONALIDADES v2.0
+## 🆕 NEW FEATURES v2.0
 
-### 🗑️ **Sistema de Eliminación Mejorado**
-- ✅ **Modal de confirmación visible** en lugar de `window.confirm`
-- ✅ **Estado de confirmación** con `deleteConfirmId`
-- ✅ **Indicador de carga** durante eliminación
-- ✅ **Interfaz moderna** con Tailwind CSS
-- ✅ **Prevención de errores** con botones deshabilitados
+### 🗑️ **Enhanced Deletion System**
+- ✅ **Visible confirmation modal** instead of `window.confirm`
+- ✅ **Confirmation state** with `deleteConfirmId`
+- ✅ **Loading indicator** during deletion
+- ✅ **Modern interface** with Tailwind CSS
+- ✅ **Error prevention** with disabled buttons
 
-### 🔧 **Manejo de Errores Mejorado**
-- ✅ **Logging detallado** de errores de API
-- ✅ **Mensajes de error específicos** para el usuario
-- ✅ **Información de debugging** completa
-- ✅ **Validación robusta** en backend y frontend
+### 🔧 **Enhanced Error Handling**
+- ✅ **Detailed logging** of API errors
+- ✅ **Specific error messages** for users
+- ✅ **Complete debugging information**
+- ✅ **Robust validation** in backend and frontend
 
-### 📊 **Sincronización en Tiempo Real**
-- ✅ **Actualización automática** de inventario
-- ✅ **Validación de stock** en tiempo real
-- ✅ **Respuesta completa** con productos actualizados
-- ✅ **Manejo de errores** con rollback automático
+### 📊 **Real-time Synchronization**
+- ✅ **Automatic inventory update**
+- ✅ **Real-time stock validation**
+- ✅ **Complete response** with updated products
+- ✅ **Error handling** with automatic rollback
 
 ---
 
-## 🖼️ SISTEMA DE SUBIDA DE IMÁGENES ✨ MEJORADO (REQUIERE AUTENTICACIÓN)
+## 🖼️ ENHANCED IMAGE UPLOAD SYSTEM ✨ (REQUIRES AUTHENTICATION)
 
-### 📁 ESTRUCTURA DE ARCHIVOS
+### 📁 FILE STRUCTURE
 ```
 backend/
 ├── uploads/
-│   └── products/          # Imágenes de productos
+│   └── products/          # Product images
 │       ├── product-1753301746047-40980611.JPG
 │       └── ...
 └── test-server.js
 ```
 
-### 🔧 CONFIGURACIÓN DE MULTER (REQUIERE AUTENTICACIÓN)
+### 🔧 MULTER CONFIGURATION (REQUIRES AUTHENTICATION)
 **Backend** (`backend/test-server.js`):
 ```javascript
 const multer = require('multer');
 const path = require('path');
 
-// Configuración para subida de imágenes de productos
+// Configuration for product image uploads
 const productImageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/products/');
@@ -72,7 +72,7 @@ const productImageStorage = multer.diskStorage({
 const productImageUpload = multer({
   storage: productImageStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB máximo
+    fileSize: 5 * 1024 * 1024 // 5MB maximum
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -82,29 +82,29 @@ const productImageUpload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(new Error('Solo se permiten imágenes (jpeg, jpg, png, gif, webp)'));
+      cb(new Error('Only images are allowed (jpeg, jpg, png, gif, webp)'));
     }
   }
 });
 ```
 
-### 🌐 SERVIR IMÁGENES ESTÁTICAS
+### 🌐 SERVING STATIC IMAGES
 **Backend** (`backend/test-server.js`):
 ```javascript
-// Servir archivos estáticos desde uploads
+// Serve static files from uploads
 app.use('/uploads', express.static('uploads'));
 ```
 
-### 🎯 FRONTEND - MANEJO DE IMÁGENES
+### 🎯 FRONTEND - IMAGE HANDLING
 **ProductCard** (`src/components/ProductCard.tsx`):
 ```typescript
 const getImageUrl = () => {
   if (product.image) {
-    // Si la imagen ya tiene http, usarla tal como está
+    // If image already has http, use it as is
     if (product.image.startsWith('http')) {
       return product.image;
     }
-    // Si es una URL relativa, construir la URL completa
+    // If it's a relative URL, build the complete URL
     return `http://localhost:4444${product.image}`;
   }
   if (product.images && product.images.length > 0) {
@@ -118,13 +118,13 @@ const getImageUrl = () => {
 };
 ```
 
-### 📤 SUBIDA DE IMÁGENES EN NEWPRODUCTPAGE (REQUIERE AUTENTICACIÓN)
+### 📤 IMAGE UPLOAD IN NEWPRODUCTPAGE (REQUIRES AUTHENTICATION)
 **Frontend** (`src/components/NewProductPage.tsx`):
-- **Drag & Drop**: Interfaz intuitiva para arrastrar archivos
-- **Validación**: Verificación de tipo y tamaño de archivo
-- **Preview**: Vista previa de imágenes antes de subir
-- **FormData**: Envío de datos con imágenes usando FormData
-- **Autenticación**: Requiere token válido en headers
+- **Drag & Drop**: Intuitive interface for dragging files
+- **Validation**: File type and size verification
+- **Preview**: Image preview before upload
+- **FormData**: Sending data with images using FormData
+- **Authentication**: Requires valid token in headers
 
 ```typescript
 const handleSubmit = async (e: React.FormEvent) => {
@@ -137,12 +137,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   formData.append('stock', formData.stock.toString());
   formData.append('category', formData.category);
   
-  // Agregar imágenes
+  // Add images
   selectedFiles.forEach(file => {
     formData.append('images', file);
   });
   
-  // Enviar con FormData
+  // Send with FormData
   const response = await fetch(`${API_BASE_URL}/products`, {
     method: 'POST',
     headers: {
@@ -155,29 +155,29 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 ---
 
-## 🔐 ENDPOINTS DE AUTENTICACIÓN
+## 🔐 AUTHENTICATION ENDPOINTS
 
-### 🔑 FLUJO DE AUTENTICACIÓN
+### 🔑 AUTHENTICATION FLOW
 ```
-1. Usuario se registra → POST /api/auth/register
-2. Usuario hace login → POST /api/auth/login → Recibe TOKEN
-3. Con el TOKEN puede acceder a:
-   - Productos (CRUD completo + imágenes)
-   - Inventario (ver y actualizar)
-   - Ventas (crear y ver historial)
-   - Perfil (ver y actualizar)
+1. User registers → POST /api/auth/register
+2. User logs in → POST /api/auth/login → Receives TOKEN
+3. With the TOKEN can access:
+   - Products (full CRUD + images)
+   - Inventory (view and update)
+   - Sales (create and view history)
+   - Profile (view and update)
 ```
 
-### 1. REGISTRO DE USUARIO
+### 1. USER REGISTRATION
 ```
 POST /api/auth/register
 Content-Type: application/json
 
 Body:
 {
-  "email": "usuario@ejemplo.com",
+  "email": "user@example.com",
   "password": "password123",
-  "fullName": "Nombre Completo",
+  "fullName": "Full Name",
   "phone": "+1234567890"
 }
 
@@ -187,8 +187,8 @@ Response:
   "message": "User registered successfully",
   "user": {
     "id": 3,
-    "email": "usuario@ejemplo.com",
-    "fullName": "Nombre Completo",
+    "email": "user@example.com",
+    "fullName": "Full Name",
     "role": "user"
   },
   "token": "test-token-3-1234567890"
@@ -196,17 +196,17 @@ Response:
 ```
 
 **Frontend**: `src/components/RegisterPage.tsx`
-- Función: `handleSubmit`
-- Contexto: `AuthContext.register`
+- Function: `handleSubmit`
+- Context: `AuthContext.register`
 
-### 2. LOGIN DE USUARIO
+### 2. USER LOGIN
 ```
 POST /api/auth/login
 Content-Type: application/json
 
 Body:
 {
-  "email": "usuario@ejemplo.com",
+  "email": "user@example.com",
   "password": "password123"
 }
 
@@ -217,18 +217,18 @@ Response:
   "token": "test-token-3-1234567890",
   "user": {
     "id": 3,
-    "email": "usuario@ejemplo.com",
-    "fullName": "Nombre Completo",
+    "email": "user@example.com",
+    "fullName": "Full Name",
     "role": "user"
   }
 }
 ```
 
 **Frontend**: `src/components/LoginPage.tsx`
-- Función: `handleSubmit`
-- Contexto: `AuthContext.login`
+- Function: `handleSubmit`
+- Context: `AuthContext.login`
 
-### 3. VERIFICAR AUTENTICACIÓN
+### 3. VERIFY AUTHENTICATION
 ```
 GET /api/auth/me
 Authorization: Bearer test-token-3-1234567890
@@ -238,16 +238,16 @@ Response:
   "success": true,
   "user": {
     "id": 3,
-    "email": "usuario@ejemplo.com",
-    "fullName": "Nombre Completo",
+    "email": "user@example.com",
+    "fullName": "Full Name",
     "role": "user"
   }
 }
 ```
 
 **Frontend**: `src/contexts/AuthContext.tsx`
-- Función: `checkAuth`
-- Uso: Verificar token al cargar la app
+- Function: `checkAuth`
+- Usage: Verify token when loading the app
 
 ### 4. LOGOUT
 ```
@@ -262,12 +262,12 @@ Response:
 ```
 
 **Frontend**: `src/components/SideMenu.tsx`
-- Función: `handleLogout`
-- Contexto: `AuthContext.logout`
+- Function: `handleLogout`
+- Context: `AuthContext.logout`
 
-### 🔐 USO DEL TOKEN EN FRONTEND
+### 🔐 TOKEN USAGE IN FRONTEND
 ```javascript
-// Ejemplo de cómo se envía el token en las peticiones
+// Example of how the token is sent in requests
 const token = localStorage.getItem('token');
 
 fetch('http://localhost:4444/api/products', {
@@ -279,16 +279,16 @@ fetch('http://localhost:4444/api/products', {
 });
 ```
 
-**Contexto de Auth** (`src/contexts/AuthContext.tsx`):
-- Guarda el token en localStorage al hacer login
-- Incluye el token automáticamente en todas las peticiones
-- Verifica el token al cargar la aplicación
+**Auth Context** (`src/contexts/AuthContext.tsx`):
+- Saves token in localStorage when logging in
+- Automatically includes token in all requests
+- Verifies token when loading the application
 
 ---
 
-## 👥 GESTIÓN DE USUARIOS
+## 👥 USER MANAGEMENT
 
-### LISTAR USUARIOS (Solo desarrollo)
+### LIST USERS (Development only)
 ```
 GET /api/users
 
@@ -300,7 +300,7 @@ Response:
     {
       "id": 1,
       "email": "admin@zatobox.com",
-      "fullName": "Administrador",
+      "fullName": "Administrator",
       "role": "admin",
       "phone": "+1234567890",
       "address": "123 Main St, City, Country"
@@ -309,14 +309,14 @@ Response:
 }
 ```
 
-**Frontend**: No implementado aún
-- Propósito: Panel de administración
+**Frontend**: Not implemented yet
+- Purpose: Administration panel
 
 ---
 
-## 📦 ENDPOINTS DE PRODUCTOS (REQUIERE AUTENTICACIÓN)
+## 📦 PRODUCT ENDPOINTS (REQUIRES AUTHENTICATION)
 
-### 1. LISTAR PRODUCTOS
+### 1. LIST PRODUCTS
 ```
 GET /api/products
 Authorization: Bearer test-token-3-1234567890
@@ -327,34 +327,34 @@ Response:
   "products": [
     {
       "id": 1,
-      "name": "Producto Ejemplo",
-      "description": "Descripción del producto",
+      "name": "Example Product",
+      "description": "Product description",
       "price": 29.99,
       "stock": 100,
-      "category": "Electrónicos",
-      "image": "producto1.jpg"
+      "category": "Electronics",
+      "image": "product1.jpg"
     }
   ]
 }
 ```
 
 **Frontend**: `src/components/InventoryPage.tsx`
-- Función: `fetchProducts`
+- Function: `fetchProducts`
 - Hook: `useEffect`
 
-### 2. CREAR PRODUCTO
+### 2. CREATE PRODUCT
 ```
 POST /api/products
 Authorization: Bearer test-token-3-1234567890
 Content-Type: multipart/form-data
 
 Body (FormData):
-- name: "Nuevo Producto"
-- description: "Descripción"
+- name: "New Product"
+- description: "Description"
 - price: "29.99"
 - stock: "100"
-- category: "Electrónicos"
-- images: [archivos de imagen]
+- category: "Electronics"
+- images: [image files]
 
 Response:
 {
@@ -362,38 +362,38 @@ Response:
   "message": "Product created successfully",
   "product": {
     "id": 2,
-    "name": "Nuevo Producto",
-    "description": "Descripción",
+    "name": "New Product",
+    "description": "Description",
     "price": 29.99,
     "stock": 100,
-    "category": "Electrónicos",
+    "category": "Electronics",
     "images": ["/uploads/products/product-1753301746047-40980611.JPG"]
   }
 }
 ```
 
 **Frontend**: `src/components/NewProductPage.tsx`
-- Función: `handleSubmit`
-- **Características nuevas:**
-  - ✅ **Drag & Drop**: Interfaz para arrastrar archivos
-  - ✅ **Validación**: Verificación de tipo y tamaño
-  - ✅ **Preview**: Vista previa antes de subir
-  - ✅ **FormData**: Envío con imágenes
-  - ✅ **Manejo de errores**: Feedback al usuario
+- Function: `handleSubmit`
+- **New features:**
+  - ✅ **Drag & Drop**: Interface for dragging files
+  - ✅ **Validation**: File type and size verification
+  - ✅ **Preview**: Preview before upload
+  - ✅ **FormData**: Sending with images
+  - ✅ **Error handling**: User feedback
 
-### 3. ACTUALIZAR PRODUCTO
+### 3. UPDATE PRODUCT
 ```
 PUT /api/products/:id
 Authorization: Bearer test-token-3-1234567890
 Content-Type: multipart/form-data
 
 Body (FormData):
-- name: "Producto Actualizado"
-- description: "Nueva descripción"
+- name: "Updated Product"
+- description: "New description"
 - price: "39.99"
 - stock: "50"
-- category: "Electrónicos"
-- images: [archivos de imagen opcionales]
+- category: "Electronics"
+- images: [optional image files]
 
 Response:
 {
@@ -401,21 +401,21 @@ Response:
   "message": "Product updated successfully",
   "product": {
     "id": 1,
-    "name": "Producto Actualizado",
-    "description": "Nueva descripción",
+    "name": "Updated Product",
+    "description": "New description",
     "price": 39.99,
     "stock": 50,
-    "category": "Electrónicos",
+    "category": "Electronics",
     "images": ["/uploads/products/product-1753301746047-40980611.JPG"]
   }
 }
 ```
 
 **Frontend**: `src/components/EditProductPage.tsx`
-- Función: `handleSubmit`
-- **Soporte para imágenes**: Puede actualizar imágenes existentes
+- Function: `handleSubmit`
+- **Image support**: Can update existing images
 
-### 4. ELIMINAR PRODUCTO ✨ MEJORADO
+### 4. DELETE PRODUCT ✨ ENHANCED
 ```
 DELETE /api/products/:id
 Authorization: Bearer test-token-3-1234567890
@@ -426,29 +426,29 @@ Response:
   "message": "Product deleted successfully",
   "product": {
     "id": 1,
-    "name": "Producto Eliminado",
-    "description": "Descripción",
+    "name": "Deleted Product",
+    "description": "Description",
     "price": 29.99,
     "stock": 100,
-    "category": "Electrónicos"
+    "category": "Electronics"
   }
 }
 ```
 
 **Frontend**: `src/components/InventoryPage.tsx`
-- Función: `handleDeleteClick` → `handleDeleteConfirm`
-- **Características nuevas:**
-  - ✅ **Modal de confirmación**: Interfaz visible y moderna
-  - ✅ **Estado de carga**: Indicador durante eliminación
-  - ✅ **Prevención de errores**: Botones deshabilitados
-  - ✅ **Feedback visual**: Colores y mensajes informativos
-  - ✅ **Logging detallado**: Para debugging
+- Function: `handleDeleteClick` → `handleDeleteConfirm`
+- **New features:**
+  - ✅ **Confirmation modal**: Visible and modern interface
+  - ✅ **Loading state**: Indicator during deletion
+  - ✅ **Error prevention**: Disabled buttons during operation
+  - ✅ **Visual feedback**: Colors and informative messages
+  - ✅ **Detailed logging**: For debugging
 
 ---
 
-## 📊 ENDPOINTS DE INVENTARIO (REQUIERE AUTENTICACIÓN)
+## 📊 INVENTORY ENDPOINTS (REQUIRES AUTHENTICATION)
 
-### 1. OBTENER INVENTARIO
+### 1. GET INVENTORY
 ```
 GET /api/inventory
 Authorization: Bearer test-token-3-1234567890
@@ -460,7 +460,7 @@ Response:
     {
       "id": 1,
       "productId": 1,
-      "productName": "Producto Ejemplo",
+      "productName": "Example Product",
       "quantity": 100,
       "minStock": 10,
       "lastUpdated": "2024-01-15T10:30:00Z"
@@ -470,9 +470,9 @@ Response:
 ```
 
 **Frontend**: `src/components/SmartInventoryPage.tsx`
-- Función: `fetchInventory`
+- Function: `fetchInventory`
 
-### 2. ACTUALIZAR STOCK
+### 2. UPDATE STOCK
 ```
 PUT /api/inventory/:id
 Authorization: Bearer test-token-3-1234567890
@@ -497,23 +497,23 @@ Response:
 ```
 
 **Frontend**: `src/components/SmartInventoryPage.tsx`
-- Función: `updateStock`
+- Function: `updateStock`
 
 ---
 
-## 💰 ENDPOINTS DE VENTAS (REQUIERE AUTENTICACIÓN) ✨ MEJORADO
+## 💰 SALES ENDPOINTS (REQUIRES AUTHENTICATION) ✨ ENHANCED
 
-### 🔄 FLUJO COMPLETO DE VENTAS
+### 🔄 COMPLETE SALES FLOW
 ```
-1. Usuario selecciona productos → Se agregan al carrito
-2. Usuario procede al pago → Se abre PaymentScreen
-3. Usuario completa el pago → Se ejecuta handlePaymentSuccess
-4. Backend recibe la venta → Valida stock y actualiza inventario
-5. Frontend actualiza UI → Muestra productos con stock actualizado
-6. Usuario ve confirmación → PaymentSuccessScreen con detalles
+1. User selects products → Added to cart
+2. User proceeds to payment → PaymentScreen opens
+3. User completes payment → handlePaymentSuccess executes
+4. Backend receives sale → Validates stock and updates inventory
+5. Frontend updates UI → Shows products with updated stock
+6. User sees confirmation → PaymentSuccessScreen with details
 ```
 
-### 1. CREAR VENTA ✨ MEJORADO
+### 1. CREATE SALE ✨ ENHANCED
 ```
 POST /api/sales
 Authorization: Bearer test-token-3-1234567890
@@ -564,16 +564,16 @@ Response:
 ```
 
 **Frontend**: `src/components/HomePage.tsx`
-- Función: `handlePaymentSuccess`
-- Integración: `salesAPI.create()`
+- Function: `handlePaymentSuccess`
+- Integration: `salesAPI.create()`
 
-**Características del Endpoint:**
-- ✅ **Validación de stock**: Verifica que haya suficiente inventario
-- ✅ **Actualización automática**: El stock se reduce inmediatamente
-- ✅ **Manejo de errores**: Retorna errores específicos si algo falla
-- ✅ **Respuesta completa**: Incluye detalles de la venta y productos actualizados
+**Endpoint Features:**
+- ✅ **Stock validation**: Verifies sufficient inventory
+- ✅ **Automatic update**: Stock is reduced immediately
+- ✅ **Error handling**: Returns specific errors if something fails
+- ✅ **Complete response**: Includes sale details and updated products
 
-### 2. OBTENER HISTORIAL DE VENTAS
+### 2. GET SALES HISTORY
 ```
 GET /api/sales
 Authorization: Bearer test-token-3-1234567890
@@ -590,7 +590,7 @@ Response:
       "items": [
         {
           "productId": 1,
-          "productName": "Producto Ejemplo",
+          "productName": "Example Product",
           "quantity": 2,
           "price": 29.99
         }
@@ -601,13 +601,13 @@ Response:
 ```
 
 **Frontend**: `src/components/SalesDrawer.tsx`
-- Función: `fetchSales`
+- Function: `fetchSales`
 
 ---
 
-## 👤 ENDPOINTS DE PERFIL (REQUIERE AUTENTICACIÓN)
+## 👤 PROFILE ENDPOINTS (REQUIRES AUTHENTICATION)
 
-### 1. OBTENER PERFIL
+### 1. GET PROFILE
 ```
 GET /api/profile
 Authorization: Bearer test-token-3-1234567890
@@ -617,8 +617,8 @@ Response:
   "success": true,
   "profile": {
     "id": 3,
-    "email": "usuario@ejemplo.com",
-    "fullName": "Nombre Completo",
+    "email": "user@example.com",
+    "fullName": "Full Name",
     "role": "user",
     "phone": "+1234567890",
     "address": "123 Main St"
@@ -627,9 +627,9 @@ Response:
 ```
 
 **Frontend**: `src/components/ProfilePage.tsx`
-- Función: `fetchProfile`
+- Function: `fetchProfile`
 
-### 2. ACTUALIZAR PERFIL
+### 2. UPDATE PROFILE
 ```
 PUT /api/profile
 Authorization: Bearer test-token-3-1234567890
@@ -637,7 +637,7 @@ Content-Type: application/json
 
 Body:
 {
-  "fullName": "Nuevo Nombre",
+  "fullName": "New Name",
   "phone": "+1234567891",
   "address": "456 Oak St"
 }
@@ -648,8 +648,8 @@ Response:
   "message": "Profile updated successfully",
   "profile": {
     "id": 3,
-    "email": "usuario@ejemplo.com",
-    "fullName": "Nuevo Nombre",
+    "email": "user@example.com",
+    "fullName": "New Name",
     "role": "user",
     "phone": "+1234567891",
     "address": "456 Oak St"
@@ -658,20 +658,20 @@ Response:
 ```
 
 **Frontend**: `src/components/ProfilePage.tsx`
-- Función: `handleSubmit`
+- Function: `handleSubmit`
 
 ---
 
-## 🔧 CONFIGURACIÓN DE CORS
+## 🔧 CORS CONFIGURATION
 
 **Backend** (`backend/test-server.js`):
 ```javascript
 app.use(cors({
   origin: function (origin, callback) {
-    // Permitir requests sin origin (como aplicaciones móviles o Postman)
+    // Allow requests without origin (like mobile apps or Postman)
     if (!origin) return callback(null, true);
     
-    // Permitir todos los puertos de localhost para desarrollo
+    // Allow all localhost ports for development
     if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
       return callback(null, true);
     }
@@ -717,79 +717,79 @@ app.use(cors({
 
 ---
 
-## 🚀 FUNCIONES ESPECÍFICAS PARA ARREGLAR
+## 🚀 SPECIFIC FUNCTIONS TO FIX
 
-### 1. **Autenticación Persistente**
-- **Problema**: Token se pierde al recargar página
-- **Archivo**: `src/contexts/AuthContext.tsx`
-- **Función**: `checkAuth` - Verificar token en localStorage
+### 1. **Persistent Authentication**
+- **Problem**: Token is lost when reloading page
+- **File**: `src/contexts/AuthContext.tsx`
+- **Function**: `checkAuth` - Verify token in localStorage
 
-### 2. **Manejo de Errores**
-- **Problema**: No hay manejo de errores en las peticiones
-- **Archivos**: Todos los componentes que hacen fetch
-- **Solución**: Implementar try-catch y mostrar mensajes de error
+### 2. **Error Handling**
+- **Problem**: No error handling in requests
+- **Files**: All components that make fetch calls
+- **Solution**: Implement try-catch and show error messages
 
-### 3. **Validación de Formularios**
-- **Problema**: No hay validación en el frontend
-- **Archivos**: `LoginPage.tsx`, `RegisterPage.tsx`, `NewProductPage.tsx`
-- **Solución**: Agregar validación con librería como Formik o react-hook-form
+### 3. **Form Validation**
+- **Problem**: No validation in frontend
+- **Files**: `LoginPage.tsx`, `RegisterPage.tsx`, `NewProductPage.tsx`
+- **Solution**: Add validation with library like Formik or react-hook-form
 
 ### 4. **Loading States**
-- **Problema**: No hay indicadores de carga
-- **Archivos**: Todos los componentes que hacen peticiones
-- **Solución**: Agregar estados de loading
+- **Problem**: No loading indicators
+- **Files**: All components that make requests
+- **Solution**: Add loading states
 
 ### 5. **Refresh Token**
-- **Problema**: No hay renovación automática de tokens
-- **Archivo**: `src/contexts/AuthContext.tsx`
-- **Solución**: Implementar refresh token
+- **Problem**: No automatic token renewal
+- **File**: `src/contexts/AuthContext.tsx`
+- **Solution**: Implement refresh token
 
 ### 6. **Optimistic Updates**
-- **Problema**: UI no se actualiza inmediatamente
-- **Archivos**: `InventoryPage.tsx`, `SmartInventoryPage.tsx`
-- **Solución**: Actualizar estado local antes de confirmar con backend
+- **Problem**: UI doesn't update immediately
+- **Files**: `InventoryPage.tsx`, `SmartInventoryPage.tsx`
+- **Solution**: Update local state before confirming with backend
 
-### 7. **Paginación**
-- **Problema**: No hay paginación en listas grandes
-- **Archivos**: `InventoryPage.tsx`, `SmartInventoryPage.tsx`
-- **Solución**: Implementar paginación con limit/offset
+### 7. **Pagination**
+- **Problem**: No pagination in large lists
+- **Files**: `InventoryPage.tsx`, `SmartInventoryPage.tsx`
+- **Solution**: Implement pagination with limit/offset
 
-### 8. **Búsqueda y Filtros**
-- **Problema**: No hay búsqueda en productos
-- **Archivo**: `src/components/InventoryPage.tsx`
-- **Solución**: Agregar input de búsqueda y filtros
+### 8. **Search and Filters**
+- **Problem**: No search in products
+- **File**: `src/components/InventoryPage.tsx`
+- **Solution**: Add search input and filters
 
 ---
 
-## 📁 ESTRUCTURA DE ARCHIVOS
+## 📁 FILE STRUCTURE
 
 ```
 ZatoBox-main/
 ├── backend/
-│   ├── test-server.js          # Servidor de prueba ✨ ACTUALIZADO
-│   ├── users.json              # Usuarios persistidos
-│   └── server.js               # Servidor principal (no usado)
+│   ├── test-server.js          # Test server ✨ UPDATED
+│   ├── users.json              # Persisted users
+│   └── server.js               # Main server (not used)
 ├── src/
 │   ├── components/
 │   │   ├── LoginPage.tsx       # Login
-│   │   ├── RegisterPage.tsx    # Registro
-│   │   ├── InventoryPage.tsx   # Lista de productos ✨ MEJORADO
-│   │   ├── NewProductPage.tsx  # Crear producto
-│   │   ├── EditProductPage.tsx # Editar producto
-│   │   ├── SmartInventoryPage.tsx # Inventario inteligente
-│   │   ├── PaymentScreen.tsx   # Pantalla de pago ✨ MEJORADO
-│   │   ├── SalesDrawer.tsx     # Historial de ventas
-│   │   ├── ProfilePage.tsx     # Perfil de usuario
-│   │   └── SideMenu.tsx        # Menú lateral
+│   │   ├── RegisterPage.tsx    # Registration
+│   │   ├── InventoryPage.tsx   # Product list ✨ ENHANCED
+│   │   ├── NewProductPage.tsx  # Create product
+│   │   ├── EditProductPage.tsx # Edit product
+│   │   ├── SmartInventoryPage.tsx # Smart inventory
+│   │   ├── PaymentScreen.tsx   # Payment screen ✨ ENHANCED
+│   │   ├── SalesDrawer.tsx     # Sales history
+│   │   ├── ProfilePage.tsx     # User profile
+│   │   └── SideMenu.tsx        # Side menu
 │   ├── contexts/
-│   │   └── AuthContext.tsx     # Contexto de autenticación
-│   └── App.tsx                 # Componente principal
-└── CONEXIONES_BACKEND_FRONTEND.md # Este archivo ✨ ACTUALIZADO
+│   │   └── AuthContext.tsx     # Authentication context
+│   └── App.tsx                 # Main component
+└── CONEXIONES_BACKEND_FRONTEND.md # This file ✨ UPDATED
 ```
 
 ---
 
-## 🛠️ COMANDOS PARA DESPLEGAR
+## 🛠️ DEPLOYMENT COMMANDS
 
 ### Backend:
 ```bash
@@ -802,7 +802,7 @@ node test-server.js
 npm run dev
 ```
 
-### Verificar servicios:
+### Verify services:
 ```bash
 # Backend
 netstat -ano | findstr "4444"
@@ -815,223 +815,223 @@ netstat -ano | findstr "5173"
 
 ## 🔍 DEBUGGING
 
-### Verificar conexión backend:
+### Verify backend connection:
 - http://localhost:4444/health
 
-### Verificar usuarios registrados:
+### Verify registered users:
 - http://localhost:4444/api/users
 
-### Verificar productos:
+### Verify products:
 - http://localhost:4444/api/products
 
-### Verificar ventas: ✨ NUEVO
+### Verify sales: ✨ NEW
 - http://localhost:4444/api/sales
 
-### Logs del backend:
-- Revisar consola donde corre `node test-server.js`
+### Backend logs:
+- Check console where `node test-server.js` is running
 
-### Logs del frontend:
-- Revisar DevTools del navegador (F12)
-
----
-
-## 🔒 RESUMEN DE SEGURIDAD
-
-### Endpoints PÚBLICOS (sin autenticación):
-- `POST /api/auth/register` - Registro de usuarios
-- `POST /api/auth/login` - Login de usuarios
-- `GET /health` - Health check del servidor
-
-### Endpoints PRIVADOS (requieren token):
-- `GET /api/auth/me` - Verificar autenticación
-- `POST /api/auth/logout` - Cerrar sesión
-- `GET /api/products` - Listar productos
-- `POST /api/products` - Crear producto (con imágenes)
-- `PUT /api/products/:id` - Actualizar producto (con imágenes)
-- `DELETE /api/products/:id` - Eliminar producto ✨ MEJORADO
-- `POST /api/products/:id/images` - Subir imágenes a producto ✨ NUEVO
-- `GET /api/inventory` - Obtener inventario
-- `PUT /api/inventory/:id` - Actualizar stock
-- `POST /api/sales` - Crear venta
-- `GET /api/sales` - Historial de ventas
-- `GET /api/profile` - Obtener perfil
-- `PUT /api/profile` - Actualizar perfil
-
-### 🔑 Flujo de Seguridad:
-1. **Registro/Login** → Obtiene token
-2. **Token se guarda** en localStorage del frontend
-3. **Todas las peticiones privadas** incluyen `Authorization: Bearer {token}`
-4. **Backend valida** el token en cada petición
-5. **Si token inválido** → Retorna 401 Unauthorized
+### Frontend logs:
+- Check browser DevTools (F12)
 
 ---
 
-## 🆕 NUEVAS FUNCIONALIDADES AGREGADAS v2.0
+## 🔒 SECURITY SUMMARY
 
-### 🗑️ **Sistema de Eliminación Mejorado**
-- ✅ **Modal de confirmación**: Interfaz visible y moderna
-- ✅ **Estado de carga**: Indicador durante eliminación
-- ✅ **Prevención de errores**: Botones deshabilitados
-- ✅ **Feedback visual**: Colores y mensajes informativos
-- ✅ **Logging detallado**: Para debugging
+### PUBLIC Endpoints (no authentication):
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /health` - Server health check
 
-### 💰 **Sistema de Ventas Completo**
-- ✅ **Endpoint POST /api/sales**: Crear ventas con validación de stock
-- ✅ **Actualización automática de inventario**: Stock se reduce al crear venta
-- ✅ **Integración frontend-backend**: Flujo completo de pago
-- ✅ **Manejo de errores**: Validaciones y mensajes de error específicos
+### PRIVATE Endpoints (require token):
+- `GET /api/auth/me` - Verify authentication
+- `POST /api/auth/logout` - Logout
+- `GET /api/products` - List products
+- `POST /api/products` - Create product (with images)
+- `PUT /api/products/:id` - Update product (with images)
+- `DELETE /api/products/:id` - Delete product ✨ ENHANCED
+- `POST /api/products/:id/images` - Upload images to product ✨ NEW
+- `GET /api/inventory` - Get inventory
+- `PUT /api/inventory/:id` - Update stock
+- `POST /api/sales` - Create sale
+- `GET /api/sales` - Sales history
+- `GET /api/profile` - Get profile
+- `PUT /api/profile` - Update profile
 
-### 💳 **Calculadora de Cambio Mejorada**
-- ✅ **Cálculo automático**: Cambio calculado en tiempo real
-- ✅ **Validación de monto**: Verifica que el pago sea suficiente
-- ✅ **Botones de monto rápido**: $10, $20, $50, $100, $200, $500
-- ✅ **Feedback visual**: Colores y mensajes informativos
-- ✅ **Formato de moneda**: Formato español con separadores de miles
-
-### 🔄 **Sincronización de Inventario**
-- ✅ **Actualización inmediata**: UI se actualiza al completar venta
-- ✅ **Validación de stock**: Previene ventas con stock insuficiente
-- ✅ **Respuesta completa**: Incluye productos actualizados
-- ✅ **Manejo de errores**: Rollback en caso de fallo
-
-### 📊 **Mejoras en la UI/UX**
-- ✅ **Estados de carga**: Indicadores durante operaciones
-- ✅ **Mensajes de confirmación**: Feedback claro al usuario
-- ✅ **Validaciones en tiempo real**: Verificación de datos
-- ✅ **Interfaz responsiva**: Adaptable a diferentes pantallas
-
-### 🖼️ **Sistema de Subida de Imágenes** ✨ MEJORADO (REQUIERE AUTENTICACIÓN)
-- ✅ **Subida de archivos**: Soporte para múltiples formatos (JPG, PNG, GIF, WebP)
-- ✅ **Validación de archivos**: Verificación de tipo y tamaño (máx 5MB)
-- ✅ **Almacenamiento seguro**: Archivos guardados con nombres únicos
-- ✅ **Servir imágenes estáticas**: Backend sirve archivos desde `/uploads/products/`
-- ✅ **URLs dinámicas**: Frontend construye URLs completas automáticamente
-- ✅ **Drag & Drop**: Interfaz intuitiva para subir archivos
-- ✅ **Preview de imágenes**: Vista previa antes de subir
-- ✅ **Manejo de errores**: Feedback específico para problemas de subida
-- ✅ **Autenticación requerida**: Token válido necesario para todas las operaciones
+### 🔑 Security Flow:
+1. **Registration/Login** → Gets token
+2. **Token is saved** in frontend localStorage
+3. **All private requests** include `Authorization: Bearer {token}`
+4. **Backend validates** token in each request
+5. **If invalid token** → Returns 401 Unauthorized
 
 ---
 
-## 🧪 PRUEBAS REALIZADAS
+## 🆕 NEW FEATURES ADDED v2.0
 
-### ✅ **Prueba de Venta Exitosa**
-```
-Venta creada con ID: 1752853147640
-Stock actualizado: Cabinet with Doors pasó de 25 a 23 unidades
-Respuesta incluye productos actualizados
-No hay errores en el proceso
-```
+### 🗑️ **Enhanced Deletion System**
+- ✅ **Confirmation modal**: Visible and modern interface
+- ✅ **Loading state**: Indicator during deletion
+- ✅ **Error prevention**: Disabled buttons during operation
+- ✅ **Visual feedback**: Colors and informative messages
+- ✅ **Detailed logging**: For debugging
 
-### ✅ **Prueba de Validación de Stock**
-```
-Error cuando stock insuficiente
-Mensaje específico: "Insufficient stock for product"
-Prevención de ventas inválidas
-```
+### 💰 **Complete Sales System**
+- ✅ **POST /api/sales endpoint**: Create sales with stock validation
+- ✅ **Automatic inventory update**: Stock is reduced when creating sale
+- ✅ **Frontend-backend integration**: Complete payment flow
+- ✅ **Error handling**: Validations and specific error messages
 
-### ✅ **Prueba de Calculadora de Cambio**
-```
-Cálculo correcto del cambio
-Validación de monto mínimo
-Botones de monto rápido funcionando
-Formato de moneda correcto
-```
+### 💳 **Enhanced Change Calculator**
+- ✅ **Automatic calculation**: Change calculated in real-time
+- ✅ **Amount validation**: Verifies payment is sufficient
+- ✅ **Quick amount buttons**: $10, $20, $50, $100, $200, $500
+- ✅ **Visual feedback**: Colors and informative messages
+- ✅ **Currency format**: Spanish format with thousands separators
 
-### ✅ **Prueba de Subida de Imágenes** ✨ NUEVO
-```
-Producto "Caffe Test" creado exitosamente
-Imagen subida: product-1753301746047-40980611.JPG
-Archivo almacenado en: backend/uploads/products/
-URL construida correctamente: http://localhost:4444/uploads/products/filename.jpg
-ProductCard muestra imagen correctamente
-```
+### 🔄 **Inventory Synchronization**
+- ✅ **Immediate update**: UI updates when completing sale
+- ✅ **Stock validation**: Prevents sales with insufficient stock
+- ✅ **Complete response**: Includes updated products
+- ✅ **Error handling**: Rollback in case of failure
 
-### ✅ **Prueba de Eliminación de Productos** ✨ NUEVO
-```
-Modal de confirmación visible
-Estado de carga durante eliminación
-Producto eliminado exitosamente
-UI actualizada automáticamente
-Logging detallado para debugging
-```
+### 📊 **UI/UX Improvements**
+- ✅ **Loading states**: Indicators during operations
+- ✅ **Confirmation messages**: Clear feedback to user
+- ✅ **Real-time validations**: Data verification
+- ✅ **Responsive interface**: Adaptable to different screens
 
-### 🔧 **Problema Resuelto: URLs de Imágenes**
-**Problema identificado:**
-- Las imágenes se subían correctamente al backend
-- Las URLs se guardaban como rutas relativas (`/uploads/products/filename.jpg`)
-- El frontend no construía las URLs completas para mostrar las imágenes
-
-**Solución implementada:**
-- Modificación del `ProductCard.tsx` para construir URLs completas
-- Verificación de URLs absolutas vs relativas
-- Construcción automática de URLs: `http://localhost:4444${imageUrl}`
-- Soporte para imágenes de Internet y locales
-
-### 🔧 **Problema Resuelto: Botón de Eliminar**
-**Problema identificado:**
-- El botón de eliminar usaba `window.confirm` que no era visible
-- El usuario cancelaba sin darse cuenta
-- No había feedback visual durante la operación
-
-**Solución implementada:**
-- Modal de confirmación moderno y visible
-- Estado de carga con indicador visual
-- Botones deshabilitados durante operación
-- Logging detallado para debugging
-- Interfaz responsiva y accesible
+### 🖼️ **Image Upload System** ✨ ENHANCED (REQUIRES AUTHENTICATION)
+- ✅ **File upload**: Support for multiple formats (JPG, PNG, GIF, WebP)
+- ✅ **File validation**: Type and size verification (max 5MB)
+- ✅ **Secure storage**: Files saved with unique names
+- ✅ **Serve static images**: Backend serves files from `/uploads/products/`
+- ✅ **Dynamic URLs**: Frontend builds complete URLs automatically
+- ✅ **Drag & Drop**: Intuitive interface for uploading files
+- ✅ **Image preview**: Preview before upload
+- ✅ **Error handling**: Specific feedback for upload problems
+- ✅ **Authentication required**: Valid token needed for all operations
 
 ---
 
-## 🚀 ESTADO ACTUAL DEL PROYECTO
+## 🧪 TESTS PERFORMED
 
-### ✅ **Funcionalidades Completadas**
-- [x] Autenticación completa (login/registro/logout)
-- [x] CRUD de productos con imágenes
-- [x] Gestión de inventario
-- [x] Sistema de ventas completo
-- [x] Calculadora de cambio
-- [x] Sincronización automática de inventario
-- [x] Sistema de subida de imágenes ✨ MEJORADO
-- [x] Sistema de eliminación mejorado ✨ NUEVO
-- [x] Interfaz de usuario moderna
-- [x] Manejo de errores robusto
-- [x] Logging detallado para debugging
+### ✅ **Successful Sale Test**
+```
+Sale created with ID: 1752853147640
+Stock updated: Cabinet with Doors went from 25 to 23 units
+Response includes updated products
+No errors in the process
+```
 
-### 🔄 **Funcionalidades en Desarrollo**
-- [ ] Historial de ventas detallado
-- [ ] Reportes y estadísticas
-- [ ] Notificaciones de stock bajo
-- [ ] Exportación de datos
-- [ ] Panel de administración
+### ✅ **Stock Validation Test**
+```
+Error when insufficient stock
+Specific message: "Insufficient stock for product"
+Prevention of invalid sales
+```
 
-### 📋 **Próximas Mejoras**
-- [ ] Paginación en listas grandes
-- [ ] Búsqueda avanzada con filtros
-- [ ] Refresh token automático
-- [ ] Validación de formularios mejorada
-- [ ] Optimistic updates en toda la app
+### ✅ **Change Calculator Test**
+```
+Correct change calculation
+Minimum amount validation
+Quick amount buttons working
+Correct currency format
+```
+
+### ✅ **Image Upload Test** ✨ NEW
+```
+Product "Caffe Test" created successfully
+Image uploaded: product-1753301746047-40980611.JPG
+File stored in: backend/uploads/products/
+URL built correctly: http://localhost:4444/uploads/products/filename.jpg
+ProductCard displays image correctly
+```
+
+### ✅ **Product Deletion Test** ✨ NEW
+```
+Confirmation modal visible
+Loading state during deletion
+Product deleted successfully
+UI updated automatically
+Detailed logging for debugging
+```
+
+### 🔧 **Problem Solved: Image URLs**
+**Problem identified:**
+- Images were uploaded correctly to backend
+- URLs were saved as relative paths (`/uploads/products/filename.jpg`)
+- Frontend wasn't building complete URLs to display images
+
+**Solution implemented:**
+- Modification of `ProductCard.tsx` to build complete URLs
+- Verification of absolute vs relative URLs
+- Automatic URL construction: `http://localhost:4444${imageUrl}`
+- Support for Internet and local images
+
+### 🔧 **Problem Solved: Delete Button**
+**Problem identified:**
+- Delete button used `window.confirm` which wasn't visible
+- User cancelled without realizing
+- No visual feedback during operation
+
+**Solution implemented:**
+- Modern and visible confirmation modal
+- Loading state with visual indicator
+- Disabled buttons during operation
+- Detailed logging for debugging
+- Responsive and accessible interface
 
 ---
 
-## 📈 MÉTRICAS DE PROYECTO
+## 🚀 CURRENT PROJECT STATUS
 
-### 📊 **Estadísticas Actuales**
-- **Componentes React**: 15+
-- **Endpoints API**: 20+
-- **Funcionalidades principales**: 8
-- **Archivos de configuración**: 5
-- **Documentación**: 3 idiomas (ES, EN, Técnico)
+### ✅ **Completed Features**
+- [x] Complete authentication (login/register/logout)
+- [x] Product CRUD with images
+- [x] Inventory management
+- [x] Complete sales system
+- [x] Change calculator
+- [x] Automatic inventory synchronization
+- [x] Enhanced image upload system ✨ ENHANCED
+- [x] Enhanced deletion system ✨ NEW
+- [x] Modern user interface
+- [x] Robust error handling
+- [x] Detailed logging for debugging
 
-### 🎯 **Objetivos Cumplidos**
-- ✅ **Interfaz moderna**: Diseño responsivo con Tailwind CSS
-- ✅ **Autenticación segura**: JWT con validación robusta
-- ✅ **Gestión de productos**: CRUD completo con imágenes
-- ✅ **Sistema de ventas**: Flujo completo con validaciones
-- ✅ **Inventario inteligente**: Actualización automática
-- ✅ **Manejo de errores**: Feedback claro al usuario
-- ✅ **Documentación completa**: Guías técnicas detalladas
+### 🔄 **Features in Development**
+- [ ] Detailed sales history
+- [ ] Reports and statistics
+- [ ] Low stock notifications
+- [ ] Data export
+- [ ] Administration panel
+
+### 📋 **Next Improvements**
+- [ ] Pagination in large lists
+- [ ] Advanced search with filters
+- [ ] Automatic refresh token
+- [ ] Enhanced form validation
+- [ ] Optimistic updates throughout the app
 
 ---
 
-**ZatoBox v2.0** - Sistema Moderno de Gestión de Inventario y Ventas 
+## 📈 PROJECT METRICS
+
+### 📊 **Current Statistics**
+- **React Components**: 15+
+- **API Endpoints**: 20+
+- **Main Features**: 8
+- **Configuration Files**: 5
+- **Documentation**: 3 languages (ES, EN, Technical)
+
+### 🎯 **Achieved Objectives**
+- ✅ **Modern Interface**: Responsive design with Tailwind CSS
+- ✅ **Secure Authentication**: JWT with robust validation
+- ✅ **Product Management**: Complete CRUD with images
+- ✅ **Sales System**: Complete flow with validations
+- ✅ **Smart Inventory**: Automatic updates
+- ✅ **Error Handling**: Clear user feedback
+- ✅ **Complete Documentation**: Detailed technical guides
+
+---
+
+**ZatoBox v2.0** - Modern Inventory and Sales Management System 
