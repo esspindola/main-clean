@@ -1,9 +1,11 @@
 // Configuración de la API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4444/api';
+const OCR_API_BASE_URL = import.meta.env.VITE_OCR_API_URL || 'http://127.0.0.1:8001/api/v1';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
-  TIMEOUT: 10000,
+  OCR_BASE_URL: OCR_API_BASE_URL,
+  TIMEOUT: 60000, // Increased to 60 seconds for OCR processing
   HEADERS: {
     'Content-Type': 'application/json',
   }
@@ -29,8 +31,11 @@ export const ENDPOINTS = {
   INVENTORY: '/inventory',
   INVENTORY_MOVEMENTS: '/inventory/movements',
   
-  // OCR
-  OCR_UPLOAD: '/ocr/upload',
+  // OCR - Updated for new backend
+  OCR_PROCESS: '/invoice/process',
+  OCR_DEBUG: '/invoice/debug', 
+  OCR_VALIDATE: '/invoice/validate',
+  OCR_FORMATS: '/invoice/supported-formats',
 };
 
 export default API_CONFIG; 

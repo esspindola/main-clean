@@ -240,24 +240,219 @@ export const profileAPI = {
   }),
 };
 
+// OCR API Types
+export interface OCRMetadata {
+  ruc?: string;
+  invoice_number?: string;
+  date?: string;
+  company_name?: string;
+  payment_method?: string;
+  subtotal?: string;
+  iva?: string;
+  total?: string;
+}
+
+export interface OCRLineItem {
+  description: string;
+  quantity: string;
+  unit_price: string;
+  total_price: string;
+  confidence: number;
+}
+
+export interface OCRDetection {
+  field_type: string;
+  text: string;
+  confidence: number;
+  bbox: {
+    xmin: number;
+    ymin: number;
+    xmax: number;
+    ymax: number;
+  };
+  ocr_confidence?: number;
+}
+
+export interface OCRResponse {
+  success: boolean;
+  message: string;
+  metadata: OCRMetadata;
+  line_items: OCRLineItem[];
+  detections: OCRDetection[];
+  processed_image?: string;
+  processing_time: number;
+  statistics: {
+    yolo_detections: number;
+    table_regions: number;
+    ocr_confidence: number;
+    model_status: {
+      yolo_loaded: boolean;
+      classes_count: number;
+      is_loaded: boolean;
+    };
+  };
+  summary?: {
+    total_productos: number;
+    total_cantidad: number;
+    gran_total: string;
+    promedio_precio: string;
+  };
+}
+
+export interface OCRDebugResponse {
+  model_status: {
+    yolo_loaded: boolean;
+    classes_count: number;
+  };
+  ocr_engines: {
+    tesseract?: {
+      status: string;
+      version?: string;
+      error?: string;
+    };
+  };
+  simple_test: {
+    tesseract_text?: string;
+    yolo_detections?: number;
+    detected_classes?: string[];
+    yolo_error?: string;
+  };
+}
+
 // OCR API
 export const ocrAPI = {
-  processDocument: (file: File): Promise<any> => {
-    const token = getAuthToken();
+  /**
+   * Process invoice document with advanced OCR
+   */
+  processDocument: (file: File, options: {
+    enhance_ocr?: boolean;
+    rotation_correction?: boolean;
+    confidence_threshold?: number;
+  } = {}): Promise<OCRResponse> => {
     const formData = new FormData();
-    formData.append('document', file);
+    formData.append('file', file);
     
-    return fetch(`${API_BASE_URL}/ocr/upload`, {
+    // Add processing options
+    if (options.enhance_ocr !== undefined) {
+      formData.append('enhance_ocr', options.enhance_ocr.toString());
+    }
+    if (options.rotation_correction !== undefined) {
+      formData.append('rotation_correction', options.rotation_correction.toString());
+    }
+    if (options.confidence_threshold !== undefined) {
+      formData.append('confidence_threshold', options.confidence_threshold.toString());
+    }
+    
+    // Configuración más robusta con logs detallados
+    console.log('🚀 Iniciando procesamiento OCR...');
+    console.log('📍 URL destino:', `http://localhost:8001/api/v1/invoice/process`);
+    console.log('📄 Archivo:', file.name, 'Tamaño:', file.size, 'bytes');
+    
+    const startTime = Date.now();
+    
+    return fetch(`http://localhost:8001/api/v1/invoice/process`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: formData,
-    }).then(response => {
+      mode: 'cors',
+      credentials: 'omit'
+    }).then(async response => {
+      const elapsed = Date.now() - startTime;
+      console.log(`📥 Respuesta recibida del servidor en ${elapsed}ms:`, response.status, response.statusText);
+      console.log('🔍 Headers de respuesta:', [...response.headers.entries()]);
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('❌ Error del servidor:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
-      return response.json();
+      
+      const data = await response.json();
+      console.log('✅ Datos procesados exitosamente:', Object.keys(data));
+      console.log('🔎 Productos detectados:', data.line_items?.length || 0);
+      console.log('📊 Datos completos:', data);
+      return data;
+    }).catch(error => {
+      const elapsed = Date.now() - startTime;
+      console.error(`🔥 Error en procesamiento OCR después de ${elapsed}ms:`, error);
+      console.error('🔥 Tipo de error:', error.name);
+      console.error('🔥 Mensaje:', error.message);
+      throw error;
+    });
+  },
+
+  /**
+   * Validate file before processing
+   */
+  validateFile: (file: File): Promise<{
+    valid: boolean;
+    message?: string;
+    error?: string;
+    file_info?: {
+      filename: string;
+      size: number;
+      content_type: string;
+    };
+  }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return fetch(`${API_CONFIG.OCR_BASE_URL}/invoice/validate`, {
+      method: 'POST',
+      body: formData,
+    }).then(async response => {
+      const data = await response.json();
+      if (!response.ok && response.status !== 400) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+      return data;
+    });
+  },
+
+  /**
+   * Get debug information about OCR system
+   */
+  getDebugInfo: (): Promise<OCRDebugResponse> => {
+    return fetch(`${API_CONFIG.OCR_BASE_URL}/invoice/debug`, {
+      method: 'GET',
+    }).then(async response => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+      return data;
+    });
+  },
+
+  /**
+   * Get supported file formats and capabilities
+   */
+  getSupportedFormats: (): Promise<{
+    supported_formats: string[];
+    max_file_size_mb: number;
+    ocr_languages: string[];
+    capabilities: {
+      pdf_processing: boolean;
+      image_processing: boolean;
+      table_detection: boolean;
+      rotation_correction: boolean;
+      multi_ocr_engines: boolean;
+      yolo_field_detection: boolean;
+    };
+    optimal_conditions: {
+      dpi: string;
+      format: string;
+      quality: string;
+      orientation: string;
+    };
+  }> => {
+    return fetch(`${API_CONFIG.OCR_BASE_URL}/invoice/supported-formats`, {
+      method: 'GET',
+    }).then(async response => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+      return data;
     });
   },
 }; 
