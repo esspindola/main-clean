@@ -23,3 +23,94 @@ dist-ssr
 *.sln
 *.sw?
 .env
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+venv-linux/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+*.out
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and outputs
+uploads/*
+outputs/*
+!uploads/.gitkeep
+!outputs/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+*.pid
+
+# Testing files
+test_*.py
+*_test.py
+debug_*.py
+*_debug.py
+test_*.png
+test_*.pdf
+debug_*.jpg
+
+# YOLOv5 training runs
+yolov5/runs/
+datasets/
+
+# Data files específicos de prueba
+data_invoices.json
+orders.json
+providers.json
+installed.txt
+
+# Git artifacts
+filter-repo/
+.git/
+
+# Requirements obsoletos
+requirements.txt
+dependencies_*.txt
