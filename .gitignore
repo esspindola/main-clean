@@ -1,80 +1,91 @@
-# Ignorar caché de Python
-__pycache__/
-*.pyc
-*.pyo
-
-# Ignorar archivos temporales
-temp/
-*.tmp
-*.bak
-
-# Ignorar contenido extenso en yolov5, pero no el código necesario
-yolov5/*
-!yolov5/hubconf.py
-!yolov5/models/
-!yolov5/utils/
-!yolov5/data/
-!yolov5/requirements.txt
-!yolov5/runs/
-!yolov5/runs/train/
-!yolov5/runs/train/exp4/
-!yolov5/runs/train/exp4/weights/
-!yolov5/runs/train/exp4/weights/best.pt
-
-# Ignorar entornos virtuales y dependencias
-venv/
-labelimg_env/
-node_modules/
-
-# Ignorar datos de entrenamiento y validación
-datasets/coco128/
-datasets/train/
-datasets/val/
-
-# Ignorar archivos temporales y logs
-*.log
-*.out
-*.dat
-
-# Ignorar otros modelos (excepto best.pt)
-*.h5
-*.pt
-
-# Ignorar configuraciones específicas del sistema
-*.swp
-.DS_Store
-Thumbs.db
-
-# Ignorar archivos de configuración de entornos
-*.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# entornos virtuales
-.venv/
-env/
-venv-linux/
-
-# artefactos de Python
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# datos de entrenamiento / resultados grandes
-yolov5/runs/
-*.pt
+# Virtual Environment
+venv/
+venv-linux/
+ENV/
+env/
+.venv/
 
-# pdf2image caché
-*.ppm
-
-# variables de entorno
-.env
-
-# IDEs
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# logs
+# Logs
 *.log
+logs/
+*.out
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and outputs
+uploads/*
+outputs/*
+!uploads/.gitkeep
+!outputs/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+*.pid
+
+# Testing files
+test_*.py
+*_test.py
+debug_*.py
+*_debug.py
+test_*.png
+test_*.pdf
+debug_*.jpg
+
+# YOLOv5 training runs
+yolov5/runs/
+datasets/
+
+# Data files específicos de prueba
+data_invoices.json
+orders.json
+providers.json
+installed.txt
+
+# Git artifacts
+filter-repo/
+.git/
+
+# Requirements obsoletos
+requirements.txt
+dependencies_*.txt

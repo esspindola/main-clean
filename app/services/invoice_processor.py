@@ -327,7 +327,7 @@ class InvoiceProcessor:
                 if (formatted_item['total_price'] != 'No detectado' and 
                     formatted_item['quantity'] != 'No detectado'):
                     
-                    # Extract numeric values
+                  
                     total_match = re.search(r'[\d,]+\.?\d*', formatted_item['total_price'])
                     qty_match = re.search(r'\d+', formatted_item['quantity'])
                     
@@ -391,15 +391,15 @@ class InvoiceProcessor:
                 x2 = int(detection.get('xmax', 0))
                 y2 = int(detection.get('ymax', 0))
                 
-                # Draw bounding box
+             
                 cv2.rectangle(vis_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 
-                # Draw label
+             
                 label = f"{detection.get('class_name', '')} ({detection.get('confidence', 0):.2f})"
                 cv2.putText(vis_image, label, (x1, y1-10), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
             
-            # Draw table regions
+           
             for i, region in enumerate(table_regions):
                 x, y, w, h = region.get('bbox', (0, 0, 0, 0))
                 cv2.rectangle(vis_image, (x, y), (x+w, y+h), (255, 0, 0), 2)
@@ -416,7 +416,7 @@ class InvoiceProcessor:
             logger.error(f"Visualization creation failed: {e}")
             return None
     
-    # ========== MÉTODOS DEL SISTEMA ROBUSTO ==========
+  
     
     def _robust_yolo_detection(self, image: np.ndarray) -> List[Dict]:
         """Detección YOLO robusta con manejo de errores mejorado"""
@@ -452,13 +452,13 @@ class InvoiceProcessor:
                 logger.warning("⚠️ No YOLO model available")
                 return []
             
-            # Preprocesar imagen
+         
             if len(image.shape) == 3:
                 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             else:
                 image_rgb = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
             
-            # Redimensionar si es necesario
+          
             height, width = image_rgb.shape[:2]
             if width > 1280 or height > 1280:
                 scale = min(1280/width, 1280/height)
@@ -530,21 +530,21 @@ class InvoiceProcessor:
             
             from robust_multi_engine_ocr import RobustMultiEngineOCR
             
-            # Inicializar sistema robusto
+          
             robust_system = RobustMultiEngineOCR(
                 yolo_model=self.model_manager.yolo_model,
                 model_classes=self.model_manager.classes
             )
             
-            # Procesar con sistema robusto
+          
             result = robust_system.process_invoice_robust(image)
             
             if result.get('success', False):
-                # Convertir formato para compatibilidad
+               
                 metadata = result.get('metadata', {})
                 line_items = result.get('line_items', [])
                 
-                # Formatear metadatos
+               
                 formatted_metadata = {}
                 for field, value in metadata.items():
                     if value and str(value).strip():
@@ -554,7 +554,7 @@ class InvoiceProcessor:
                             'bbox': {'xmin': 0, 'ymin': 0, 'xmax': 100, 'ymax': 100}
                         }
                 
-                # Formatear líneas de items
+             
                 formatted_items = []
                 for item in line_items:
                     formatted_items.append({
@@ -587,17 +587,17 @@ class InvoiceProcessor:
         logger.info("🔄 Using fallback pattern-based extraction...")
         
         try:
-            # Extraer texto completo con Tesseract básico
+          
             if len(image.shape) == 3:
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             else:
                 gray = image
             
-            # Mejorar imagen
+         
             clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
             enhanced = clahe.apply(gray)
             
-            # OCR básico
+          
             try:
                 text = pytesseract.image_to_string(enhanced, config='--psm 6 -l spa+eng')
                 logger.info(f"📄 Extracted {len(text)} characters with Tesseract")
@@ -630,7 +630,7 @@ class InvoiceProcessor:
                 except:
                     continue
             
-            # Productos básicos
+          
             line_items = []
             lines = text.split('\n')
             for line in lines:

@@ -99,12 +99,12 @@ class ImageProcessor:
             if estimated_dpi < self.min_dpi:
                 # Calculate scale factor
                 scale_factor = self.target_dpi / estimated_dpi
-                scale_factor = min(scale_factor, 3.0)  # Limit upscaling
+                scale_factor = min(scale_factor, 3.0) 
                 
                 new_width = int(width * scale_factor)
                 new_height = int(height * scale_factor)
                 
-                # Use high-quality interpolation
+              
                 enhanced = cv2.resize(image, (new_width, new_height), 
                                     interpolation=cv2.INTER_CUBIC)
                 
@@ -163,7 +163,7 @@ class ImageProcessor:
     def _sharpen_image(self, image: np.ndarray) -> np.ndarray:
         """Apply sharpening filter to enhance text edges."""
         try:
-            # Unsharp masking kernel
+          
             kernel = np.array([[-1,-1,-1],
                               [-1, 9,-1],
                               [-1,-1,-1]])
@@ -189,7 +189,7 @@ class ImageProcessor:
             else:
                 gray = image.copy()
             
-            # Apply edge detection
+         
             edges = cv2.Canny(gray, 50, 150, apertureSize=3)
             
             
@@ -416,8 +416,7 @@ class ImageProcessor:
             pad_bottom = max_dim - height - pad_top
             pad_left = (max_dim - width) // 2
             pad_right = max_dim - width - pad_left
-            
-            # Apply padding
+          
             if len(image.shape) == 3:
                 padded = cv2.copyMakeBorder(image, pad_top, pad_bottom, pad_left, pad_right,
                                           cv2.BORDER_CONSTANT, value=color)

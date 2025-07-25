@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Sistema Inteligente de Análisis de Facturas - Nivel PhD
 Análisis adaptativo para múltiples formatos de facturas con IA avanzada
@@ -100,7 +100,7 @@ class IntelligentInvoiceAnalyzer:
             ]
         }
         
-        # Configuraciones OCR especializadas
+       
         self.ocr_configs = {
             'general': '--psm 6 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúñÁÉÍÓÚÑ0123456789.,:/- ',
             'numbers': '--psm 8 -c tessedit_char_whitelist=0123456789.,',
@@ -110,7 +110,7 @@ class IntelligentInvoiceAnalyzer:
             'sparse_text': '--psm 11',
         }
         
-        # Clases esperadas del modelo entrenado
+        # Clases esperadas para detección YOLO
         self.expected_classes = [
             'logo', 'razon_social', 'R.U.C', 'numero_factura', 'fecha_hora',
             'descripcion', 'cantidad', 'precio_unitario', 'precio_total',
@@ -122,10 +122,10 @@ class IntelligentInvoiceAnalyzer:
         """Preprocesa la imagen con múltiples técnicas para mejorar OCR"""
         preprocessed = {}
         
-        # Original
+  
         preprocessed['original'] = image.copy()
         
-        # Escala de grises
+
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         preprocessed['gray'] = gray
         
@@ -142,7 +142,7 @@ class IntelligentInvoiceAnalyzer:
         enhanced = clahe.apply(gray)
         preprocessed['enhanced'] = enhanced
         
-        # Dilatación para texto pequeño
+  
         kernel = np.ones((1,1), np.uint8)
         dilated = cv2.dilate(gray, kernel, iterations=1)
         preprocessed['dilated'] = dilated
@@ -156,11 +156,11 @@ class IntelligentInvoiceAnalyzer:
         # Preprocesar imagen
         preprocessed_images = self.preprocess_image_intelligent(image)
         
-        # Tesseract con diferentes configuraciones
+       
         for prep_name, prep_image in preprocessed_images.items():
             for config_name, config in self.ocr_configs.items():
                 try:
-                    # Aplicar configuración específica según el tipo de campo
+                 
                     if field_type in ['ruc', 'numero_factura'] and config_name in ['numbers', 'single_line']:
                         text = pytesseract.image_to_string(prep_image, config=config, lang='spa+eng')
                     elif field_type == 'fecha' and config_name in ['dates', 'single_line']:
@@ -171,7 +171,7 @@ class IntelligentInvoiceAnalyzer:
                         continue
                     
                     if text.strip():
-                        # Calcular confianza basada en la longitud y coherencia
+                      
                         confidence = min(0.9, len(text.strip()) / 50 + 0.3)
                         results.append((text.strip(), confidence))
                         
@@ -190,7 +190,7 @@ class IntelligentInvoiceAnalyzer:
         except Exception as e:
             logger.debug(f"EasyOCR falló: {e}")
         
-        # Eliminar duplicados y ordenar por confianza
+      
         unique_results = {}
         for text, conf in results:
             clean_text = re.sub(r'\s+', ' ', text).strip()
@@ -216,10 +216,10 @@ class IntelligentInvoiceAnalyzer:
                     for match in matches:
                         text = match.group(1) if match.groups() else match.group(0)
                         
-                        # Calcular confianza basada en el patrón y contexto
-                        confidence = 0.7  # Base confidence for pattern matching
+                       
+                        confidence = 0.7  
                         
-                        # Bonus por contexto
+                      
                         context_before = full_text[max(0, match.start()-20):match.start()]
                         context_after = full_text[match.end():min(len(full_text), match.end()+20)]
                         
@@ -277,11 +277,11 @@ class IntelligentInvoiceAnalyzer:
         
         for i, line in enumerate(lines):
             line = line.strip()
-            if len(line) < 5:  # Líneas muy cortas probablemente no son productos
+            if len(line) < 5:  
                 continue
             
-            # Patrones para detectar líneas de productos
-            # Patrón: cantidad + descripción + precio
+          
+        
             pattern1 = r'(\d+(?:[.,]\d+)?)\s+(.+?)\s+(\d+[.,]\d{2})'
             # Patrón: descripción + cantidad + precio unitario + total
             pattern2 = r'(.+?)\s+(\d+)\s+(\d+[.,]\d{2})\s+(\d+[.,]\d{2})'
@@ -308,7 +308,7 @@ class IntelligentInvoiceAnalyzer:
                     'source': 'pattern2'
                 })
             else:
-                # Líneas que podrían ser productos sin formato claro
+             
                 if any(word in line.lower() for word in ['producto', 'item', 'art', 'serv']):
                     products.append({
                         'description': line,
@@ -337,14 +337,14 @@ class IntelligentInvoiceAnalyzer:
                 class_name = detection['name']
                 confidence = float(detection['confidence'])
                 
-                if confidence < 0.25:  # Filtrar detecciones de baja confianza
+                if confidence < 0.25:
                     continue
                 
-                # Extraer región
+            
                 x_min, y_min = int(detection['xmin']), int(detection['ymin'])
                 x_max, y_max = int(detection['xmax']), int(detection['ymax'])
                 
-                # Validar coordenadas
+              
                 h, w = image.shape[:2]
                 x_min = max(0, min(x_min, w-1))
                 y_min = max(0, min(y_min, h-1))
@@ -356,7 +356,7 @@ class IntelligentInvoiceAnalyzer:
                 if region.size == 0:
                     continue
                 
-                # Extraer texto con estrategias múltiples
+            
                 text_results = self.extract_text_with_multiple_strategies(region, class_name)
                 
                 if text_results:
@@ -394,15 +394,15 @@ class IntelligentInvoiceAnalyzer:
             'iva': 'iva'
         }
         
-        # Primero agregar campos YOLO
+       
         for yolo_class, field in yolo_fields.items():
             mapped_name = class_mapping.get(yolo_class, yolo_class)
             merged_fields[mapped_name] = field
         
-        # Luego agregar/mejorar con campos de patrones
+     
         for pattern_name, field in pattern_fields.items():
             if pattern_name in merged_fields:
-                # Comparar confianza y elegir el mejor
+             
                 existing = merged_fields[pattern_name]
                 combined_conf_existing = (existing.confidence + existing.ocr_confidence) / 2
                 combined_conf_new = (field.confidence + field.ocr_confidence) / 2
@@ -422,17 +422,17 @@ class IntelligentInvoiceAnalyzer:
         
         logger.info("🚀 Iniciando análisis inteligente de factura")
         
-        # 1. Extraer texto completo de la imagen
+    
         full_text_results = self.extract_text_with_multiple_strategies(image, 'general')
         full_text = full_text_results[0][0] if full_text_results else ""
         
         logger.info(f"📄 Texto extraído: {len(full_text)} caracteres")
         
-        # 2. Detectar formato de factura
+    
         format_type = self.detect_invoice_format(full_text)
         logger.info(f"📋 Formato detectado: {format_type}")
         
-        # 3. Análisis con patrones inteligentes
+   
         pattern_fields = self.apply_intelligent_patterns(full_text)
         
         # 4. Análisis con YOLO (si disponible)

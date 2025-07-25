@@ -32,7 +32,7 @@ class FileHandler:
         self.upload_folder = Path(upload_folder)
         self.temp_folder = Path(temp_folder)
         
-        # Create directories if they don't exist
+      
         self.upload_folder.mkdir(exist_ok=True)
         self.temp_folder.mkdir(exist_ok=True)
         
@@ -53,14 +53,14 @@ class FileHandler:
             if not file or not file.filename:
                 raise ValueError("No file provided")
             
-            # Generate secure filename
+          
             original_filename = file.filename
             if custom_name:
                 filename = secure_filename(custom_name)
             else:
                 filename = secure_filename(original_filename)
             
-            # Add timestamp to avoid conflicts
+          
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             name, ext = os.path.splitext(filename)
             unique_filename = f"{name}_{timestamp}{ext}"
@@ -269,7 +269,7 @@ class FileHandler:
                 logger.error(f"Source file not found: {source_path}")
                 return False
             
-            # Create destination directory if it doesn't exist
+          
             destination.parent.mkdir(parents=True, exist_ok=True)
             
             # Copy file
@@ -301,10 +301,10 @@ class FileHandler:
                 logger.error(f"Source file not found: {source_path}")
                 return False
             
-            # Create destination directory if it doesn't exist
+         
             destination.parent.mkdir(parents=True, exist_ok=True)
             
-            # Move file
+         
             shutil.move(str(source), str(destination))
             
             logger.debug(f"File moved: {source_path} -> {destination_path}")
@@ -324,7 +324,7 @@ class FileHandler:
         try:
             usage_info = {}
             
-            # Upload folder usage
+         
             upload_size = self._calculate_directory_size(self.upload_folder)
             usage_info['upload_folder'] = {
                 'path': str(self.upload_folder),
@@ -332,7 +332,7 @@ class FileHandler:
                 'size_mb': round(upload_size / (1024 * 1024), 2)
             }
             
-            # Temp folder usage
+          
             temp_size = self._calculate_directory_size(self.temp_folder)
             usage_info['temp_folder'] = {
                 'path': str(self.temp_folder),
@@ -340,7 +340,7 @@ class FileHandler:
                 'size_mb': round(temp_size / (1024 * 1024), 2)
             }
             
-            # System disk usage
+           
             disk_usage = shutil.disk_usage(str(self.upload_folder))
             usage_info['disk'] = {
                 'total_bytes': disk_usage.total,
@@ -418,7 +418,7 @@ class FileHandler:
                     if file_info:
                         files.append(file_info)
             
-            # Sort by modification time (newest first)
+            
             files.sort(key=lambda x: x['modified'], reverse=True)
             
             return files

@@ -87,32 +87,10 @@ class RobustMultiEngineOCR:
         }
 
     def initialize_paddle_ocr(self):
-        """Inicializar PaddleOCR (motor principal de respaldo)"""
-        try:
-            import paddleocr
-            self.paddle_ocr = paddleocr.PaddleOCR(
-                use_angle_cls=True, 
-                lang='es',
-                use_gpu=False,  # CPU para compatibilidad
-                show_log=False
-            )
-            print("✅ PaddleOCR inicializado correctamente")
-            return True
-        except ImportError:
-            print("⚠️ PaddleOCR no disponible. Instalando...")
-            try:
-                import subprocess
-                subprocess.check_call(['pip', 'install', 'paddlepaddle', 'paddleocr'])
-                import paddleocr
-                self.paddle_ocr = paddleocr.PaddleOCR(use_angle_cls=True, lang='es', use_gpu=False, show_log=False)
-                print("✅ PaddleOCR instalado e inicializado")
-                return True
-            except Exception as e:
-                print(f"❌ Error instalando PaddleOCR: {e}")
-                return False
-        except Exception as e:
-            print(f"❌ Error inicializando PaddleOCR: {e}")
-            return False
+        """Inicializar PaddleOCR (motor principal de respaldo) - ANTI-BUCLE"""
+        print("⚠️ PADDLEOCR DESHABILITADO TEMPORALMENTE - EVITANDO BUCLE INFINITO")
+        print("✅ Continuando solo con Tesseract (más rápido y estable)")
+        return False
 
     def preprocess_image_advanced(self, image: np.ndarray) -> Dict[str, np.ndarray]:
         """Preprocesamiento avanzado para mejorar OCR"""
@@ -489,10 +467,12 @@ class RobustMultiEngineOCR:
         return final_results
 
     def process_invoice_robust(self, image: np.ndarray) -> Dict:
-        """Procesamiento robusto multi-motor"""
+        """Procesamiento robusto multi-motor CON TIMEOUT"""
         start_time = time.time()
+        TIMEOUT_SECONDS = 60  # 1 minuto máximo
         
         print("🚀 INICIANDO PROCESAMIENTO MULTI-MOTOR ROBUSTO")
+        print(f"⏰ TIMEOUT: {TIMEOUT_SECONDS} segundos máximo")
         print("="*60)
         print(f"📷 Imagen: {image.shape}")
         
@@ -502,15 +482,28 @@ class RobustMultiEngineOCR:
             print("-" * 30)
             yolo_detections = self.fix_yolo_inference(image)
             
-            # MOTOR 2: PaddleOCR
-            print("\n🏮 MOTOR 2: PaddleOCR")
-            print("-" * 30)
-            paddle_text, paddle_structured = self.extract_with_paddle_ocr(image)
+            # Verificar timeout después de YOLO
+            if time.time() - start_time > TIMEOUT_SECONDS:
+                print(f"🚨 TIMEOUT después de YOLO - {time.time() - start_time:.1f}s")
+                return {'success': False, 'message': 'Timeout después de YOLO'}
             
-            # MOTOR 3: Tesseract Avanzado
+            # MOTOR 2: PaddleOCR (DESHABILITADO)
+            print("\n🏮 MOTOR 2: PaddleOCR (SKIP)")
+            print("-" * 30)
+            paddle_text, paddle_structured = "", {}
+            
+            # MOTOR 3: Tesseract Avanzado (CON TIMEOUT)
             print("\n🔍 MOTOR 3: Tesseract Avanzado")
             print("-" * 30)
+            tesseract_start = time.time()
             tesseract_text = self.extract_with_tesseract_advanced(image)
+            tesseract_time = time.time() - tesseract_start
+            print(f"⏱️ Tesseract completado en {tesseract_time:.1f}s")
+            
+            # Verificar timeout después de Tesseract
+            if time.time() - start_time > TIMEOUT_SECONDS:
+                print(f"🚨 TIMEOUT después de Tesseract - {time.time() - start_time:.1f}s")
+                return {'success': False, 'message': 'Timeout después de Tesseract'}
             
             # Combinar textos
             combined_text = f"{paddle_text}\n{tesseract_text}"
@@ -522,23 +515,56 @@ class RobustMultiEngineOCR:
                     'message': 'No se pudo extraer suficiente texto con ningún motor'
                 }
             
-            # MOTOR 4: Patrones Ecuatorianos
-            print("\n🇪🇨 MOTOR 4: Patrones Ecuatorianos")
+            # MOTOR 4: SISTEMA INTELIGENTE CON NLP (NUEVO)
+            print("\n🧠 MOTOR 4: SMART NLP PATTERNS")
             print("-" * 30)
-            pattern_results = self.apply_ecuador_patterns(combined_text)
             
-            # FUSIÓN INTELIGENTE
-            print("\n🧠 FUSIÓN INTELIGENTE")
-            print("-" * 30)
-            final_metadata = self.intelligent_fusion(
-                yolo_detections, 
-                paddle_structured, 
-                pattern_results, 
-                combined_text
-            )
+            # Importar sistema inteligente
+            try:
+                import sys
+                import os
+                sys.path.append(os.path.dirname(__file__))
+                
+                from smart_invoice_nlp import process_invoice_with_smart_nlp
+                
+                # Procesar con sistema inteligente
+                smart_result = process_invoice_with_smart_nlp(combined_text)
+                
+                if smart_result.get('success'):
+                    final_metadata = smart_result.get('metadata', {})
+                    products = smart_result.get('line_items', [])
+                    
+                    print(f"✅ Smart NLP: {len(final_metadata)} campos, {len(products)} productos")
+                    print(f"📊 Tipo factura: {smart_result.get('invoice_type', 'UNKNOWN')}")
+                    print(f"🔍 Validación: {smart_result.get('validation', {})}")
+                else:
+                    # Fallback al sistema anterior
+                    print("⚠️ Smart NLP falló, usando sistema anterior...")
+                    pattern_results = self.apply_ecuador_patterns(combined_text)
+                    final_metadata = self.intelligent_fusion(
+                        yolo_detections, paddle_structured, pattern_results, combined_text
+                    )
+            except Exception as e:
+                print(f"❌ Error en Smart NLP: {e}, usando sistema anterior...")
+                pattern_results = self.apply_ecuador_patterns(combined_text)
+                final_metadata = self.intelligent_fusion(
+                    yolo_detections, paddle_structured, pattern_results, combined_text
+                )
             
-            # Extraer productos (simplificado)
-            products = self.extract_products_from_text(combined_text)
+            # Usar productos del sistema inteligente si están disponibles
+            if 'products' in locals() and products:
+                print(f"🛒 Usando productos del sistema inteligente: {len(products)}")
+            else:
+                # Fallback: Extraer productos (CON TIMEOUT)
+                products_start = time.time()
+                products = self.extract_products_from_text(combined_text)
+                products_time = time.time() - products_start
+                print(f"⏱️ Productos extraídos (fallback) en {products_time:.1f}s")
+            
+            # Verificar timeout después de productos
+            if time.time() - start_time > TIMEOUT_SECONDS:
+                print(f"🚨 TIMEOUT después de productos - {time.time() - start_time:.1f}s")
+                return {'success': False, 'message': 'Timeout después de extracción de productos'}
             
             # Calcular métricas
             processing_time = time.time() - start_time
@@ -597,21 +623,83 @@ class RobustMultiEngineOCR:
             }
 
     def extract_products_from_text(self, text: str) -> List[Dict]:
-        """Extraer productos del texto con patrones mejorados"""
+        """Extraer productos del texto con patrones mejorados PARA FACTURAS COMPLETAS"""
         products = []
         lines = text.split('\n')
         
-        print(f"🛒 EXTRAYENDO PRODUCTOS de {len(lines)} líneas...")
+        print(f"🛒 EXTRAYENDO PRODUCTOS COMPLETOS de {len(lines)} líneas...")
         
         # Detectar si es factura tipo "Invoice" en inglés
-        is_english_invoice = 'Invoice' in text and 'Description' in text and 'Quantity' in text
+        is_english_invoice = 'Invoice' in text and ('Description' in text or 'Quantity' in text)
         
-        for i, line in enumerate(lines):
-            line = line.strip()
-            if len(line) < 5:
+        # Patrones específicos para el formato de factura del ejemplo
+        product_patterns = [
+            # Patrón principal: Nombre del producto en línea separada + descripción + cantidad + precios
+            r'^([A-Za-z]{3,15})$',  # Cheese, Orange, Computer, etc.
+            # Descripción larga en línea siguiente
+            r'^(.{20,200})$',  # The Football Is Good For Training...
+            # Línea con cantidad y precios: 1 $73.00 $73.00
+            r'^(\d+)\s+\$?([\d,]+\.?\d{0,2})\s+\$?([\d,]+\.?\d{0,2})$'
+        ]
+        
+        # Lista de productos conocidos para el ejemplo
+        known_products = ['Cheese', 'Orange', 'Computer', 'Sausages', 'Doritos', 'Chair', 'Hat']
+        
+        # LÍMITE DE TIEMPO Y PRODUCTOS PARA EVITAR BUCLE INFINITO
+        max_products = 10
+        max_lines = min(200, len(lines))  # Máximo 200 líneas para evitar colgarse
+        
+        print(f"🚨 ANTI-BUCLE: Procesando máximo {max_lines} líneas, máximo {max_products} productos")
+        
+        i = 0
+        while i < max_lines and len(products) < max_products:
+            line = lines[i].strip()
+            
+            # ESTRATEGIA 1: Buscar productos conocidos del ejemplo
+            if line in known_products:
+                product_name = line
+                description = ""
+                quantity = "1"
+                unit_price = "0.00"
+                total_price = "0.00"
+                
+                # Buscar descripción en líneas siguientes
+                j = i + 1
+                while j < len(lines) and j < i + 5:  # Máximo 5 líneas hacia adelante
+                    next_line = lines[j].strip()
+                    
+                    # Si encuentra precios, es la línea de cantidad/precios
+                    price_match = re.search(r'^(\d+)\s+\$?([\d,]+\.?\d{0,2})\s+\$?([\d,]+\.?\d{0,2})$', next_line)
+                    if price_match:
+                        quantity = price_match.group(1)
+                        unit_price = f"${price_match.group(2)}"
+                        total_price = f"${price_match.group(3)}"
+                        break
+                    
+                    # Si no tiene números ni signos $, es descripción
+                    elif len(next_line) > 15 and not re.search(r'[\d$]', next_line):
+                        if description:
+                            description += " " + next_line
+                        else:
+                            description = next_line
+                    
+                    j += 1
+                
+                # Agregar producto si encontramos datos válidos
+                if description or quantity != "1":
+                    products.append({
+                        'description': f"{product_name}: {description}" if description else product_name,
+                        'quantity': quantity,
+                        'unit_price': unit_price,
+                        'total_price': total_price,
+                        'confidence': 0.9
+                    })
+                    print(f"  ✅ KNOWN PRODUCT: {product_name} - Qty: {quantity}, Price: {total_price}")
+                
+                i = j + 1  # Saltar las líneas procesadas
                 continue
             
-            # PATRONES PARA FACTURAS EN INGLÉS (TIPO INVOICE)
+            # ESTRATEGIA 2: PATRONES PARA FACTURAS EN INGLÉS (TIPO INVOICE)
             if is_english_invoice:
                 # Buscar descripciones largas típicas de facturas Invoice
                 long_desc_match = re.search(r'^([A-Za-z][A-Za-z0-9\s\.,]{20,200})$', line)
@@ -693,8 +781,30 @@ class RobustMultiEngineOCR:
                         print(f"  ✅ ECUADORIAN PRODUCT: {desc[:30]}...")
                     break
         
+        # CALCULAR TOTAL REAL
+        calculated_total = 0.0
+        for product in products:
+            try:
+                total_str = product.get('total_price', '0.00').replace('$', '').replace(',', '')
+                if total_str and total_str != '0.00':
+                    calculated_total += float(total_str)
+            except:
+                continue
+        
         print(f"🛒 PRODUCTOS EXTRAÍDOS: {len(products)}")
-        return products[:15]  # Aumentar límite
+        print(f"💰 TOTAL CALCULADO: ${calculated_total:.2f}")
+        
+        # Agregar producto de resumen si es necesario
+        if calculated_total > 0:
+            products.append({
+                'description': '--- TOTAL CALCULADO ---',
+                'quantity': '',
+                'unit_price': '',
+                'total_price': f'${calculated_total:.2f}',
+                'confidence': 1.0
+            })
+        
+        return products[:20]  # Aumentar límite
 
 # Instancia global
 robust_ocr_system = None

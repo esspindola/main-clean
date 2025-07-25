@@ -24,30 +24,46 @@ class ModelManager:
         self.is_loaded = False
     
     def load_models(self):
-        """Load all required models."""
-        try:
-            self._load_yolo_model()
-            self._load_classes()
-            self.is_loaded = True
-            logger.info("All models loaded successfully")
-        except Exception as e:
-            logger.error(f"Failed to load models: {e}")
-            self.is_loaded = False
-            raise
+        """Load all required models - PATTERN-ONLY VERSION (FAST)."""
+        logger.info("🚀 PATTERN-ONLY MODE - SKIPPING YOLO FOR SPEED")
+        logger.info("⚡ Using advanced pattern recognition instead of YOLO")
+        
+        self._load_classes()
+        self.yolo_model = self._create_dummy_model()
+        self.is_loaded = True
+        
+        logger.info("✅ Pattern-only system loaded successfully (FAST MODE)")
     
     def _load_yolo_model(self):
         """Load YOLOv5 custom trained model using DetectMultiBackend."""
         try:
-            model_path = current_app.config['MODEL_PATH']
+            from pathlib import Path
+            model_path = Path('models/best.pt')
+            
+         
+            if not model_path.exists():
+                model_path = Path('/app/models/best.pt')
+            if not model_path.exists():
+                model_path = Path('yolov5/runs/train/exp_4/weights/best.pt')
+            
+            logger.info(f"🎯 Intentando cargar modelo desde: {model_path}")
             
             if not model_path.exists():
                 logger.warning(f"Custom model not found at {model_path}, using dummy model")
                 self.yolo_model = self._create_dummy_model()
             else:
                 try:
+                  
+                    import torch
+                    logger.info(f"🔄 Cargando modelo YOLO desde {model_path}")
                     
-                    from models.common import DetectMultiBackend
-                    self.yolo_model = DetectMultiBackend(str(model_path))
+                    try:
+                        self.yolo_model = torch.hub.load('ultralytics/yolov5', 'custom', path=str(model_path), force_reload=True)
+                        logger.info("✅ Modelo YOLO cargado con torch.hub")
+                    except Exception as torch_error:
+                        logger.warning(f"⚠️ torch.hub falló: {torch_error}, intentando carga directa...")
+                        self.yolo_model = torch.load(str(model_path), map_location='cpu')
+                        logger.info("✅ Modelo YOLO cargado directamente")
                     self.yolo_model.eval()
                     logger.info(f"Loaded custom YOLOv5 model using DetectMultiBackend from {model_path}")
                 except Exception as backend_error:
@@ -104,14 +120,26 @@ class ModelManager:
     def _load_classes(self):
         """Load class names from data.yaml."""
         try:
-            data_path = Path('datasets/data.yaml')
+            possible_paths = [
+                Path('datasets/data.yaml'),
+                Path('/app/datasets/data.yaml'),
+                Path('data.yaml'),
+                Path('/app/data.yaml')
+            ]
             
-            if data_path.exists():
+            data_path = None
+            for path in possible_paths:
+                if path.exists():
+                    data_path = path
+                    break
+            
+            if data_path:
+                logger.info(f"📄 Cargando clases desde: {data_path}")
                 with open(data_path, 'r', encoding='utf-8') as f:
                     data = yaml.safe_load(f)
                     self.classes = {i: name for i, name in enumerate(data.get('names', []))}
             else:
-               
+                logger.warning("📄 data.yaml no encontrado, usando clases por defecto")
                 self.classes = {
                     0: 'logo', 1: 'R.U.C', 2: 'numero_factura', 3: 'fecha_hora',
                     4: 'razon_social', 5: 'cantidad', 6: 'descripcion', 7: 'precio_unitario',
@@ -140,7 +168,6 @@ class ModelManager:
             self.load_models()
         
         try:
-            # For dummy model, return empty list
             if isinstance(self.yolo_model, type(self._create_dummy_model())):
                 logger.debug("Using dummy model, returning empty detections")
                 return []
@@ -154,16 +181,14 @@ class ModelManager:
                 from utils.augmentations import letterbox
                 img, *_ = letterbox(image_rgb, new_shape=640, auto=False)
                 
-                # Convert to tensor format
-                img = img.transpose((2, 0, 1))  # HWC → CHW
+                img = img.transpose((2, 0, 1))  
                 img = np.ascontiguousarray(img)
                 img = torch.from_numpy(img).float() / 255.0
-                img = img.unsqueeze(0)  # batch=1
+                img = img.unsqueeze(0)  
                 
-                # Run inference
                 with torch.no_grad():
                     if hasattr(self.yolo_model, 'predict'):
-                        # torch.hub format
+                       
                         results = self.yolo_model(image_rgb)
                         if hasattr(results, 'xyxy') and len(results.xyxy) > 0:
                             pred = results.xyxy[0]
@@ -182,7 +207,6 @@ class ModelManager:
                         except ImportError:
                             logger.warning("non_max_suppression not available, using raw predictions")
                 
-                # Parse detections
                 detections = []
                 if pred is not None and len(pred):
                     if hasattr(pred, 'cpu'):

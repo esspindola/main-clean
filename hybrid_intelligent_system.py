@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Sistema Híbrido Inteligente para OCR de Facturas
 Combina tu modelo YOLO entrenado con patrones inteligentes como respaldo

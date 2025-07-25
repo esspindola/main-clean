@@ -24,7 +24,7 @@ class TextProcessor:
     """
     
     def __init__(self):
-        # Pattern definitions for different field types
+      
         self.patterns = {
             'ruc': [
                 r'\b\d{10,13}\b',  # RUC numbers
@@ -129,25 +129,25 @@ class TextProcessor:
         for row in rows:
             enhanced_row = row.copy()
             
-            # Improve description classification
+          
             description = row.get('description', '')
             enhanced_row['description'] = self._clean_description_text(description)
             
-            # Improve quantity detection
+          
             quantity = row.get('quantity', '')
             enhanced_row['quantity'] = self._clean_quantity_text(quantity)
             
-            # Improve price detection and formatting
+          
             unit_price = row.get('unit_price', '')
             total_price = row.get('total_price', '')
             
             enhanced_row['unit_price'] = self._clean_price_text(unit_price)
             enhanced_row['total_price'] = self._clean_price_text(total_price)
             
-            # Add field type classification
+         
             enhanced_row['field_types'] = self._classify_row_fields(enhanced_row)
             
-            # Recalculate confidence based on field quality
+         
             enhanced_row['confidence'] = self._calculate_row_confidence(enhanced_row)
             
             enhanced_rows.append(enhanced_row)
@@ -158,7 +158,7 @@ class TextProcessor:
         """Extract key-value pairs from text results."""
         key_value_pairs = {}
         
-        # Combine all text for pattern matching
+    
         all_text = ' '.join([result.get('text', '') for result in text_results])
         
         # Extract RUC
@@ -176,12 +176,12 @@ class TextProcessor:
         if date_value:
             key_value_pairs['date'] = date_value
         
-        # Extract company name using context
+      
         company_name = self._extract_company_name(text_results)
         if company_name:
             key_value_pairs['company_name'] = company_name
         
-        # Extract monetary totals
+     
         monetary_values = self._extract_monetary_values(all_text)
         key_value_pairs.update(monetary_values)
         
@@ -192,13 +192,13 @@ class TextProcessor:
         for pattern in patterns:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
-                # Return the captured group if exists, otherwise the full match
+              
                 return match.group(1) if match.groups() else match.group(0)
         return None
     
     def _extract_company_name(self, text_results: List[Dict]) -> Optional[str]:
         """Extract company name using position and context."""
-        # Look for text near the top of the document
+       
         company_candidates = []
         
         for result in text_results:
@@ -206,9 +206,9 @@ class TextProcessor:
             bbox = result.get('bbox', {})
             y_pos = bbox.get('ymin', 0)
             
-            # Company name is usually in the top 30% of the document
+         
             if y_pos < 0.3 and len(text) > 5:
-                # Filter out common non-company text
+              
                 if not any(keyword in text.lower() for keyword in 
                           ['factura', 'ruc', 'fecha', 'número', 'autorización']):
                     company_candidates.append({
@@ -217,7 +217,7 @@ class TextProcessor:
                         'confidence': result.get('confidence', 0)
                     })
         
-        # Select best candidate (highest confidence in top position)
+       
         if company_candidates:
             best_candidate = max(company_candidates, 
                                key=lambda x: x['confidence'] * (1 - x['y_pos']))
@@ -229,7 +229,7 @@ class TextProcessor:
         """Extract monetary values (subtotal, tax, total)."""
         monetary_values = {}
         
-        # Patterns for different monetary fields
+      
         monetary_patterns = {
             'subtotal': [
                 r'SUBTOTAL\s*:?\s*\$?\s*([\d,]+\.?\d{0,2})',
@@ -252,7 +252,7 @@ class TextProcessor:
         for field_name, patterns in monetary_patterns.items():
             value = self._extract_pattern_value(text, patterns)
             if value:
-                # Format monetary value
+              
                 formatted_value = self._format_monetary_value(value)
                 if formatted_value:
                     monetary_values[field_name] = formatted_value
@@ -264,13 +264,12 @@ class TextProcessor:
         if not text or text == 'No detectado':
             return 'No detectado'
         
-        # Remove extra whitespace
+    
         cleaned = re.sub(r'\s+', ' ', text.strip())
         
-        # Remove special characters but keep basic punctuation
         cleaned = re.sub(r'[^\w\s\.\,\-\(\)\[\]]', ' ', cleaned)
         
-        # Remove very short words that are likely OCR errors
+        
         words = cleaned.split()
         filtered_words = [word for word in words if len(word) > 1 or word.isdigit()]
         
@@ -282,7 +281,7 @@ class TextProcessor:
         if not text or text == 'No detectado':
             return 'No detectado'
         
-        # Extract numeric values
+   
         numeric_match = re.search(r'(\d+(?:\.\d+)?)', text)
         if numeric_match:
             return numeric_match.group(1)
@@ -294,7 +293,7 @@ class TextProcessor:
         if not text or text == 'No detectado':
             return 'No detectado'
         
-        # Extract monetary value
+     
         price_match = re.search(r'[\$]?\s*([\d,]+\.?\d{0,2})', text)
         if price_match:
             value = price_match.group(1)
@@ -305,13 +304,13 @@ class TextProcessor:
     def _format_monetary_value(self, value: str) -> str:
         """Format monetary value consistently."""
         try:
-            # Remove commas and extra spaces
+         
             cleaned_value = re.sub(r'[^\d\.]', '', value)
             
-            # Convert to float and format
+          
             numeric_value = float(cleaned_value)
             
-            # Format with 2 decimal places
+         
             formatted = f"${numeric_value:.2f}"
             
             return formatted
@@ -335,23 +334,23 @@ class TextProcessor:
         if not content or content == 'No detectado':
             return 'empty'
         
-        # Check for monetary values
+      
         if re.search(r'[\$€]|(\d+[,.]?\d*)', content):
             return 'monetary'
         
-        # Check for pure numbers (quantity)
+      
         if re.match(r'^\d+(\.\d+)?$', content.strip()):
             return 'numeric'
         
-        # Check for text description
+      
         if len(content.split()) > 2:
             return 'text_description'
         
-        # Check for dates
+    
         if re.search(r'\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}', content):
             return 'date'
         
-        # Default classification
+     
         return 'text'
     
     def _calculate_row_confidence(self, row: Dict) -> float:
@@ -361,14 +360,14 @@ class TextProcessor:
         original_confidence = row.get('confidence', 0.0)
         confidence_factors.append(original_confidence)
         
-        # Factor: Field completeness
+     
         fields = ['description', 'quantity', 'unit_price', 'total_price']
         non_empty_fields = sum(1 for field in fields 
                               if row.get(field, 'No detectado') != 'No detectado')
         completeness_score = non_empty_fields / len(fields)
         confidence_factors.append(completeness_score)
         
-        # Factor: Field type consistency
+    
         field_types = row.get('field_types', {})
         type_consistency = 0.0
         
@@ -383,8 +382,8 @@ class TextProcessor:
         
         confidence_factors.append(type_consistency)
         
-        # Calculate weighted average
-        weights = [0.4, 0.3, 0.3]  # Original confidence, completeness, consistency
+      
+        weights = [0.4, 0.3, 0.3]  
         final_confidence = sum(f * w for f, w in zip(confidence_factors, weights))
         
         return min(max(final_confidence, 0.0), 1.0)
@@ -398,25 +397,25 @@ class TextProcessor:
                 continue
             
             if key == 'ruc':
-                # Validate and clean RUC
+             
                 cleaned_ruc = re.sub(r'[^\d]', '', value)
                 if len(cleaned_ruc) >= 10:
                     cleaned_data[key] = cleaned_ruc
             
             elif key == 'date':
-                # Standardize date format
+              
                 cleaned_date = self._standardize_date(value)
                 if cleaned_date:
                     cleaned_data[key] = cleaned_date
             
             elif key in ['subtotal', 'iva', 'total']:
-                # Format monetary values
+              
                 formatted_value = self._format_monetary_value(value)
                 if formatted_value:
                     cleaned_data[key] = formatted_value
             
             else:
-                # Basic text cleaning
+            
                 cleaned_value = re.sub(r'\s+', ' ', value.strip())
                 if cleaned_value:
                     cleaned_data[key] = cleaned_value
@@ -426,7 +425,7 @@ class TextProcessor:
     def _standardize_date(self, date_str: str) -> Optional[str]:
         """Standardize date format."""
         try:
-            # Common date patterns
+           
             patterns = [
                 r'(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})',
                 r'(\d{1,2})\s+de\s+\w+\s+de\s+(\d{4})'
@@ -437,12 +436,12 @@ class TextProcessor:
                 if match:
                     if len(match.groups()) == 3:
                         day, month, year = match.groups()
-                        # Ensure 4-digit year
+                     
                         if len(year) == 2:
                             year = '20' + year if int(year) < 50 else '19' + year
                         return f"{day.zfill(2)}/{month.zfill(2)}/{year}"
             
-            return date_str  # Return original if no pattern matches
+            return date_str  
             
         except Exception as e:
             logger.warning(f"Date standardization failed: {e}")

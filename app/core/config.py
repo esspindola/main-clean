@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 from typing import List
 
-
 class Config:
     """Base configuration class with common settings."""
     
@@ -21,7 +20,7 @@ class Config:
     
    
     CORS_ORIGINS = [
-        # Development servers
+       
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:5173",  # Vite dev server
@@ -48,7 +47,6 @@ class Config:
     TESSDATA_PREFIX = os.environ.get('TESSDATA_PREFIX', '/usr/share/tesseract-ocr/5/tessdata')
     OCR_LANGUAGES = ['spa', 'eng']
     
-   
     MODEL_PATH = Path('models/best.pt')
     YOLO_CONFIDENCE_THRESHOLD = 0.25
     YOLO_IOU_THRESHOLD = 0.45
@@ -62,7 +60,6 @@ class Config:
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
     LOG_FILE = Path('logs/ocr_backend.log')
     
-   
     DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///ocr_backend.db')
     
    

@@ -386,7 +386,7 @@ def validate_processing_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
         for param in bool_params:
             value = params.get(param, True)
             if not isinstance(value, bool):
-                # Try to convert string values
+               
                 if isinstance(value, str):
                     value = value.lower() in ['true', '1', 'yes', 'on']
                 else:

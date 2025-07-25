@@ -6,7 +6,7 @@ Advanced OCR processing with multiple engines for maximum accuracy
 import cv2
 import numpy as np
 import pytesseract
-# EasyOCR import made optional to prevent startup issues
+
 try:
     import easyocr
     EASYOCR_AVAILABLE = True
@@ -55,7 +55,7 @@ class OCREngineManager:
         else:
             logger.warning("EasyOCR not available, using Tesseract only")
             
-        # Test Tesseract
+     
         try:
             version = pytesseract.get_tesseract_version()
             logger.info(f"Tesseract version: {version}")
@@ -171,7 +171,7 @@ class OCREngineManager:
         
         for detection in detections:
             try:
-                # Extract region
+               
                 x1 = max(0, int(detection.get('xmin', 0)))
                 y1 = max(0, int(detection.get('ymin', 0)))
                 x2 = min(image.shape[1], int(detection.get('xmax', 0)))
@@ -304,7 +304,7 @@ class OCREngineManager:
             results = []
             for bbox_points, text, confidence in ocr_results:
                 if confidence > 0.3:  
-                    # Convert bbox points to rectangle
+                  
                     xs = [point[0] for point in bbox_points]
                     ys = [point[1] for point in bbox_points]
                     
@@ -342,13 +342,13 @@ class OCREngineManager:
                     gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
                 )
             elif class_name in ['fecha_hora']:
-                # For dates, enhance contrast
+               
                 enhanced = cv2.equalizeHist(gray)
             elif class_name in ['razon_social', 'descripcion']:
-                # For text fields, denoise
+              
                 enhanced = cv2.fastNlMeansDenoising(gray)
             else:
-                # Default enhancement
+             
                 clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
                 enhanced = clahe.apply(gray)
             
@@ -379,14 +379,14 @@ class OCREngineManager:
             
             results = []
             
-            # Process each cell
+         
             for row_idx, row in enumerate(rows):
                 for col_idx, cell_bbox in enumerate(row):
                     x, y, w, h = cell_bbox
-                    if w > 10 and h > 10:  # Skip very small cells
+                    if w > 10 and h > 10:  
                         cell_region = table_region[y:y+h, x:x+w]
                         
-                        # Extract text from cell
+                      
                         cell_text = self._extract_cell_text(cell_region)
                         
                         if cell_text:
@@ -486,7 +486,7 @@ class OCREngineManager:
         if not results:
             return []
         
-        # Sort by position
+     
         results.sort(key=lambda x: (x.get('bbox', {}).get('ymin', 0), 
                                    x.get('bbox', {}).get('xmin', 0)))
         
@@ -539,7 +539,7 @@ class OCREngineManager:
         if not results:
             return []
         
-        # Group by Y coordinate (rows)
+       
         rows = defaultdict(list)
         
         for result in results:

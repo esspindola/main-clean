@@ -101,26 +101,26 @@ def detect_sections(image):
         results = model(image)
         print(f"🔍 YOLO detectó {len(results)} resultado(s)")
         
-        # Para versiones nuevas de YOLOv5 (2023+)
+      
         if hasattr(results, 'pandas'):
             try:
-                # Intenta el método tradicional
+              
                 detections = results.pandas().xyxy[0]
                 print(f"📊 Detecciones (método pandas): {len(detections)}")
                 return detections
             except Exception as pandas_error:
                 print(f"⚠️ Error con método pandas: {pandas_error}")
         
-        # Método alternativo para versiones nuevas
+     
         if hasattr(results, '__iter__'):
-            # results es una lista de resultados
+           
             result = results[0] if results else None
             if result is not None:
                 if hasattr(result, 'boxes') and result.boxes is not None:
-                    # Acceso directo a boxes (YOLOv8+ style)
+                  
                     boxes = result.boxes
                     if boxes.xyxy is not None and len(boxes.xyxy) > 0:
-                        # Crear DataFrame manualmente
+                   
                         detections_data = []
                         for i in range(len(boxes.xyxy)):
                             detection = {
@@ -139,7 +139,7 @@ def detect_sections(image):
                         return detections_df
                 
         print("⚠️ No se pudieron extraer detecciones, usando datos dummy")
-        # Retornar DataFrame vacío pero con columnas correctas
+      
         return pd.DataFrame(columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class', 'name'])
         
     except Exception as e:
@@ -152,7 +152,7 @@ def clean_row(row_text):
     import re
     if not row_text:
         return ""
-    # Eliminar caracteres especiales y múltiples espacios
+  
     cleaned = re.sub(r'[^\w\s.,:-]', '', str(row_text))
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
     return cleaned
@@ -161,11 +161,11 @@ def extract_tables_and_text(image, detections):
     table_data = []
     for _, row in detections.iterrows():
         if row['name'] == 'Product_Table':
-            # Recortar la región correspondiente a la tabla de productos
+           
             x_min, y_min, x_max, y_max = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
             table_image = image[y_min:y_max, x_min:x_max]
 
-            # Aplicar OCR a la tabla
+         
             ocr_result = pytesseract.image_to_string(table_image, config='--psm 6', lang='spa')
             rows = ocr_result.split('\n')
             cleaned_rows = [clean_row(row) for row in rows if row.strip() != '']
@@ -179,7 +179,7 @@ def extract_key_value_pairs(image, detections):
             x_min, y_min, x_max, y_max = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
             section_image = image[y_min:y_max, x_min:x_max]
 
-            # Aplicar OCR para obtener todos los textos de la sección
+         
             ocr_result = pytesseract.image_to_data(section_image, output_type=pytesseract.Output.DATAFRAME, lang='spa')
             ocr_result = ocr_result[ocr_result.conf > 50]
             
@@ -202,12 +202,12 @@ def process_image(file):
     try:
         start_time = time.time()
         
-        # Leer la imagen en memoria
+      
         image = Image.open(file.stream).convert('RGB')
         image = np.array(image)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        # Verificar que la imagen no está vacía
+     
         if image is None or image.size == 0:
             return {'error': 'Error al procesar la imagen: imagen vacía o inválida.'}
 
@@ -222,10 +222,10 @@ def process_image(file):
         headers = table_data[0] if len(table_data) > 0 else []
         table_body = table_data[1:] if len(table_data) > 1 else []
 
-        # Crear estructura compatible con frontend
+   
         processing_time = time.time() - start_time
         
-        # Convertir a formato de line_items
+   
         line_items = []
         for item in table_body:
             if isinstance(item, str) and item.strip():
@@ -270,7 +270,7 @@ def process_pdf(file):
     try:
         start_time = time.time()
         
-        # Convertir PDF a imágenes
+    
         images = convert_from_bytes(file.read())
         all_table_data = []
         all_key_value_pairs = {}
@@ -294,10 +294,10 @@ def process_pdf(file):
         headers = all_table_data[0] if len(all_table_data) > 0 else []
         table_data = all_table_data[1:] if len(all_table_data) > 1 else []
 
-        # Crear estructura compatible con frontend
+    
         processing_time = time.time() - start_time
         
-        # Convertir a formato de line_items
+    
         line_items = []
         for item in table_data:
             if isinstance(item, str) and item.strip():
@@ -343,19 +343,19 @@ def extract_text_with_multiple_ocr(region_image):
     """Extrae texto usando múltiples engines OCR para mayor precisión"""
     texts = []
     
-    # 1. Tesseract con diferentes configuraciones
+ 
     try:
-        # Configuración básica
+      
         text1 = pytesseract.image_to_string(region_image, config='--psm 6', lang='spa')
         if text1.strip():
             texts.append(clean_row(text1))
         
-        # Configuración para números y fechas
+    
         text2 = pytesseract.image_to_string(region_image, config='--psm 8 -c tessedit_char_whitelist=0123456789.-/', lang='spa')
         if text2.strip():
             texts.append(clean_row(text2))
             
-        # Configuración para texto sin restricciones
+     
         text3 = pytesseract.image_to_string(region_image, config='--psm 7', lang='spa')
         if text3.strip():
             texts.append(clean_row(text3))
@@ -363,7 +363,7 @@ def extract_text_with_multiple_ocr(region_image):
     except Exception as e:
         print(f"Error con Tesseract: {e}")
     
-    # 2. EasyOCR como backup
+  
     try:
         import easyocr
         reader = easyocr.Reader(['es', 'en'])
@@ -446,10 +446,10 @@ def apply_intelligent_patterns_to_text(full_text):
                 for match in matches:
                     text = match.group(1) if match.groups() else match.group(0)
                     
-                    # Calcular confianza basada en el patrón y contexto
-                    confidence = 0.7  # Base confidence for pattern matching
+                  
+                    confidence = 0.7 
                     
-                    # Bonus por contexto
+                
                     context_before = full_text[max(0, match.start()-20):match.start()]
                     context_after = full_text[match.end():min(len(full_text), match.end()+20)]
                     
@@ -479,12 +479,12 @@ def extract_products_from_text(full_text):
     
     for line in lines:
         line = line.strip()
-        if len(line) < 5:  # Líneas muy cortas probablemente no son productos
+        if len(line) < 5:  
             continue
         
-        # Patrón: cantidad + descripción + precio
+    
         pattern1 = r'(\d+(?:[.,]\d+)?)\s+(.+?)\s+(\d+[.,]\d{2})'
-        # Patrón: descripción + cantidad + precio unitario + total
+      
         pattern2 = r'(.+?)\s+(\d+)\s+(\d+[.,]\d{2})\s+(\d+[.,]\d{2})'
         
         match1 = re.search(pattern1, line)
@@ -523,7 +523,7 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
     
     print(f"🔍 Procesando {len(detections)} detecciones con threshold {confidence_threshold}")
     
-    # Definir las 18 clases esperadas para facturas
+ 
     expected_classes = [
         'logo', 'razon_social', 'R.U.C', 'numero_factura', 'fecha_hora',
         'descripcion', 'cantidad', 'precio_unitario', 'precio_total',
@@ -540,27 +540,27 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
     
     if detections.empty:
         print("⚠️ No hay detecciones YOLO, procesando imagen completa con OCR")
-        # Si no hay detecciones YOLO, procesar toda la imagen
+    
         try:
             full_text = extract_text_with_multiple_ocr(image)
             print(f"📄 Texto extraído de imagen completa: {full_text[:200]}...")
             
-            # Buscar patrones comunes en facturas
+         
             import re
             
-            # Buscar RUC
+       
             ruc_match = re.search(r'R\.?U\.?C\.?\s*:?\s*(\d{11,13})', full_text, re.IGNORECASE)
             if ruc_match:
                 extracted_data['metadata']['ruc'] = ruc_match.group(1)
                 print(f"🔍 RUC encontrado: {ruc_match.group(1)}")
             
-            # Buscar fechas
+     
             date_match = re.search(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', full_text)
             if date_match:
                 extracted_data['metadata']['date'] = date_match.group(1)
                 print(f"📅 Fecha encontrada: {date_match.group(1)}")
             
-            # Buscar totales
+     
             total_match = re.search(r'total\s*:?\s*\$?\s*(\d+[.,]\d{2})', full_text, re.IGNORECASE)
             if total_match:
                 extracted_data['metadata']['total'] = total_match.group(1)
@@ -581,27 +581,27 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
             
             print(f"🎯 Procesando región {class_name} con confianza {detection['confidence']:.2f}")
             
-            # Validar coordenadas
+       
             h, w = image.shape[:2]
             x_min = max(0, min(x_min, w-1))
             y_min = max(0, min(y_min, h-1))
             x_max = max(x_min+1, min(x_max, w))
             y_max = max(y_min+1, min(y_max, h))
             
-            # Extraer región de imagen
+    
             region_image = image[y_min:y_max, x_min:x_max]
             
             if region_image.size == 0:
                 print(f"⚠️ Región vacía para {class_name}")
                 continue
             
-            # Aplicar OCR mejorado a la región
+       
             ocr_text = extract_text_with_multiple_ocr(region_image)
             
             if ocr_text:
                 print(f"📝 {class_name}: '{ocr_text}'")
                 
-                # Agregar detección
+         
                 detection_data = {
                     'field_type': class_name,
                     'text': ocr_text,
@@ -616,7 +616,7 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
                 }
                 extracted_data['detections'].append(detection_data)
                 
-                # Guardar región por clase
+           
                 if class_name not in extracted_data['class_regions']:
                     extracted_data['class_regions'][class_name] = []
                 extracted_data['class_regions'][class_name].append({
@@ -625,7 +625,7 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
                     'confidence': float(detection['confidence'])
                 })
                 
-                # Mapear a metadatos según el tipo de clase
+          
                 if class_name in ['razon_social', 'company_name']:
                     extracted_data['metadata']['company_name'] = ocr_text
                 elif class_name in ['R.U.C', 'ruc']:
@@ -641,11 +641,11 @@ def extract_invoice_data_structured(image, detections, confidence_threshold=0.25
                 elif class_name in ['total_amount', 'total']:
                     extracted_data['metadata']['total'] = ocr_text
                 elif class_name in ['product_table', 'descripcion', 'description']:
-                    # Procesar tabla de productos
+                
                     lines = ocr_text.split('\n')
                     for line in lines:
                         if line.strip() and len(line.strip()) > 3:
-                            # Formato básico de línea de producto
+                         
                             parts = line.split()
                             if len(parts) >= 1:
                                 extracted_data['line_items'].append({
@@ -675,12 +675,12 @@ def create_detection_image(image, detections):
             confidence = detection['confidence']
             class_name = detection['name']
             
-            # Color según el tipo de clase
-            color = (0, 255, 0)  # Verde por defecto
+      
+            color = (0, 255, 0) 
             if 'table' in class_name.lower():
-                color = (255, 0, 0)  # Azul para tablas
+                color = (255, 0, 0)  
             elif any(key in class_name.lower() for key in ['total', 'subtotal', 'iva']):
-                color = (0, 255, 255)  # Amarillo para valores monetarios
+                color = (0, 255, 255)  
             
             # Dibujar rectángulo
             cv2.rectangle(result_image, (x_min, y_min), (x_max, y_max), color, 2)
@@ -710,20 +710,20 @@ def process_image_structured(file, options=None):
         print(f"📁 Archivo recibido: {file.filename}")
         print(f"⚙️ Opciones: {options}")
         
-        # Leer archivo (puede ser imagen o PDF)
+ 
         filename = file.filename.lower()
         if filename.endswith('.pdf'):
             print("📄 Detectado PDF, convirtiendo a imagen...")
             try:
-                # Convertir PDF a imagen
-                file.stream.seek(0)  # Resetear stream
+          
+                file.stream.seek(0) 
                 images = convert_from_bytes(file.stream.read())
                 if not images:
                     print("❌ Error: No se pudieron extraer páginas del PDF")
                     return {'success': False, 'message': 'Error al convertir PDF: no se pudieron extraer páginas.'}
                 
                 print(f"✅ PDF convertido: {len(images)} páginas encontradas")
-                # Usar la primera página
+           
                 pil_image = images[0]
                 image = np.array(pil_image)
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -734,7 +734,7 @@ def process_image_structured(file, options=None):
         else:
             print("🖼️ Detectada imagen, procesando directamente...")
             try:
-                file.stream.seek(0)  # Resetear stream
+                file.stream.seek(0)
                 image = Image.open(file.stream).convert('RGB')
                 image = np.array(image)
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -749,7 +749,7 @@ def process_image_structured(file, options=None):
         
         print(f"📷 Imagen cargada: {image.shape}")
         
-        # Detectar secciones con YOLO (puede fallar, pero no es crítico)
+     
         yolo_detections = pd.DataFrame()
         try:
             yolo_detections = detect_sections(image)
@@ -769,19 +769,19 @@ def process_image_structured(file, options=None):
             print(f"❌ Error importando sistema robusto: {e}")
             return {'success': False, 'message': f'Error inicializando sistema robusto: {e}'}
         
-        # Procesar con sistema robusto (no necesita conversión, maneja todo internamente)
+       
         print("🔄 Ejecutando procesamiento robusto multi-motor...")
         robust_result = robust_system.process_invoice_robust(image)
         
-        # Verificar si el procesamiento robusto fue exitoso
+    
         if not robust_result.get('success', False):
             print(f"❌ Error en sistema robusto: {robust_result.get('message', 'Error desconocido')}")
             return robust_result
         
-        # El sistema robusto ya incluye toda la lógica necesaria
+      
         print("✅ Sistema robusto multi-motor completado exitosamente")
         
-        # Agregar imagen procesada si hay detecciones YOLO
+      
         if not yolo_detections.empty:
             try:
                 processed_image = create_detection_image(image, yolo_detections)
@@ -790,7 +790,7 @@ def process_image_structured(file, options=None):
                 print(f"⚠️ Error creando imagen procesada: {e}")
                 robust_result['processed_image'] = None
         
-        # Preparar detecciones para frontend
+      
         detections = []
         metadata = robust_result.get('metadata', {})
         for field, value in metadata.items():
@@ -804,7 +804,7 @@ def process_image_structured(file, options=None):
                 })
         
         robust_result['detections'] = detections
-        robust_result['class_regions'] = {}  # Para compatibilidad
+        robust_result['class_regions'] = {}  
         
         return robust_result
         
@@ -813,7 +813,7 @@ def process_image_structured(file, options=None):
         traceback.print_exc()
         return {'success': False, 'message': f'Error al procesar imagen: {str(e)}'}
 
-# Nuevos endpoints compatibles con frontend
+
 
 @app.route('/api/v1/invoice/process', methods=['POST'])
 def process_invoice():
@@ -829,14 +829,14 @@ def process_invoice():
     if not file or not allowed_file(file.filename):
         return jsonify({'success': False, 'message': 'Tipo de archivo no soportado'}), 400
     
-    # Opciones de procesamiento
+  
     options = {
         'enhance_ocr': request.form.get('enhance_ocr', 'true').lower() == 'true',
         'rotation_correction': request.form.get('rotation_correction', 'true').lower() == 'true',
         'confidence_threshold': float(request.form.get('confidence_threshold', 0.25))
     }
     
-    # Procesar con sistema inteligente (funciona para PDFs e imágenes)
+  
     print(f"🔄 Procesando archivo: {file.filename}")
     result = process_image_structured(file, options)
     
@@ -856,17 +856,17 @@ def validate_file():
     if file.filename == '':
         return jsonify({'valid': False, 'error': 'El nombre del archivo está vacío'}), 400
     
-    # Verificar extensión
+
     if not allowed_file(file.filename):
         return jsonify({
             'valid': False, 
             'error': 'Tipo de archivo no soportado. Use: PNG, JPG, JPEG, TIFF, BMP, PDF'
         }), 400
     
-    # Verificar tamaño (50MB max)
-    file.seek(0, 2)  # Ir al final
+
+    file.seek(0, 2)  
     size = file.tell()
-    file.seek(0)  # Volver al inicio
+    file.seek(0)  
     
     if size > 50 * 1024 * 1024:  # 50MB
         return jsonify({
@@ -981,11 +981,11 @@ def process_document():
         if 'error' in data:
             return jsonify({'success': False, 'message': data['error']}), 500
 
-        # Si es una respuesta exitosa, asegurar que tenga estructura completa
+     
         if 'success' in data and data['success']:
             return jsonify(data), 200
         else:
-            # Convertir respuesta legacy al nuevo formato
+           
             legacy_data = {
                 'success': True,
                 'message': 'Documento procesado exitosamente',

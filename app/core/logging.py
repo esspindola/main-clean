@@ -26,7 +26,6 @@ def setup_logging(app: Flask):
         datefmt='%Y-%m-%d %H:%M:%S'
     )
     
-  
     file_handler = logging.handlers.RotatingFileHandler(
         filename=app.config['LOG_FILE'],
         maxBytes=10 * 1024 * 1024,  # 10MB

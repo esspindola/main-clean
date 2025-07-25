@@ -23,8 +23,8 @@ class TableDetector:
     """
     
     def __init__(self):
-        self.min_table_area = 1000  # Minimum area for valid table
-        self.line_thickness_range = (1, 5)  # Valid line thickness range
+        self.min_table_area = 1000  
+        self.line_thickness_range = (1, 5)  
         logger.info("TableDetector initialized")
     
     def detect_tables(self, image: np.ndarray) -> List[Dict]:
@@ -45,21 +45,20 @@ class TableDetector:
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             else:
                 gray = image.copy()
-            
-            # Method 1: Line-based table detection
+        
             line_tables = self._detect_tables_by_lines(gray)
             tables.extend(line_tables)
             
-            # Method 2: Contour-based table detection (fallback)
+          
             if not tables:
                 contour_tables = self._detect_tables_by_contours(gray)
                 tables.extend(contour_tables)
             
-            # Method 3: Grid pattern detection
+         
             grid_tables = self._detect_grid_patterns(gray)
             tables.extend(grid_tables)
             
-            # Filter and validate tables
+        
             validated_tables = self._validate_tables(tables, image.shape)
             
             logger.info(f"Detected {len(validated_tables)} valid tables")
@@ -74,7 +73,7 @@ class TableDetector:
         try:
             tables = []
             
-            # Apply threshold
+        
             thresh = cv2.adaptiveThreshold(
                 gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 15, -2
             )
@@ -95,16 +94,16 @@ class TableDetector:
             table_mask = cv2.addWeighted(horizontal_lines, 0.5, vertical_lines, 0.5, 0.0)
             table_mask = cv2.dilate(table_mask, None, iterations=2)
             
-            # Find table contours
+          
             contours, _ = cv2.findContours(table_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
             for contour in contours:
-                # Get bounding rectangle
+             
                 x, y, w, h = cv2.boundingRect(contour)
                 area = w * h
                 
-                # Filter by size and aspect ratio
-                if area > self.min_table_area and w > h:  # Tables are typically wider than tall
+               
+                if area > self.min_table_area and w > h: 
                     table_info = {
                         'bbox': (x, y, w, h),
                         'area': area,
@@ -136,7 +135,7 @@ class TableDetector:
           
             _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             
-            # Find contours
+      
             contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             
             for contour in contours:
@@ -144,7 +143,7 @@ class TableDetector:
                 area = cv2.contourArea(contour)
                 
                 if area > self.min_table_area:
-                    # Get bounding rectangle
+                  
                     x, y, w, h = cv2.boundingRect(contour)
                     
                   

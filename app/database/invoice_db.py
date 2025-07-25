@@ -77,14 +77,13 @@ class InvoiceDB:
     def save_invoice(self, filename: str, result_data: Dict) -> int:
         """Guardar factura procesada"""
         try:
-            # Generar hash del archivo
+           
             file_hash = hashlib.md5(filename.encode()).hexdigest()
             
-            # Extraer y limpiar datos
+           
             metadata = result_data.get('metadata', {})
             line_items = result_data.get('line_items', [])
             
-            # Limpiar metadata de diccionarios complejos
             clean_metadata = {}
             for field, value in metadata.items():
                 if isinstance(value, dict) and 'value' in value:
@@ -92,12 +91,11 @@ class InvoiceDB:
                 else:
                     clean_metadata[field] = value
             
-            # Contar campos extraídos
             fields_found = sum(1 for v in clean_metadata.values() 
                              if v and str(v) not in ['No detectado', 'None', ''])
             
             with sqlite3.connect(self.db_path) as conn:
-                # Guardar factura principal
+               
                 cursor = conn.execute('''
                     INSERT OR REPLACE INTO invoices 
                     (filename, file_hash, upload_time, processing_time, success,
@@ -124,10 +122,8 @@ class InvoiceDB:
                 
                 invoice_id = cursor.lastrowid
                 
-                # Limpiar items anteriores
                 conn.execute('DELETE FROM invoice_items WHERE invoice_id = ?', (invoice_id,))
                 
-                # Guardar items
                 for item in line_items or []:
                     conn.execute('''
                         INSERT INTO invoice_items (invoice_id, description, quantity, unit_price, total_price)
@@ -173,7 +169,6 @@ class InvoiceDB:
             with sqlite3.connect(self.db_path) as conn:
                 conn.row_factory = sqlite3.Row
                 
-                # Datos principales
                 cursor = conn.execute('SELECT * FROM invoices WHERE id = ?', (invoice_id,))
                 invoice = cursor.fetchone()
                 
@@ -182,7 +177,6 @@ class InvoiceDB:
                 
                 invoice_data = dict(invoice)
                 
-                # Items
                 cursor = conn.execute('''
                     SELECT description, quantity, unit_price, total_price
                     FROM invoice_items WHERE invoice_id = ?
@@ -190,7 +184,6 @@ class InvoiceDB:
                 
                 invoice_data['items'] = [dict(row) for row in cursor.fetchall()]
                 
-                # Parsear JSON completo
                 try:
                     invoice_data['full_data'] = json.loads(invoice_data['full_data'] or '{}')
                 except:
@@ -224,8 +217,6 @@ class InvoiceDB:
             logger.error(f"❌ Error obteniendo estadísticas: {e}")
             return {}
 
-
-# Instancia global
 _db_instance = None
 
 def get_invoice_db():

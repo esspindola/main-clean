@@ -276,20 +276,18 @@ class EnhancedOCRService:
                 
                 region_texts = []
                 
-                # EasyOCR first
                 easy_boxes = self.easyocr_text_regions(region)
                 for box in easy_boxes:
                     if box['confidence'] > 0.4:
                         region_texts.append((box['text'], box['confidence']))
                 
-                # Tesseract as backup
                 if not region_texts:
                     tess_boxes = self.tesseract_text_regions(region)
                     for box in tess_boxes:
                         if box['confidence'] > 0.3:
                             region_texts.append((box['text'], box['confidence']))
                 
-                # Choose best text
+              
                 if region_texts:
                     best_text, best_conf = max(region_texts, key=lambda x: x[1])
                     detection['extracted_text'] = best_text

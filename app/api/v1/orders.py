@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 orders_ns = Namespace('orders', description='Order and invoice management')
 
-# Swagger models
+
 order_model = orders_ns.model('Order', {
     'id': fields.String(required=True, description='Order ID'),
     'fecha': fields.String(required=True, description='Order date'),
@@ -120,7 +120,6 @@ class ArchiveInvoice(Resource):
             if not data:
                 return {'error': 'No data provided'}, 400
             
-            # Validate required fields
             required_fields = ['fecha', 'proveedor', 'total', 'lineas']
             for field in required_fields:
                 if field not in data:
@@ -139,8 +138,7 @@ class ArchiveInvoice(Resource):
                     orders = json.load(f)
                 except json.JSONDecodeError:
                     orders = []
-                
-             
+            
                 new_order = {
                     "id": str(uuid.uuid4()),
                     "fecha": data.get("fecha", datetime.now().strftime("%d/%m/%Y")),

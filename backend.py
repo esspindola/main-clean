@@ -26,10 +26,9 @@ sys.path.append("C:/Users/aryes/Documents/ocr/backend-ocr/yolov5")
 sys.path.append("C:/Users/aryes/Documents/ocr/backend-ocr/yolov5/utils")
 
 from utils.augmentations import letterbox
-from models.common import DetectMultiBackend  # asegúrate de tenerlo
+from models.common import DetectMultiBackend  
 
-# Reemplaza esta carga:
-# model = torch.hub.load(...)
+
 
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Users\aryes\Documents\tesseract.exe"
@@ -90,7 +89,7 @@ def patched_get_prediction(model, image, text_threshold, link_threshold, low_tex
                 ratio = box_arr / np.array([img_width, img_height], dtype=np.float32)
                 boxes_as_ratio.append(ratio.tolist())
             except Exception as e:
-                # Si me falla, se agrega la caja sin modificar
+              
                 boxes_as_ratio.append(box)
         prediction_result["boxes"] = boxes_as_ratio
     return prediction_result
@@ -242,8 +241,8 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
         if not scaleup:
             r = min(r, 1.0)
     
-        # Compute padding
-        ratio = r, r  # width, height ratios
+     
+        ratio = r, r  
         new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
         dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]
         if auto:
@@ -253,10 +252,10 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
             new_unpad = new_shape
             ratio = new_shape[1] / shape[1], new_shape[0] / shape[0]
     
-        dw /= 2  # divide padding into 2 sides
+        dw /= 2  
         dh /= 2
     
-        # Resize and pad
+     
         if shape[::-1] != new_unpad:
             img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
         top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
@@ -285,7 +284,7 @@ def my_adjustResultCoordinates(polys, ratio_w, ratio_h):
         except Exception:
             continue
     return new_polys
-# Inicializa el lector easyocr que incorpore modo preba
+
 easyocr_reader = easyocr.Reader(['es'], gpu=False)
 
 
@@ -296,11 +295,11 @@ def find_table_roi(img_bgr) -> tuple | None:
     horizontales+verticales; si no encuentra nada → None.
     """
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-    # binarizamos fuerte para ver líneas
+   
     bw   = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,
                                  cv2.THRESH_BINARY_INV,15, -2)
 
-    # morfología horizontal / vertical
+  
     hor = cv2.getStructuringElement(cv2.MORPH_RECT,(40,1))
     ver = cv2.getStructuringElement(cv2.MORPH_RECT,(1,40))
     mask = cv2.dilate(cv2.erode(bw,hor),hor) | cv2.dilate(cv2.erode(bw,ver),ver)
@@ -308,9 +307,9 @@ def find_table_roi(img_bgr) -> tuple | None:
     cnts,_ = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     if not cnts:
         return None
-    # ROI más grande
+ 
     x,y,w,h = cv2.boundingRect(max(cnts,key=cv2.contourArea))
-    # descartamos si ocupa <10 % de la página (falsa detección)
+  
     if w*h < 0.1*img_bgr.shape[0]*img_bgr.shape[1]:
         return None
     return (x,y,w,h)
@@ -367,16 +366,16 @@ def detect_sections(image_bgr):
         img, *_ = letterbox(img_rgb, new_shape=640, auto=False)
 
         # 2) Numpy ➜ Tensor [1,C,H,W] 0-1
-        img = img.transpose((2, 0, 1))                    # HWC→CHW
+        img = img.transpose((2, 0, 1))                    
         img = np.ascontiguousarray(img)
         img = torch.from_numpy(img).float() / 255.0
-        img = img.unsqueeze(0)                            # batch=1
+        img = img.unsqueeze(0)                          
 
-        # 3) Inferencia
+      
         with torch.no_grad():
-            pred = model(img)[0]                          # raw pred
+            pred = model(img)[0]                       
 
-        # 4) NMS
+      
         pred = non_max_suppression(pred,
                                    conf_thres=model.conf,
                                    iou_thres=0.45)[0]
@@ -388,7 +387,7 @@ def detect_sections(image_bgr):
 
             
 
-        # 5) A DataFrame
+     
         pred = pred.cpu().numpy()
         df = pd.DataFrame(pred,
                           columns=['xmin','ymin','xmax','ymax',
@@ -396,7 +395,7 @@ def detect_sections(image_bgr):
         df['name'] = df['class'].apply(
             lambda c: classes[int(c)] if int(c) < len(classes)
             else f'Clase_{int(c)}')
-        print("▶️  YOLO DF:\n", df.head())  # Print the dataframe here, after it's created
+        print("▶️  YOLO DF:\n", df.head())  
         return df
 
     except Exception as e:
@@ -560,15 +559,15 @@ def extract_text_from_roi(image, detections):
 
     W = image.shape[1]
     if has_roi:
-        x_desc = int(0.40 * W)      # 40 % si SÍ hay ROI
+        x_desc = int(0.40 * W)     
         x_cant = int(0.60 * W)
     else:
-        x_desc = int(0.45 * W)      # 45 % si NO hay ROI
+        x_desc = int(0.45 * W)      
         x_cant = int(0.65 * W)
 
     rows = group_bboxes_by_rows_and_cols(
                all_boxes,
-               row_tol=None,         # usa tolerancia adaptativa
+               row_tol=None,        
                x_desc_max=x_desc,
                x_cant_max=x_cant)
     
@@ -807,13 +806,13 @@ def process_document():
     else:
         return jsonify({"error": "Tipo de archivo no soportado"}), 400
 
-    # ───── Inferencia + OCR ─────
+ 
     detections = detect_sections(image_bgr)
 
-     # ↓↓↓ nueva línea: obtenemos filas crudas
+
     raw_rows   = extract_text_from_roi(image_bgr, detections)
 
-    # ↓↓↓ mapeamos al formato InvoiceLine esperado por el front
+
     data       = to_invoice_rows(raw_rows)
 
     marked     = mark_detections(image_bgr, detections)

@@ -32,7 +32,6 @@ def create_app(config_class=Config):
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
          expose_headers=["Content-Range", "X-Content-Range"])
     
-    # Initialize Swagger API documentation
     api = Api(app,
               title='OCR Invoice Processing API',
               version='2.0.0',
@@ -55,25 +54,27 @@ def create_app(config_class=Config):
     from app.api.v1.health import health_ns
     from app.api.v1.orders import orders_ns
     from app.api.v1.database import db_ns
+    from app.api.v1.fast_invoice import fast_ns
     
     api.add_namespace(health_ns, path='/health')
     api.add_namespace(invoice_ns, path='/invoice')
+    api.add_namespace(fast_ns, path='/fast-invoice')  # NUEVO ENDPOINT ULTRA RÁPIDO MDO PRUEBA
     api.add_namespace(orders_ns, path='/orders')
     api.add_namespace(db_ns, path='/database')
     
-    # Initialize core services
+    
     from app.core.ml_models import ModelManager
     app.model_manager = ModelManager()
     
-    # Load ML models on startup
+ 
     try:
         app.model_manager.load_models()
         logger.info("ML models loaded successfully during app initialization")
     except Exception as e:
         logger.error(f"Failed to load ML models during startup: {e}")
-        # Continue with dummy models for debugging
+   
     
-    # Add simple health check route for Docker
+
     @app.route('/health')
     def simple_health():
         return {'status': 'ok', 'message': 'OCR Backend is running'}, 200
