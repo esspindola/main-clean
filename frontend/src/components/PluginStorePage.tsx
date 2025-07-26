@@ -44,7 +44,7 @@ const PluginStorePage: React.FC = () => {
     { id: 'analytics', name: 'Analytics', icon: '📊' },
     { id: 'automation', name: 'Automation', icon: '⚡' },
     { id: 'integrations', name: 'Integrations', icon: '🔗' },
-    { id: 'developer', name: 'Developer Tools', icon: '🛠️' }
+    { id: 'developer', name: 'Developer Tools', icon: '🛠️' },
   ];
 
   // Mock data for plugins
@@ -62,7 +62,7 @@ const PluginStorePage: React.FC = () => {
       installs: 1250,
       price: 'free',
       features: ['Document scanning', 'Data extraction', 'Invoice processing', 'Receipt management'],
-      screenshot: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop'
+      screenshot: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop',
     },
     {
       id: 'smart-inventory',
@@ -77,7 +77,7 @@ const PluginStorePage: React.FC = () => {
       installs: 0,
       price: 'premium',
       features: ['AI predictions', 'Low stock alerts', 'Demand forecasting', 'Automated reordering'],
-      screenshot: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'
+      screenshot: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
     },
     {
       id: 'advanced-analytics',
@@ -91,7 +91,7 @@ const PluginStorePage: React.FC = () => {
       rating: 0,
       installs: 0,
       price: 'premium',
-      features: ['Real-time dashboards', 'Custom reports', 'Data visualization', 'Export capabilities']
+      features: ['Real-time dashboards', 'Custom reports', 'Data visualization', 'Export capabilities'],
     },
     {
       id: 'pos-integration',
@@ -105,7 +105,7 @@ const PluginStorePage: React.FC = () => {
       rating: 4.7,
       installs: 850,
       price: 'free',
-      features: ['Multi-POS support', 'Real-time sync', 'Payment processing', 'Receipt printing']
+      features: ['Multi-POS support', 'Real-time sync', 'Payment processing', 'Receipt printing'],
     },
     {
       id: 'email-automation',
@@ -119,7 +119,7 @@ const PluginStorePage: React.FC = () => {
       rating: 0,
       installs: 0,
       price: 'premium',
-      features: ['Email templates', 'Automated campaigns', 'Customer segmentation', 'Performance tracking']
+      features: ['Email templates', 'Automated campaigns', 'Customer segmentation', 'Performance tracking'],
     },
     {
       id: 'mobile-app',
@@ -133,7 +133,7 @@ const PluginStorePage: React.FC = () => {
       rating: 0,
       installs: 0,
       price: 'free',
-      features: ['Offline mode', 'Push notifications', 'Barcode scanning', 'Quick actions']
+      features: ['Offline mode', 'Push notifications', 'Barcode scanning', 'Quick actions'],
     },
     {
       id: 'api-gateway',
@@ -147,7 +147,7 @@ const PluginStorePage: React.FC = () => {
       rating: 0,
       installs: 0,
       price: 'premium',
-      features: ['REST API', 'Webhooks', 'OAuth support', 'Rate limiting']
+      features: ['REST API', 'Webhooks', 'OAuth support', 'Rate limiting'],
     },
     {
       id: 'multi-store',
@@ -161,8 +161,8 @@ const PluginStorePage: React.FC = () => {
       rating: 0,
       installs: 0,
       price: 'premium',
-      features: ['Store management', 'Inventory sync', 'Centralized reporting', 'Role-based access']
-    }
+      features: ['Store management', 'Inventory sync', 'Centralized reporting', 'Role-based access'],
+    },
   ];
 
   useEffect(() => {
@@ -177,10 +177,10 @@ const PluginStorePage: React.FC = () => {
         // For other plugins, sync with context
         return {
           ...plugin,
-          status: (isPluginActive(plugin.id) ? 'active' : 'inactive') as 'active' | 'inactive' | 'coming-soon'
+          status: (isPluginActive(plugin.id) ? 'active' : 'inactive') as 'active' | 'inactive' | 'coming-soon',
         };
       });
-      
+
       setPlugins(syncedPlugins);
       setFilteredPlugins(syncedPlugins);
       setLoading(false);
@@ -199,7 +199,7 @@ const PluginStorePage: React.FC = () => {
     if (searchQuery) {
       filtered = filtered.filter(plugin =>
         plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        plugin.description.toLowerCase().includes(searchQuery.toLowerCase())
+        plugin.description.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -231,10 +231,10 @@ const PluginStorePage: React.FC = () => {
   useEffect(() => {
     checkScrollButtons();
     window.addEventListener('resize', checkScrollButtons);
-    
+
     // Check scroll buttons after a short delay to ensure DOM is ready
     const timeoutId = setTimeout(checkScrollButtons, 100);
-    
+
     return () => {
       window.removeEventListener('resize', checkScrollButtons);
       clearTimeout(timeoutId);
@@ -253,13 +253,13 @@ const PluginStorePage: React.FC = () => {
     setNotificationMessage(message);
     setNotificationType(type);
     setShowNotification(true);
-    
+
     setTimeout(() => {
       setShowNotification(false);
     }, 3000);
   };
 
-  const handlePluginToggle = async (pluginId: string) => {
+  const handlePluginToggle = async(pluginId: string) => {
     if (!token) {
       alert('Please log in to manage plugins');
       return;
@@ -267,11 +267,11 @@ const PluginStorePage: React.FC = () => {
 
     // Get current plugin info
     const plugin = plugins.find(p => p.id === pluginId);
-    if (!plugin) return;
+    if (!plugin) {return;}
 
     // Toggle plugin status using context
     togglePlugin(pluginId);
-    
+
     // Update local state to reflect the change
     setPlugins(prev => prev.map(p => {
       if (p.id === pluginId) {
@@ -280,25 +280,25 @@ const PluginStorePage: React.FC = () => {
       }
       return p;
     }));
-    
+
     // Plugin status updated successfully
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
-        return <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>;
-      case 'inactive':
-        return <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Inactive</span>;
-      case 'coming-soon':
-        return <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">Coming Soon</span>;
-      default:
-        return null;
+    case 'active':
+      return <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>;
+    case 'inactive':
+      return <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Inactive</span>;
+    case 'coming-soon':
+      return <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">Coming Soon</span>;
+    default:
+      return null;
     }
   };
 
   const getPriceBadge = (price: string) => {
-    return price === 'free' 
+    return price === 'free'
       ? <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Free</span>
       : <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Premium</span>;
   };
@@ -373,13 +373,13 @@ const PluginStorePage: React.FC = () => {
                 )}
 
                 {/* Categories Container */}
-                <div 
+                <div
                   ref={categoriesRef}
                   onScroll={checkScrollButtons}
                   className="flex gap-3 overflow-x-auto scrollbar-hide px-2 py-1 category-scroll-container"
                   style={{
                     scrollbarWidth: 'none',
-                    msOverflowStyle: 'none'
+                    msOverflowStyle: 'none',
                   }}
                 >
                   {categories.map((category) => (
@@ -414,8 +414,8 @@ const PluginStorePage: React.FC = () => {
                 <div key={plugin.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   {plugin.screenshot && (
                     <div className="h-48 bg-gray-200 overflow-hidden">
-                      <img 
-                        src={plugin.screenshot} 
+                      <img
+                        src={plugin.screenshot}
                         alt={plugin.name}
                         className="w-full h-full object-cover"
                       />
@@ -485,7 +485,7 @@ const PluginStorePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     {getStatusBadge(plugin.status)}
@@ -554,8 +554,8 @@ const PluginStorePage: React.FC = () => {
         {/* Plugin Change Notification */}
         {showNotification && (
           <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out ${
-            notificationType === 'success' 
-              ? 'bg-green-500 text-white' 
+            notificationType === 'success'
+              ? 'bg-green-500 text-white'
               : 'bg-blue-500 text-white'
           } animate-menu-item-bounce`}>
             <div className="flex items-center space-x-2">
@@ -569,4 +569,4 @@ const PluginStorePage: React.FC = () => {
   );
 };
 
-export default PluginStorePage; 
+export default PluginStorePage;

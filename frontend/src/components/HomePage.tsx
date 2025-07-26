@@ -52,7 +52,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
 
   // Fetch products from backend
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async() => {
       if (!isAuthenticated) {
         setLoading(false);
         return;
@@ -64,7 +64,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         if (response.success) {
           // Show active products (allow stock 0 to see all products)
           const availableProducts = response.products.filter(
-            (product: Product) => product.status === 'active'
+            (product: Product) => product.status === 'active',
           );
           console.log('Products loaded:', response.products);
           console.log('Available products:', availableProducts);
@@ -100,9 +100,9 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
     if (!activeSearchTerm.trim()) {
       return products;
     }
-    
+
     return products.filter(product =>
-      product.name.toLowerCase().includes(activeSearchTerm.toLowerCase())
+      product.name.toLowerCase().includes(activeSearchTerm.toLowerCase()),
     );
   }, [activeSearchTerm, products]);
 
@@ -117,7 +117,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         return prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: Math.min(item.quantity + 1, product.stock) }
-            : item
+            : item,
         );
       } else {
         return [
@@ -147,37 +147,37 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
     setIsPaymentOpen(false);
   };
 
-  const handlePaymentSuccess = async (method: string) => {
+  const handlePaymentSuccess = async(method: string) => {
     try {
       // Prepare sale data
       const saleData = {
         items: cartItems.map(item => ({
           productId: item.id,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
         })),
         total: paymentTotal,
-        paymentMethod: method
+        paymentMethod: method,
       };
 
       // Send sale to backend
       const saleResponse = await salesAPI.create(saleData);
-      
+
       if (saleResponse.success) {
         console.log('Sale created successfully:', saleResponse);
-        
+
         // Update local inventory immediately
-        setProducts(prevProducts => 
+        setProducts(prevProducts =>
           prevProducts.map(product => {
             const cartItem = cartItems.find(item => item.id === product.id);
             if (cartItem) {
               return {
                 ...product,
-                stock: Math.max(0, product.stock - cartItem.quantity)
+                stock: Math.max(0, product.stock - cartItem.quantity),
               };
             }
             return product;
-          })
+          }),
         );
 
         // Show success message
@@ -190,7 +190,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
       }
     } catch (error) {
       console.error('Error processing sale:', error);
-              alert('Error processing sale. Please try again.');
+      alert('Error processing sale. Please try again.');
     }
   };
 
@@ -216,7 +216,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
       const updatedItems = prev.map(item =>
         item.id === productId
           ? { ...item, quantity: Math.max(0, item.quantity + change) }
-          : item
+          : item,
       );
       return updatedItems.filter(item => item.quantity > 0);
     });
@@ -233,12 +233,12 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
   };
 
   // Function to reload products
-  const reloadProducts = async () => {
+  const reloadProducts = async() => {
     try {
       setLoading(true);
       setError(null);
       const response = await productsAPI.getAll();
-      
+
       if (response.success) {
         // Show active products (allow stock 0 to see all products)
         const availableProducts = response.products.filter(product => product.status === 'active');
@@ -279,7 +279,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
             </svg>
           </div>
           <p className="text-text-primary mb-4 animate-slide-in-left">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="bg-primary hover:bg-primary-600 text-black font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg btn-animate"
           >
@@ -302,7 +302,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
               <h1 className="text-2xl font-bold text-text-primary animate-slide-in-left">
                 Sales Dashboard
               </h1>
-              
+
               {/* Search and Refresh Row */}
               <div className="flex items-center gap-3">
                 {/* Search Bar */}
@@ -316,7 +316,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
                     className="w-full pl-10 pr-4 py-2 border border-divider rounded-lg text-sm focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary placeholder-text-secondary transition-all duration-300 hover:border-complement/50"
                   />
                 </div>
-                
+
                 {/* Refresh Button */}
                 <button
                   onClick={reloadProducts}
@@ -328,7 +328,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
                 </button>
               </div>
             </div>
-            
+
             {/* Description */}
             <p className="text-text-secondary animate-slide-in-right">
               {activeSearchTerm ? (
@@ -364,7 +364,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
                   No products found
                 </h3>
                 <p className="text-text-secondary animate-slide-in-right">
-                  {activeSearchTerm 
+                  {activeSearchTerm
                     ? `No products match "${activeSearchTerm}". Try different search terms.`
                     : 'No products available for sale.'
                   }
@@ -375,7 +375,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm: externalSearchTerm = ''
         </div>
       </div>
 
-      <SalesDrawer 
+      <SalesDrawer
         isOpen={isDrawerOpen && !isPaymentOpen && !isSuccessOpen}
         onClose={handleCloseDrawer}
         onNavigateToPayment={handleNavigateToPayment}

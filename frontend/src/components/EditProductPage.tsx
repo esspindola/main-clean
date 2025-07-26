@@ -23,7 +23,7 @@ const EditProductPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     productType: 'Physical Product',
     name: '',
@@ -45,11 +45,11 @@ const EditProductPage: React.FC = () => {
 
   const existingCategories = [
     'Furniture',
-    'Textiles', 
+    'Textiles',
     'Lighting',
     'Electronics',
     'Decoration',
-    'Office'
+    'Office',
   ];
 
   const variantTypes = [
@@ -57,7 +57,7 @@ const EditProductPage: React.FC = () => {
     'Size',
     'Material',
     'Style',
-    'Finish'
+    'Finish',
   ];
 
   const [variants, setVariants] = useState<VariantData>({
@@ -67,10 +67,10 @@ const EditProductPage: React.FC = () => {
         { id: '1', value: 'Red', selected: false },
         { id: '2', value: 'Blue', selected: true },
         { id: '3', value: 'Green', selected: false },
-        { id: '4', value: 'Black', selected: true }
+        { id: '4', value: 'Black', selected: true },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Size: {
       isActive: true,
@@ -78,10 +78,10 @@ const EditProductPage: React.FC = () => {
         { id: '1', value: 'Small', selected: false },
         { id: '2', value: 'Medium', selected: true },
         { id: '3', value: 'Large', selected: false },
-        { id: '4', value: 'Extra Large', selected: false }
+        { id: '4', value: 'Extra Large', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Material: {
       isActive: false,
@@ -89,10 +89,10 @@ const EditProductPage: React.FC = () => {
         { id: '1', value: 'Wood', selected: false },
         { id: '2', value: 'Metal', selected: false },
         { id: '3', value: 'Plastic', selected: false },
-        { id: '4', value: 'Glass', selected: false }
+        { id: '4', value: 'Glass', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Style: {
       isActive: false,
@@ -100,10 +100,10 @@ const EditProductPage: React.FC = () => {
         { id: '1', value: 'Modern', selected: false },
         { id: '2', value: 'Classic', selected: false },
         { id: '3', value: 'Minimalist', selected: false },
-        { id: '4', value: 'Industrial', selected: false }
+        { id: '4', value: 'Industrial', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Finish: {
       isActive: false,
@@ -111,16 +111,16 @@ const EditProductPage: React.FC = () => {
         { id: '1', value: 'Matte', selected: false },
         { id: '2', value: 'Glossy', selected: false },
         { id: '3', value: 'Satin', selected: false },
-        { id: '4', value: 'Textured', selected: false }
+        { id: '4', value: 'Textured', selected: false },
       ],
       newValue: '',
-      showPanel: false
-    }
+      showPanel: false,
+    },
   });
 
   // Load product data when component mounts
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProduct = async() => {
       if (!id || !isAuthenticated) {
         setError('ID de producto inválido o no autenticado');
         setLoading(false);
@@ -130,9 +130,9 @@ const EditProductPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const response = await productsAPI.getById(parseInt(id));
-        
+
         if (response.success) {
           const product = response.product;
           setFormData({
@@ -168,10 +168,10 @@ const EditProductPage: React.FC = () => {
   };
 
   const handleCategoryToggle = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
+    setSelectedCategories(prev =>
+      prev.includes(category)
         ? prev.filter(c => c !== category)
-        : [...prev, category]
+        : [...prev, category],
     );
   };
 
@@ -181,8 +181,8 @@ const EditProductPage: React.FC = () => {
       [variantType]: {
         ...prev[variantType],
         isActive: !prev[variantType].isActive,
-        showPanel: !prev[variantType].isActive ? true : false
-      }
+        showPanel: !prev[variantType].isActive ? true : false,
+      },
     }));
   };
 
@@ -192,9 +192,9 @@ const EditProductPage: React.FC = () => {
       [variantType]: {
         ...prev[variantType],
         values: prev[variantType].values.map(value =>
-          value.id === valueId ? { ...value, selected: !value.selected } : value
-        )
-      }
+          value.id === valueId ? { ...value, selected: !value.selected } : value,
+        ),
+      },
     }));
   };
 
@@ -207,8 +207,8 @@ const EditProductPage: React.FC = () => {
         [variantType]: {
           ...prev[variantType],
           values: [...prev[variantType].values, { id: newId, value: newValue, selected: true }],
-          newValue: ''
-        }
+          newValue: '',
+        },
       }));
     }
   };
@@ -218,8 +218,8 @@ const EditProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        newValue: value
-      }
+        newValue: value,
+      },
     }));
   };
 
@@ -228,8 +228,8 @@ const EditProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        showPanel: false
-      }
+        showPanel: false,
+      },
     }));
   };
 
@@ -241,8 +241,8 @@ const EditProductPage: React.FC = () => {
         showPanel: false,
         isActive: false,
         values: prev[variantType].values.map(value => ({ ...value, selected: false })),
-        newValue: ''
-      }
+        newValue: '',
+      },
     }));
   };
 
@@ -258,8 +258,8 @@ const EditProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        isActive: !prev[variantType].isActive
-      }
+        isActive: !prev[variantType].isActive,
+      },
     }));
   };
 
@@ -267,7 +267,7 @@ const EditProductPage: React.FC = () => {
     setShowMoreVariantsPanel(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async() => {
     if (!isAuthenticated) {
       setError('You must log in to edit products');
       return;
@@ -293,11 +293,11 @@ const EditProductPage: React.FC = () => {
         price: parseFloat(formData.price),
         stock: parseInt(formData.inventoryQuantity) || 0,
         category: selectedCategories[0] || 'General',
-        sku: formData.sku || undefined
+        sku: formData.sku || undefined,
       };
 
       const response = await productsAPI.update(parseInt(id), productData);
-      
+
       if (response.success) {
         console.log('Product updated successfully:', response.product);
         navigate('/inventory');
@@ -312,7 +312,7 @@ const EditProductPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async() => {
     if (!isAuthenticated) {
       setError('You must log in to delete products');
       return;
@@ -332,7 +332,7 @@ const EditProductPage: React.FC = () => {
       setError(null);
 
       const response = await productsAPI.delete(parseInt(id));
-      
+
       if (response.success) {
         console.log('Product deleted successfully');
         navigate('/inventory');
@@ -370,7 +370,7 @@ const EditProductPage: React.FC = () => {
             </svg>
           </div>
           <p className="text-text-primary mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => navigate('/inventory')}
             className="bg-primary hover:bg-primary-600 text-black font-medium px-4 py-2 rounded-lg transition-colors"
           >
@@ -395,7 +395,7 @@ const EditProductPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center space-x-4">
-                  <button 
+                  <button
                     onClick={() => navigate('/inventory')}
                     className="p-2 hover:bg-gray-50 rounded-full transition-colors md:hidden"
                   >
@@ -403,21 +403,21 @@ const EditProductPage: React.FC = () => {
                   </button>
                   <h1 className="text-xl font-semibold text-text-primary md:hidden">Edit Product</h1>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   {error && (
                     <div className="text-red-500 text-sm">
                       {error}
                     </div>
                   )}
-                  <button 
+                  <button
                     onClick={handleDelete}
                     disabled={saving}
                     className="bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Delete
                   </button>
-                  <button 
+                  <button
                     onClick={handleSave}
                     disabled={saving}
                     className={`bg-primary hover:bg-primary-600 text-black font-medium px-6 py-2 rounded-lg transition-colors flex items-center space-x-2 ${
@@ -440,13 +440,13 @@ const EditProductPage: React.FC = () => {
 
           {/* Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            
+
             {/* Desktop Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
+
               {/* Left Column */}
               <div className="space-y-6">
-                
+
                 {/* Product Type */}
                 <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
                   <div className="flex items-center justify-between">
@@ -532,7 +532,7 @@ const EditProductPage: React.FC = () => {
                 {/* Categorization */}
                 <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
                   <h3 className="text-lg font-medium text-text-primary mb-4">Categorization</h3>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <input
@@ -574,11 +574,11 @@ const EditProductPage: React.FC = () => {
 
               {/* Right Column */}
               <div className="space-y-6">
-                
+
                 {/* Units Section */}
                 <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
                   <h3 className="text-lg font-medium text-text-primary mb-4">Units</h3>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-text-primary mb-2">
@@ -637,7 +637,7 @@ const EditProductPage: React.FC = () => {
                 {/* Inventory Section */}
                 <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
                   <h3 className="text-lg font-medium text-text-primary mb-4">Inventory</h3>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-text-primary mb-2">
@@ -683,7 +683,7 @@ const EditProductPage: React.FC = () => {
                 {/* Variants Section */}
                 <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
                   <h3 className="text-lg font-medium text-text-primary mb-4">Variants</h3>
-                  
+
                   <div className="space-y-4">
                     {variantTypes.map((variant) => (
                       <div key={variant} className="space-y-2">
@@ -774,8 +774,8 @@ const EditProductPage: React.FC = () => {
                         )}
                       </div>
                     ))}
-                    
-                    <button 
+
+                    <button
                       onClick={() => setShowMoreVariantsPanel(true)}
                       className="w-full p-3 border border-dashed border-divider rounded-lg text-text-secondary hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2 mt-4"
                     >

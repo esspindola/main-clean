@@ -12,7 +12,7 @@ const SmartInventoryPage: React.FC = () => {
           <Brain className="w-8 h-8 text-complement mr-3" />
           <h1 className="text-3xl font-bold text-text-primary">Smart Inventory</h1>
         </div>
-        
+
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
           <h2 className="text-xl font-semibold text-text-primary mb-4">
             🚀 Feature in Development
@@ -79,7 +79,7 @@ const SmartInventoryPage: React.FC = () => {
         <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <h4 className="font-semibold text-yellow-800 mb-2">💡 Coming Soon</h4>
           <p className="text-yellow-700 text-sm">
-            We are working on integrating artificial intelligence to make your inventory smarter. 
+            We are working on integrating artificial intelligence to make your inventory smarter.
             Meanwhile, you can use all the features of the traditional inventory.
           </p>
         </div>
@@ -88,4 +88,4 @@ const SmartInventoryPage: React.FC = () => {
   );
 };
 
-export default SmartInventoryPage; 
+export default SmartInventoryPage;

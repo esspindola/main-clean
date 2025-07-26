@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Shield, 
-  Eye, 
-  EyeOff, 
-  Globe, 
-  Clock, 
-  DollarSign, 
-  Bell, 
-  CreditCard, 
-  Download, 
-  HelpCircle, 
-  MessageSquare, 
-  Activity, 
-  LogOut, 
-  Trash2, 
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Shield,
+  Eye,
+  EyeOff,
+  Globe,
+  Clock,
+  DollarSign,
+  Bell,
+  CreditCard,
+  Download,
+  HelpCircle,
+  MessageSquare,
+  Activity,
+  LogOut,
+  Trash2,
   Save,
   Camera,
   Smartphone,
@@ -27,7 +27,7 @@ import {
   Check,
   X,
   Plus,
-  Edit3
+  Edit3,
 } from 'lucide-react';
 
 interface Session {
@@ -64,7 +64,7 @@ const ProfilePage: React.FC = () => {
   const [showPassword, setShowPassword] = useState({
     current: false,
     new: false,
-    confirm: false
+    confirm: false,
   });
 
   // Profile data state
@@ -86,15 +86,15 @@ const ProfilePage: React.FC = () => {
       lowStock: { email: true, inApp: true },
       newOrders: { email: true, inApp: true },
       paymentCompleted: { email: false, inApp: true },
-      ocrErrors: { email: true, inApp: false }
+      ocrErrors: { email: true, inApp: false },
     },
-    notificationFrequency: 'immediate'
+    notificationFrequency: 'immediate',
   });
 
   const [passwordData, setPasswordData] = useState({
     current: '',
     new: '',
-    confirm: ''
+    confirm: '',
   });
 
   const [sessions] = useState<Session[]>([
@@ -103,22 +103,22 @@ const ProfilePage: React.FC = () => {
       device: 'Chrome on Windows',
       location: 'New York, USA',
       lastActive: '2024-01-15 14:30',
-      current: true
+      current: true,
     },
     {
       id: '2',
       device: 'Safari on iPhone',
       location: 'Los Angeles, USA',
       lastActive: '2024-01-14 09:15',
-      current: false
+      current: false,
     },
     {
       id: '3',
       device: 'Firefox on Mac',
       location: 'San Francisco, USA',
       lastActive: '2024-01-13 16:45',
-      current: false
-    }
+      current: false,
+    },
   ]);
 
   const [invoices] = useState<Invoice[]>([
@@ -126,20 +126,20 @@ const ProfilePage: React.FC = () => {
       id: 'INV-001',
       date: '2024-01-15',
       amount: 299.99,
-      status: 'Paid'
+      status: 'Paid',
     },
     {
       id: 'INV-002',
       date: '2024-01-10',
       amount: 149.50,
-      status: 'Pending'
+      status: 'Pending',
     },
     {
       id: 'INV-003',
       date: '2024-01-05',
       amount: 89.99,
-      status: 'Overdue'
-    }
+      status: 'Overdue',
+    },
   ]);
 
   const [paymentCards, setPaymentCards] = useState<PaymentCard[]>([
@@ -150,7 +150,7 @@ const ProfilePage: React.FC = () => {
       expiryMonth: '12',
       expiryYear: '2025',
       holderName: 'John Doe',
-      isDefault: true
+      isDefault: true,
     },
     {
       id: '2',
@@ -159,8 +159,8 @@ const ProfilePage: React.FC = () => {
       expiryMonth: '08',
       expiryYear: '2026',
       holderName: 'John Doe',
-      isDefault: false
-    }
+      isDefault: false,
+    },
   ]);
 
   const [newCard, setNewCard] = useState({
@@ -168,7 +168,7 @@ const ProfilePage: React.FC = () => {
     expiryMonth: '',
     expiryYear: '',
     cvc: '',
-    holderName: ''
+    holderName: '',
   });
 
   const sections = [
@@ -178,7 +178,7 @@ const ProfilePage: React.FC = () => {
     { id: 'preferences', name: 'Preferences', icon: Globe },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'billing', name: 'Billing & Plan', icon: CreditCard },
-    { id: 'support', name: 'Support & Help', icon: HelpCircle }
+    { id: 'support', name: 'Support & Help', icon: HelpCircle },
   ];
 
   const handleInputChange = (field: string, value: any) => {
@@ -194,9 +194,9 @@ const ProfilePage: React.FC = () => {
           ...parentData,
           [field]: {
             ...(parentData?.[field] || {}),
-            [subfield]: value
-          }
-        }
+            [subfield]: value,
+          },
+        },
       };
     });
   };
@@ -237,7 +237,7 @@ const ProfilePage: React.FC = () => {
   const handleSetDefaultCard = (cardId: string) => {
     setPaymentCards(prev => prev.map(card => ({
       ...card,
-      isDefault: card.id === cardId
+      isDefault: card.id === cardId,
     })));
   };
 
@@ -252,8 +252,8 @@ const ProfilePage: React.FC = () => {
 
   const handleSaveCard = () => {
     if (editingCard) {
-      setPaymentCards(prev => prev.map(card => 
-        card.id === editingCard.id ? editingCard : card
+      setPaymentCards(prev => prev.map(card =>
+        card.id === editingCard.id ? editingCard : card,
       ));
     } else {
       // Add new card logic
@@ -264,7 +264,7 @@ const ProfilePage: React.FC = () => {
         expiryMonth: '12',
         expiryYear: '2025',
         holderName: 'John Doe',
-        isDefault: false
+        isDefault: false,
       };
       setPaymentCards(prev => [...prev, newCard]);
     }
@@ -274,27 +274,27 @@ const ProfilePage: React.FC = () => {
 
   const getCardIcon = (type: string) => {
     switch (type) {
-      case 'visa':
-        return '💳';
-      case 'mastercard':
-        return '💳';
-      case 'amex':
-        return '💳';
-      default:
-        return '💳';
+    case 'visa':
+      return '💳';
+    case 'mastercard':
+      return '💳';
+    case 'amex':
+      return '💳';
+    default:
+      return '💳';
     }
   };
 
   const getInvoiceStatusColor = (status: string) => {
     switch (status) {
-      case 'Paid':
-        return 'bg-success-100 text-success-800';
-      case 'Pending':
-        return 'bg-warning-100 text-warning-800';
-      case 'Overdue':
-        return 'bg-error-100 text-error-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+    case 'Paid':
+      return 'bg-success-100 text-success-800';
+    case 'Pending':
+      return 'bg-warning-100 text-warning-800';
+    case 'Overdue':
+      return 'bg-error-100 text-error-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -355,7 +355,7 @@ const ProfilePage: React.FC = () => {
               className="flex-1 p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
             />
             <button className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-              profileData.emailVerified 
+              profileData.emailVerified
                 ? 'bg-success-100 text-success-800 cursor-default'
                 : 'bg-complement hover:bg-complement-600 text-white'
             }`}>
@@ -376,7 +376,7 @@ const ProfilePage: React.FC = () => {
               className="flex-1 p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
             />
             <button className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-              profileData.phoneVerified 
+              profileData.phoneVerified
                 ? 'bg-success-100 text-success-800 cursor-default'
                 : 'bg-complement hover:bg-complement-600 text-white'
             }`}>
@@ -685,13 +685,13 @@ const ProfilePage: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium text-text-primary">Payment Method</h3>
-          <button 
+          <button
             onClick={handleOpenPaymentModal}
             className="bg-secondary hover:bg-secondary-600 text-white px-4 py-2 rounded-lg transition-colors">
             Update Method
           </button>
         </div>
-        
+
         {/* Display default card */}
         {paymentCards.length > 0 && (
           <div className="bg-gray-50 rounded-lg p-4 border border-divider">
@@ -704,7 +704,7 @@ const ProfilePage: React.FC = () => {
                 <div className="text-sm text-text-secondary">
                   {(() => {
                     const defaultCard = paymentCards.find(card => card.isDefault);
-                    if (!defaultCard) return 'No default card';
+                    if (!defaultCard) {return 'No default card';}
                     return `${defaultCard.type.charAt(0).toUpperCase() + defaultCard.type.slice(1)} • Expires ${defaultCard.expiryMonth}/${defaultCard.expiryYear}`;
                   })()}
                 </div>
@@ -786,22 +786,22 @@ const ProfilePage: React.FC = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'profile':
-        return renderProfileHeader();
-      case 'personal':
-        return renderPersonalData();
-      case 'security':
-        return renderSecurity();
-      case 'preferences':
-        return renderPreferences();
-      case 'notifications':
-        return renderNotifications();
-      case 'billing':
-        return renderBilling();
-      case 'support':
-        return renderSupport();
-      default:
-        return renderProfileHeader();
+    case 'profile':
+      return renderProfileHeader();
+    case 'personal':
+      return renderPersonalData();
+    case 'security':
+      return renderSecurity();
+    case 'preferences':
+      return renderPreferences();
+    case 'notifications':
+      return renderNotifications();
+    case 'billing':
+      return renderBilling();
+    case 'support':
+      return renderSupport();
+    default:
+      return renderProfileHeader();
     }
   };
 
@@ -812,7 +812,7 @@ const ProfilePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 onClick={() => navigate('/')}
                 className="p-2 hover:bg-gray-50 rounded-full transition-colors md:hidden"
               >
@@ -827,7 +827,7 @@ const ProfilePage: React.FC = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
+
           {/* Desktop Sidebar */}
           <div className="hidden lg:block">
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-4 sticky top-24">
