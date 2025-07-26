@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🚀 ZatoBox v2.0 - Intelligent Point of Sale System
 
 A complete point of sale system with intelligent inventory, OCR, advanced product management, and professional configuration.
@@ -230,7 +229,6 @@ Get-Process -Name "node" | Stop-Process -Force
 # Reinstall dependencies
 npm run clean
 npm run install:all
-=======
 # 🧾 OCR Invoice Processing Backend
 
 Sistema OCR inteligente para procesamiento automático de facturas usando algoritmos de reconocimiento de patrones y Machine Learning.
@@ -326,12 +324,10 @@ curl -X POST http://localhost:8001/api/v1/invoice/process \\
 
 # Ver logs en tiempo real
 docker logs ocr-backend-light -f
->>>>>>> 7a9c480ed7d77bb084fc18da907da670acee374f
 ```
 
 ## 📊 API Endpoints
 
-<<<<<<< HEAD
 ### Authentication
 - `POST /api/auth/login` - Login
 - `POST /api/auth/register` - Register user
@@ -470,7 +466,6 @@ This project is under the MIT License. See the `LICENSE.txt` file for more detai
 **ZatoBox v2.0** - Transforming digital commerce 🚀
 
 *Developed with ❤️ to make commerce smarter and more efficient.* 
-=======
 ### Procesamiento de Facturas
 ```http
 POST /api/v1/invoice/process
@@ -687,4 +682,3 @@ python app-light-fixed.py
 ---
 
 **OCR Backend v2.0** - Sistema inteligente de procesamiento de facturas con algoritmos de Machine Learning 🚀
->>>>>>> 7a9c480ed7d77bb084fc18da907da670acee374f
