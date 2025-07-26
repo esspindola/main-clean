@@ -1,109 +1,192 @@
-# 🚀 ZatoBox v2.0 - Sistema Inteligente de Punto de Venta
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a id="readme-top"></a>
 
-Un sistema completo de punto de venta con inventario inteligente, OCR, gestión avanzada de productos y configuración profesional.
+<!-- PROJECT SHIELDS -->
+[![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![MIT License][license-shield]][license-url] [![LinkedIn][linkedin-shield]][linkedin-url]
 
-## ✨ Características Principales
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/ZatoBox/main">
+    <img src="shared/images/logo.png" alt="ZatoBox Logo" width="200">
+  </a>
 
-- 🛍️ **Gestión de Productos**: CRUD completo con imágenes y categorización
-- 📊 **Inventario Inteligente**: Control de stock y movimientos con IA
-- 🔍 **OCR Avanzado**: Escaneo automático de documentos y facturas
-- 💳 **Sistema de Pagos**: Múltiples métodos de pago integrados
-- 📈 **Reportes de Ventas**: Análisis detallado y exportación
-- 🔐 **Autenticación Segura**: JWT con roles de usuario y 2FA
-- ⚙️ **Configuración Completa**: Panel de configuración profesional
-- 📱 **Interfaz Moderna**: React + TypeScript + Tailwind CSS
-- ⚡ **Backend Robusto**: Node.js + Express + SQLite
-- 🔌 **Sistema de Plugins**: Módulos extensibles y configurables
+  <h3 align="center">🚀 ZatoBox v2.0 - Intelligent Point of Sale System</h3>
 
-## 🛠️ Tecnologías Utilizadas
+  <p align="center">
+    A complete point of sale system with smart inventory, OCR, advanced product management, and professional configuration.
+    <br />
+    <a href="https://github.com/ZatoBox/main"><strong>Explore Documentation »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/ZatoBox/main">View Demo</a>
+    &middot;
+    <a href="https://github.com/ZatoBox/main/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    &middot;
+    <a href="https://github.com/ZatoBox/main/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#características-principales">Main Features</a>
+    </li>
+    <li>
+      <a href="#tecnologías-utilizadas">Technologies Used</a>
+      <ul>
+        <li><a href="#frontend">Frontend</a></li>
+        <li><a href="#backend">Backend</a></li>
+        <li><a href="#ocr-y-procesamiento">OCR and Processing</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#instalación-y-configuración">Installation and Setup</a>
+      <ul>
+        <li><a href="#requisitos-previos">Prerequisites</a></li>
+        <li><a href="#instalación-automática-recomendada">Automatic Installation</a></li>
+        <li><a href="#instalación-manual">Manual Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#acceso-a-la-aplicación">Application Access</a></li>
+    <li><a href="#credenciales-de-prueba">Test Credentials</a></li>
+    <li><a href="#scripts-disponibles">Available Scripts</a></li>
+    <li><a href="#solución-de-problemas">Troubleshooting</a></li>
+    <li><a href="#api-endpoints">API Endpoints</a></li>
+    <li><a href="#ocr-sistema-inteligente">OCR - Intelligent System</a></li>
+    <li><a href="#features-by-module">Features by Module</a></li>
+    <li><a href="#estructura-del-proyecto">Project Structure</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#contribución">Contribution</a></li>
+    <li><a href="#licencia">License</a></li>
+    <li><a href="#soporte">Support</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#métricas-del-proyecto">Project Metrics</a></li>
+    <li><a href="#logros">Achievements</a></li>
+  </ol>
+</details>
+
+## ✨ Main Features
+
+- 🛍️ **Product Management**: Full CRUD with images and categorization
+- 📊 **Smart Inventory**: Stock control and movements with AI
+- 🔍 **Advanced OCR**: Automatic document and invoice scanning
+- 💳 **Payment System**: Multiple integrated payment methods
+- 📈 **Sales Reports**: Detailed analysis and export
+- 🔐 **Secure Authentication**: JWT with user roles and 2FA
+- ⚙️ **Full Configuration**: Professional configuration panel
+- 📱 **Modern Interface**: React + TypeScript + Tailwind CSS
+- ⚡ **Robust Backend**: Node.js + Express + SQLite
+- 🔌 **Plugin System**: Extensible and configurable modules
+
+## 🛠️ Technologies Used
+
+### Built With
+
+[![React][React.js]][React-url]
+[![TypeScript][TypeScript]][TypeScript-url]
+[![Node.js][Node.js]][Node-url]
+[![Express][Express.js]][Express-url]
+[![Python][Python]][Python-url]
+[![Flask][Flask]][Flask-url]
+[![Tailwind CSS][Tailwind]][Tailwind-url]
+[![SQLite][SQLite]][SQLite-url]
+[![JavaScript][JavaScript]][JavaScript-url]
+[![HTML5][HTML5]][HTML5-url]
+[![CSS3][CSS3]][CSS3-url]
+[![Vite][Vite]][Vite-url]
+[![Jest][Jest]][Jest-url]
+[![OpenCV][OpenCV]][OpenCV-url]
+[![Tesseract][Tesseract]][Tesseract-url]
 
 ### Frontend
-- **React 18** - Biblioteca UI moderna
-- **TypeScript** - Tipado estático para mayor seguridad
-- **Vite** - Herramienta de construcción ultra-rápida
-- **Tailwind CSS** - Framework CSS utility-first
-- **React Router v6** - Navegación declarativa
-- **Lucide React** - Iconos modernos y consistentes
-- **Vitest** - Framework de testing rápido
-- **React Testing Library** - Testing de componentes
+- **React 18** - Modern UI library
+- **TypeScript** - Static typing for greater safety
+- **Vite** - Ultra-fast build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router v6** - Declarative navigation
+- **Lucide React** - Modern and consistent icons
+- **Vitest** - Fast testing framework
+- **React Testing Library** - Component testing
 
 ### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express.js** - Framework web minimalista
-- **SQLite** - Base de datos ligera y eficiente
-- **JWT** - Autenticación stateless
-- **Multer** - Manejo de carga de archivos
-- **CORS** - Compartir recursos entre orígenes
-- **Jest** - Framework de testing
-- **Supertest** - Testing de API
+- **Node.js** - JavaScript runtime
+- **Express.js** - Minimalist web framework
+- **SQLite** - Lightweight and efficient database
+- **JWT** - Stateless authentication
+- **Multer** - File upload handling
+- **CORS** - Cross-origin resource sharing
+- **Jest** - Testing framework
+- **Supertest** - API testing
 
-### OCR y Procesamiento
-- **Python 3.12** - Procesamiento de imágenes
-- **Tesseract OCR** - Reconocimiento óptico de caracteres
-- **OpenCV** - Procesamiento de imágenes
-- **Flask** - Servidor web para OCR
-- **pdf2image** - Conversión de PDF a imágenes
-- **Poppler** - Renderizado de PDFs
+### OCR and Processing
+- **Python 3.12** - Image processing
+- **Tesseract OCR** - Optical character recognition
+- **OpenCV** - Image processing
+- **Flask** - Web server for OCR
+- **pdf2image** - PDF to image conversion
+- **Poppler** - PDF rendering
 
-## 🚀 Instalación y Configuración
+## 🚀 Installation and Setup
 
-### 📋 Requisitos Previos
+### 📋 Prerequisites
 - **Windows 10/11** (64-bit)
-- **PowerShell 5.0** o superior
-- **Conexión a Internet** para descargar dependencias
+- **PowerShell 5.0** or higher
+- **Internet connection** to download dependencies
 
-### ⚡ Instalación Automática (Recomendada)
+### ⚡ Automatic Installation (Recommended)
 
-#### 1. Descargar el Proyecto
+#### 1. Download the Project
 ```bash
-git clone https://github.com/tu-usuario/zatobox.git
+git clone https://github.com/your-user/zatobox.git
 cd zatobox
 ```
 
-#### 2. Ejecutar Script de Instalación
+#### 2. Run Installation Script
 ```powershell
-# Abrir PowerShell como Administrador
+# Open PowerShell as Administrator
 .\install-zatobox.ps1
 ```
 
-El script automáticamente:
-- ✅ Instala Node.js y npm
-- ✅ Instala Python 3.12
-- ✅ Instala Tesseract OCR
-- ✅ Instala Poppler (soporte PDF)
-- ✅ Instala todas las dependencias
-- ✅ Configura el entorno
-- ✅ Crea directorios necesarios
+The script automatically:
+- ✅ Installs Node.js and npm
+- ✅ Installs Python 3.12
+- ✅ Installs Tesseract OCR
+- ✅ Installs Poppler (PDF support)
+- ✅ Installs all dependencies
+- ✅ Sets up the environment
+- ✅ Creates necessary directories
 
-#### 3. Iniciar ZatoBox
+#### 3. Start ZatoBox
 ```powershell
 .\start-zatobox.ps1
 ```
 
-### 🔧 Instalación Manual (Si la automática falla)
+### 🔧 Manual Installation (If automatic fails)
 
-#### Paso 1: Instalar Node.js
-1. Descargar desde: https://nodejs.org/
-2. Instalar versión LTS (18.x o superior)
-3. Verificar: `node --version` y `npm --version`
+#### Step 1: Install Node.js
+1. Download from: https://nodejs.org/
+2. Install LTS version (18.x or higher)
+3. Verify: `node --version` and `npm --version`
 
-#### Paso 2: Instalar Python
-1. Descargar desde: https://python.org/
-2. Instalar Python 3.12
-3. Marcar "Add to PATH" durante la instalación
-4. Verificar: `py --version` o `python --version`
+#### Step 2: Install Python
+1. Download from: https://python.org/
+2. Install Python 3.12
+3. Check "Add to PATH" during installation
+4. Verify: `py --version` or `python --version`
 
-#### Paso 3: Instalar Tesseract OCR
-1. Descargar desde: https://github.com/UB-Mannheim/tesseract/wiki
-2. Instalar en `C:\Program Files\Tesseract-OCR`
-3. Agregar al PATH: `C:\Program Files\Tesseract-OCR`
+#### Step 3: Install Tesseract OCR
+1. Download from: https://github.com/UB-Mannheim/tesseract/wiki
+2. Install in `C:\Program Files\Tesseract-OCR`
+3. Add to PATH: `C:\Program Files\Tesseract-OCR`
 
-#### Paso 4: Instalar Dependencias
+#### Step 4: Install Dependencies
 ```powershell
-# Dependencias de Python
+# Python dependencies
 py -m pip install -r requirements-light.txt
 
-# Dependencias de Node.js
+# Node.js dependencies
 npm install
 cd frontend
 npm install
@@ -113,7 +196,7 @@ npm install
 cd ..
 ```
 
-#### Paso 5: Iniciar Servicios
+#### Step 5: Start Services
 ```powershell
 # Terminal 1 - Backend
 cd backend
@@ -129,81 +212,81 @@ $env:PATH += ";C:\Program Files\Tesseract-OCR"
 py app-light-fixed.py
 ```
 
-> **Nota:** En PowerShell no uses '&&' para encadenar comandos. Ejecuta cada comando en una línea separada. Si copias comandos de bash/cmd, reemplaza '&&' por saltos de línea o ';'.
+> **Note:** In PowerShell do not use '&&' to chain commands. Run each command on a separate line. If you copy commands from bash/cmd, replace '&&' with line breaks or ';'.
 
-## 🌐 Acceso a la Aplicación
+## 🌐 Application Access
 
-| Servicio | URL | Descripción |
-|----------|-----|-------------|
-| **Frontend** | http://localhost:5173 | Interfaz principal |
-| **Backend** | http://localhost:4444 | API REST |
-| **OCR** | http://localhost:5000 | Servidor OCR |
+| Service   | URL                  | Description         |
+|-----------|----------------------|---------------------|
+| **Frontend** | http://localhost:5173 | Main interface      |
+| **Backend**  | http://localhost:4444 | REST API           |
+| **OCR**      | http://localhost:5000 | OCR server         |
 
-## 🔑 Credenciales de Prueba
+## 🔑 Test Credentials
 
 - **Email**: `admin@frontposw.com`
 - **Password**: `admin12345678`
 
-## 🛠️ Scripts Disponibles
+## 🛠️ Available Scripts
 
-### Instalación y Verificación
-- `install-zatobox.ps1` - Instalación automática completa
-- `verificar-instalacion.ps1` - Verificar estado de instalación
-- `start-zatobox.ps1` - Iniciar todos los servicios
+### Installation and Verification
+- `install-zatobox.ps1` - Complete automatic installation
+- `verificar-instalacion.ps1` - Verify installation status
+- `start-zatobox.ps1` - Start all services
 
-### Desarrollo
-- `npm run dev` - Iniciar frontend y backend
-- `npm run dev:frontend` - Solo frontend
-- `npm run dev:backend` - Solo backend
-- `npm run install:all` - Instalar todas las dependencias
+### Development
+- `npm run dev` - Start frontend and backend
+- `npm run dev:frontend` - Frontend only
+- `npm run dev:backend` - Backend only
+- `npm run install:all` - Install all dependencies
 
-## 🛠️ Solución de Problemas
+## 🛠️ Troubleshooting
 
-### Error: "Node.js no encontrado"
+### Error: "Node.js not found"
 ```powershell
-# Reinstalar Node.js desde https://nodejs.org/
+# Reinstall Node.js from https://nodejs.org/
 ```
 
-### Error: "Python no encontrado"
+### Error: "Python not found"
 ```powershell
-# Reinstalar Python desde https://python.org/
-# Asegurarse de marcar "Add to PATH"
-# Usar comando 'py' en lugar de 'python'
+# Reinstall Python from https://python.org/
+# Make sure to check "Add to PATH"
+# Use 'py' command instead of 'python'
 ```
 
-### Error: "Tesseract no encontrado"
+### Error: "Tesseract not found"
 ```powershell
-# Reinstalar Tesseract desde https://github.com/UB-Mannheim/tesseract/wiki
-# Agregar manualmente al PATH: C:\Program Files\Tesseract-OCR
-# Verificar con: & "C:\Program Files\Tesseract-OCR\tesseract.exe" --version
+# Reinstall Tesseract from https://github.com/UB-Mannheim/tesseract/wiki
+# Manually add to PATH: C:\Program Files\Tesseract-OCR
+# Verify with: & "C:\Program Files\Tesseract-OCR\tesseract.exe" --version
 ```
 
-### Error: "Puerto ocupado"
+### Error: "Port in use"
 ```powershell
-# Detener servicios que usen los puertos 4444, 5173, 5000
+# Stop services using ports 4444, 5173, 5000
 netstat -ano | findstr ":4444"
 taskkill /PID [PID] /F
 ```
 
-### Error: "Dependencias no encontradas"
+### Error: "Dependencies not found"
 ```powershell
-# Reinstalar dependencias
+# Reinstall dependencies
 npm run clean
 npm run install:all
 py -m pip install -r requirements-light.txt
 ```
 
-### Error: "OCR no funciona"
+### Error: "OCR not working"
 ```powershell
-# Verificar que Tesseract esté en PATH
+# Make sure Tesseract is in PATH
 $env:PATH += ";C:\Program Files\Tesseract-OCR"
 py app-light-fixed.py
 ```
 
-### Error: "CORS en OCR"
+### Error: "CORS in OCR"
 ```powershell
-# Verificar que el frontend esté configurado para puerto 5000
-# El OCR funciona en puerto 5000, no 8001
+# Make sure the frontend is configured for port 5000
+# OCR runs on port 5000, not 8001
 ```
 
 ## 📊 API Endpoints
@@ -241,30 +324,30 @@ py app-light-fixed.py
 - `GET /health` - System health check
 - `GET /api/health` - API health check
 
-## 🔍 OCR - Sistema Inteligente de Procesamiento de Facturas
+## 🔍 OCR - Intelligent Invoice Processing System
 
-### ✨ Algoritmo Ultra Inteligente
-- **Parser de Líneas Mixtas**: Detecta productos en formatos complejos donde toda la información está en una sola línea
-- **Reconocimiento Multi-Patrón**: 3 patrones diferentes para máxima cobertura de detección
-- **Extracción de Metadatos**: Fecha, número de factura, método de pago, totales financieros
-- **Confianza Alta**: 95-98% de precisión en la extracción
+### ✨ Ultra Intelligent Algorithm
+- **Mixed Line Parser**: Detects products in complex formats where all information is on a single line
+- **Multi-Pattern Recognition**: 3 different patterns for maximum detection coverage
+- **Metadata Extraction**: Date, invoice number, payment method, financial totals
+- **High Confidence**: 95-98% extraction accuracy
 
-### 📊 API Endpoints OCR
+### 📊 OCR API Endpoints
 
-#### Procesamiento de Facturas
+#### Invoice Processing
 ```http
 POST /api/v1/invoice/process
 Content-Type: multipart/form-data
 
-# Parámetros:
-file: archivo PDF o imagen de la factura
+# Parameters:
+file: PDF or image file of the invoice
 ```
 
-#### Respuesta de la API
+#### API Response
 ```json
 {
   "metadata": {
-    "company_name": "Nombre de la empresa",
+    "company_name": "Company name",
     "date": "7/24/2025", 
     "invoice_number": "INV-797145",
     "payment_method": "Cash",
@@ -292,56 +375,56 @@ file: archivo PDF o imagen de la factura
 
 #### Health Check
 ```http
-GET /health               # Estado básico
-GET /api/v1/invoice/debug # Información detallada del sistema
+GET /health               # Basic status
+GET /api/v1/invoice/debug # Detailed system information
 ```
 
-### 🧠 Explicación Científica de los Algoritmos
+### 🧠 Scientific Explanation of the Algorithms
 
-#### 1. **Algoritmo Ultra Inteligente de Reconocimiento de Patrones**
+#### 1. **Ultra Intelligent Pattern Recognition Algorithm**
 
-**Fundamento Teórico**
-El sistema utiliza **expresiones regulares avanzadas** combinadas con **análisis secuencial de líneas** para detectar productos en formatos complejos.
+**Theoretical Foundation**
+The system uses **advanced regular expressions** combined with **sequential line analysis** to detect products in complex formats.
 
-**Patrones Implementados**
+**Implemented Patterns**
 
-**Patrón 1: Líneas Complejas Completas**
+**Pattern 1: Complete Complex Lines**
 ```regex
 ^([A-Za-z][A-Za-z\s,.-]*?)\s+(\d+)\s+\$(\d+(?:\.\d{2})?)\s+\$(\d+(?:\.\d{2})?)$
 ```
-- **Propósito**: Detectar productos donde toda la información está en una línea
-- **Ejemplo**: `"Cheese The Football Is Good For Training 1 $73.00 $73.00"`
-- **Grupos de Captura**:
-  1. Descripción completa del producto
-  2. Cantidad numérica
-  3. Precio unitario (sin $)
-  4. Precio total (sin $)
+- **Purpose**: Detect products where all information is on one line
+- **Example**: `"Cheese The Football Is Good For Training 1 $73.00 $73.00"`
+- **Capture Groups**:
+  1. Full product description
+  2. Numeric quantity
+  3. Unit price (without $)
+  4. Total price (without $)
 
-**Patrón 2: Productos Multi-línea**
+**Pattern 2: Multi-line Products**
 ```python
 if (re.match(r'^[A-Za-z]+$', line) and 
     len(line) >= 3 and len(line) <= 20):
-    # Buscar precio en siguientes 4 líneas
+    # Search for price in next 4 lines
     price_match = re.search(r'(\d+)\s+\$(\d+(?:\.\d{2})?)\s+\$(\d+(?:\.\d{2})?)$', check_line)
 ```
-- **Propósito**: Productos donde nombre y precio están separados
-- **Algoritmo**: Búsqueda hacia adelante con ventana deslizante
-- **Optimización**: Máximo 4 líneas de búsqueda para eficiencia
+- **Purpose**: Products where name and price are separated
+- **Algorithm**: Forward search with sliding window
+- **Optimization**: Maximum 4 lines search for efficiency
 
-**Patrón 3: Separadores Especiales**
+**Pattern 3: Special Separators**
 ```regex
 ^([A-Za-z]+)\s*[,\s]*[,\s]*\s*(\d+)\s+\$(\d+(?:\.\d{2})?)\s+\$(\d+(?:\.\d{2})?)$
 ```
-- **Propósito**: Manejo de comas y espacios como separadores
-- **Ejemplo**: `"Orange , , 2 $61.00 $122.00"`
+- **Purpose**: Handles commas and spaces as separators
+- **Example**: `"Orange , , 2 $61.00 $122.00"`
 
-#### 2. **Preprocesamiento de Imágenes con OpenCV**
+#### 2. **Image Preprocessing with OpenCV**
 
-**Pipeline de Optimización**
-1. **Conversión a Escala de Grises**: Reducción de dimensionalidad
-2. **Filtro Mediano**: Eliminación de ruido gaussiano
-3. **Binarización Adaptativa**: Mejora del contraste local
-4. **Umbralización Gaussiana**: Optimización para OCR
+**Optimization Pipeline**
+1. **Grayscale Conversion**: Dimensionality reduction
+2. **Median Filter**: Gaussian noise removal
+3. **Adaptive Binarization**: Improves local contrast
+4. **Gaussian Thresholding**: Optimized for OCR
 
 ```python
 def preprocess_image(image_cv):
@@ -353,50 +436,50 @@ def preprocess_image(image_cv):
     return binary
 ```
 
-#### 3. **Motor OCR Multi-Configuración**
+#### 3. **Multi-Configuration OCR Engine**
 
-**Configuración Optimizada de Tesseract**
+**Optimized Tesseract Configuration**
 ```python
 config = '--psm 6'  # Page Segmentation Mode 6: Single uniform block
 text = pytesseract.image_to_string(image_cv, config=config, lang='eng')
 ```
-- **PSM 6**: Óptimo para facturas con bloques de texto uniformes
-- **DPI 300**: Resolución estándar para máxima precisión
-- **Idioma inglés**: Optimizado para números y texto alfanumérico
+- **PSM 6**: Optimal for invoices with uniform text blocks
+- **DPI 300**: Standard resolution for maximum accuracy
+- **English language**: Optimized for numbers and alphanumeric text
 
-#### 4. **Algoritmo de Extracción de Metadatos**
+#### 4. **Metadata Extraction Algorithm**
 
-**Búsqueda Secuencial Inteligente**
+**Intelligent Sequential Search**
 ```python
 def extract_complete_metadata_ultra(full_text):
     lines = [line.strip() for line in full_text.split('\n') if line.strip()]
     
-    # Extracción de fecha con regex flexible
+    # Date extraction with flexible regex
     date_match = re.search(r'(\d{1,2}/\d{1,2}/\d{4})', line)
     
-    # Extracción de número de factura con patrones múltiples
+    # Invoice number extraction with multiple patterns
     invoice_match = re.search(r'((?:LBM-|INV-)\d+)', line)
     
-    # Extracción de totales con búsqueda contextual
+    # Totals extraction with contextual search
     total_match = re.search(r'Total:\s*\$?(\d+[.,]\d+)', line)
 ```
 
-**Ventajas del Algoritmo**
-- **Robustez**: Maneja variaciones en formato
-- **Eficiencia**: O(n) donde n = número de líneas
-- **Precisión**: 95%+ en facturas estándar
-- **Escalabilidad**: Fácilmente extensible para nuevos patrones
+**Algorithm Advantages**
+- **Robustness**: Handles format variations
+- **Efficiency**: O(n) where n = number of lines
+- **Accuracy**: 95%+ on standard invoices
+- **Scalability**: Easily extendable for new patterns
 
-### 📈 Métricas de Performance OCR
+### 📈 OCR Performance Metrics
 
-| Métrica | Valor |
-|---------|-------|
-| Precisión de OCR | 95-98% |
-| Tiempo de procesamiento | < 5s |
-| Productos detectados | 5-10 por factura |
-| Formatos soportados | PDF, PNG, JPG, TIFF |
-| Tamaño máximo archivo | 50MB |
-| Confianza promedio | 95% |
+| Metric                | Value   |
+|-----------------------|---------|
+| OCR Accuracy          | 95-98%  |
+| Processing time       | < 5s    |
+| Products detected     | 5-10 per invoice |
+| Supported formats     | PDF, PNG, JPG, TIFF |
+| Max file size         | 50MB    |
+| Average confidence    | 95%     |
 
 ## 🎯 Features by Module
 
@@ -533,19 +616,27 @@ node test-health.js
 - Update documentation as needed
 - Verify all tests pass
 
+### Top contributors:
+
+<a href="https://github.com/ZatoBox/main/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ZatoBox/main" alt="contrib.rocks image" />
+</a>
+
 ## 📄 License
 
 This project is under the MIT License. See the `LICENSE.txt` file for more details.
 
 ## 🆘 Support
 
-- **Documentación**: Check the `docs/` folder
+- **Documentation**: Check the `docs/` folder
 - **Issues**: Report bugs in GitHub Issues
 - **Discussions**: Join discussions on GitHub
 - **Wiki**: Consult the project wiki
-- **Verificación**: `.\verificar-instalacion.ps1`
+- **Verification**: `./verificar-instalacion.ps1`
 
 ## 🎯 Roadmap
+
+📋 **[Ver Roadmap Completo](https://github.com/ZatoBox/Documents/blob/main/Roadmap.png)**
 
 ### Version 2.1 (Next)
 - [ ] Payment gateway integration
@@ -582,8 +673,57 @@ This project is under the MIT License. See the `LICENSE.txt` file for more detai
 - ✅ **OCR Integration**: Advanced invoice processing
 - ✅ **Installation automation**: One-click setup
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
-**ZatoBox v2.0** - Transformando el comercio digital 🚀
+**ZatoBox v2.0** - Transforming digital commerce 🚀
 
-*Desarrollado con ❤️ para hacer el comercio más inteligente y eficiente.*
+*Developed with ❤️ to make commerce smarter and more efficient.*
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[invisible-shield]: https://img.shields.io/badge/invisible-shield-gray?style=for-the-badge
+[invisible-url]: https://github.com/ZatoBox/main/graphs/contributors
+[contributors-shield]: https://img.shields.io/github/contributors/ZatoBox/main.svg?style=for-the-badge
+[contributors-url]: https://github.com/ZatoBox/main/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ZatoBox/main.svg?style=for-the-badge
+[forks-url]: https://github.com/ZatoBox/main/network/members
+[stars-shield]: https://img.shields.io/github/stars/ZatoBox/main.svg?style=for-the-badge
+[stars-url]: https://github.com/ZatoBox/main/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ZatoBox/main.svg?style=for-the-badge
+[issues-url]: https://github.com/ZatoBox/main/issues
+[license-shield]: https://img.shields.io/github/license/ZatoBox/main.svg?style=for-the-badge
+[license-url]: https://github.com/ZatoBox/main/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/company/zatobox
+[product-screenshot]: shared/images/demo.jpg
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[TypeScript]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
+[TypeScript-url]: https://www.typescriptlang.org/
+[Node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[Node-url]: https://nodejs.org/
+[Express.js]: https://img.shields.io/badge/Express.js-404D59?style=for-the-badge
+[Express-url]: https://expressjs.com/
+[Python]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://python.org/
+[Flask]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white
+[Flask-url]: https://flask.palletsprojects.com/
+[Tailwind]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[Tailwind-url]: https://tailwindcss.com/
+[SQLite]: https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white
+[SQLite-url]: https://www.sqlite.org/
+[JavaScript]: https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black
+[JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+[HTML5]: https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white
+[HTML5-url]: https://developer.mozilla.org/en-US/docs/Web/HTML
+[CSS3]: https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
+[CSS3-url]: https://developer.mozilla.org/en-US/docs/Web/CSS
+[Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
+[Vite-url]: https://vitejs.dev/
+[Jest]: https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white
+[Jest-url]: https://jestjs.io/
+[OpenCV]: https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white
+[OpenCV-url]: https://opencv.org/
+[Tesseract]: https://img.shields.io/badge/Tesseract-000000?style=for-the-badge&logo=tesseract&logoColor=white
+[Tesseract-url]: https://github.com/tesseract-ocr/tesseract 
