@@ -32,7 +32,7 @@ const InventoryPage: React.FC = () => {
 
   // Fetch products from backend
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async() => {
       if (!isAuthenticated) {
         setError('You must log in to view inventory');
         setLoading(false);
@@ -95,8 +95,8 @@ const InventoryPage: React.FC = () => {
     setDeleteConfirmId(id);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!deleteConfirmId) return;
+  const handleDeleteConfirm = async() => {
+    if (!deleteConfirmId) {return;}
 
     setIsDeleting(true);
     setError(null);
@@ -105,7 +105,7 @@ const InventoryPage: React.FC = () => {
       console.log('Attempting to delete product:', deleteConfirmId);
       const response = await productsAPI.delete(deleteConfirmId);
       console.log('Delete response:', response);
-      
+
       if (response.success) {
         console.log('Product deleted successfully, updating UI');
         // Remove the product from the local state
@@ -161,7 +161,7 @@ const InventoryPage: React.FC = () => {
             </svg>
           </div>
           <p className="text-text-primary mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="bg-primary hover:bg-primary-600 text-black font-medium px-4 py-2 rounded-lg transition-colors"
           >
@@ -180,7 +180,7 @@ const InventoryPage: React.FC = () => {
           {/* Top Row */}
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 onClick={() => navigate('/')}
                 className="p-2 hover:bg-gray-50 rounded-full transition-colors md:hidden"
               >
@@ -188,8 +188,8 @@ const InventoryPage: React.FC = () => {
               </button>
               <h1 className="text-xl font-semibold text-text-primary md:hidden">Inventory</h1>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => navigate('/new-product')}
               className="bg-primary hover:bg-primary-600 text-black font-medium px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             >
@@ -221,8 +221,8 @@ const InventoryPage: React.FC = () => {
                 <button
                   onClick={() => setStatusFilter('all')}
                   className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    statusFilter === 'all' 
-                      ? 'bg-bg-surface text-text-primary shadow-sm' 
+                    statusFilter === 'all'
+                      ? 'bg-bg-surface text-text-primary shadow-sm'
                       : 'text-text-secondary hover:text-text-primary'
                   }`}
                 >
@@ -231,8 +231,8 @@ const InventoryPage: React.FC = () => {
                 <button
                   onClick={() => setStatusFilter('active')}
                   className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    statusFilter === 'active' 
-                      ? 'bg-bg-surface text-text-primary shadow-sm' 
+                    statusFilter === 'active'
+                      ? 'bg-bg-surface text-text-primary shadow-sm'
                       : 'text-text-secondary hover:text-text-primary'
                   }`}
                 >
@@ -241,8 +241,8 @@ const InventoryPage: React.FC = () => {
                 <button
                   onClick={() => setStatusFilter('inactive')}
                   className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    statusFilter === 'inactive' 
-                      ? 'bg-bg-surface text-text-primary shadow-sm' 
+                    statusFilter === 'inactive'
+                      ? 'bg-bg-surface text-text-primary shadow-sm'
                       : 'text-text-secondary hover:text-text-primary'
                   }`}
                 >
@@ -281,7 +281,7 @@ const InventoryPage: React.FC = () => {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
+
         {/* Error Message */}
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
@@ -309,7 +309,7 @@ const InventoryPage: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {/* Desktop/Tablet Table */}
         <div className="hidden md:block bg-bg-surface rounded-lg shadow-sm border border-divider overflow-hidden">
           <table className="w-full">
@@ -343,8 +343,8 @@ const InventoryPage: React.FC = () => {
             </thead>
             <tbody className="bg-bg-surface divide-y divide-divider">
               {filteredItems.map((item) => (
-                <tr 
-                  key={item.id} 
+                <tr
+                  key={item.id}
                   className="hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <td className="px-4 py-4">
@@ -375,11 +375,11 @@ const InventoryPage: React.FC = () => {
                   </td>
                   <td className="px-4 py-4 text-sm text-text-primary lg:table-cell hidden">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      item.stock > 10 
+                      item.stock > 10
                         ? 'bg-success-100 text-success-800'
                         : item.stock > 0
-                        ? 'bg-warning-100 text-warning-800'
-                        : 'bg-error-100 text-error-800'
+                          ? 'bg-warning-100 text-warning-800'
+                          : 'bg-error-100 text-error-800'
                     }`}>
                       {item.stock} units
                     </span>
@@ -389,7 +389,7 @@ const InventoryPage: React.FC = () => {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center space-x-1">
-                      <button 
+                      <button
                         onClick={() => handleEditProduct(item.id)}
                         className="p-1 hover:bg-gray-50 rounded transition-colors"
                         title="Edit"
@@ -398,7 +398,7 @@ const InventoryPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                       </button>
-                      <button 
+                      <button
                         onClick={(e) => handleDeleteClick(item.id, e)}
                         className="p-1 hover:bg-red-50 rounded transition-colors"
                         title="Delete"
@@ -418,8 +418,8 @@ const InventoryPage: React.FC = () => {
         {/* Mobile Card Layout */}
         <div className="md:hidden space-y-4">
           {filteredItems.map((item) => (
-            <div 
-              key={item.id} 
+            <div
+              key={item.id}
               className="bg-bg-surface rounded-lg shadow-sm border border-divider p-4"
             >
               <div className="flex items-start space-x-3">
@@ -429,11 +429,11 @@ const InventoryPage: React.FC = () => {
                   onChange={(e) => handleSelectItem(item.id, e.target.checked)}
                   className="w-4 h-4 text-complement border-gray-300 rounded focus:ring-complement mt-1"
                 />
-                
+
                 <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Package size={24} className="text-text-secondary" />
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -441,32 +441,32 @@ const InventoryPage: React.FC = () => {
                         {item.name}
                       </h3>
                       <p className="text-sm text-text-secondary">{item.category}</p>
-                      
+
                       <div className="flex items-center space-x-4 mt-2">
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          item.stock > 10 
+                          item.stock > 10
                             ? 'bg-success-100 text-success-800'
                             : item.stock > 0
-                            ? 'bg-warning-100 text-warning-800'
-                            : 'bg-error-100 text-error-800'
+                              ? 'bg-warning-100 text-warning-800'
+                              : 'bg-error-100 text-error-800'
                         }`}>
                           {item.stock} units
                         </span>
-                        
+
                         <span className="text-sm font-medium text-text-primary">
                           ${item.price.toFixed(2)}
                         </span>
                       </div>
-                      
+
                       <span className={`inline-flex mt-2 text-xs ${
                         item.status === 'active' ? 'text-success' : 'text-error'
                       }`}>
                         {item.status === 'active' ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center space-x-1">
-                      <button 
+                      <button
                         onClick={() => handleEditProduct(item.id)}
                         className="p-1 hover:bg-gray-50 rounded transition-colors"
                         title="Edit"
@@ -475,7 +475,7 @@ const InventoryPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                       </button>
-                      <button 
+                      <button
                         onClick={(e) => handleDeleteClick(item.id, e)}
                         className="p-1 hover:bg-red-50 rounded transition-colors"
                         title="Delete"
@@ -513,11 +513,11 @@ const InventoryPage: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-medium text-text-primary">Confirm Delete</h3>
               </div>
-              
+
               <p className="text-text-secondary mb-6">
                 Are you sure you want to delete this product? This action cannot be undone.
               </p>
-              
+
               <div className="flex space-x-3">
                 <button
                   onClick={handleDeleteCancel}

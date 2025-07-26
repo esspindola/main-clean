@@ -47,7 +47,7 @@ export const PluginProvider: React.FC<PluginProviderProps> = ({ children }) => {
       const newActivePlugins = prev.includes(pluginId)
         ? prev.filter(id => id !== pluginId)
         : [...prev, pluginId];
-      
+
       localStorage.setItem('activePlugins', JSON.stringify(newActivePlugins));
       return newActivePlugins;
     });
@@ -61,9 +61,9 @@ export const PluginProvider: React.FC<PluginProviderProps> = ({ children }) => {
     <PluginContext.Provider value={{
       activePlugins,
       togglePlugin,
-      isPluginActive
+      isPluginActive,
     }}>
       {children}
     </PluginContext.Provider>
   );
-}; 
+};

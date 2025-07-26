@@ -49,28 +49,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   const imageUrl = getImageUrl();
 
   return (
-    <div 
+    <div
       onClick={handleClick}
       className="group relative bg-white rounded-lg border border-divider overflow-hidden cursor-pointer transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:border-complement/30 animate-fade-in"
       style={{
-        animationDelay: `${product.id * 100}ms`
+        animationDelay: `${product.id * 100}ms`,
       }}
     >
       {/* Stock Badge */}
       <div className="absolute top-3 right-3 z-10">
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-          product.stock > 10 
-            ? 'bg-success-100 text-success-800 group-hover:bg-success-200' 
-            : product.stock > 0 
-            ? 'bg-warning-100 text-warning-800 group-hover:bg-warning-200' 
-            : 'bg-error-100 text-error-800 group-hover:bg-error-200'
+          product.stock > 10
+            ? 'bg-success-100 text-success-800 group-hover:bg-success-200'
+            : product.stock > 0
+              ? 'bg-warning-100 text-warning-800 group-hover:bg-warning-200'
+              : 'bg-error-100 text-error-800 group-hover:bg-error-200'
         }`}>
           <div className={`w-2 h-2 rounded-full mr-1 transition-all duration-300 ${
-            product.stock > 10 
-              ? 'bg-success-500' 
-              : product.stock > 0 
-              ? 'bg-warning-500' 
-              : 'bg-error-500'
+            product.stock > 10
+              ? 'bg-success-500'
+              : product.stock > 0
+                ? 'bg-warning-500'
+                : 'bg-error-500'
           }`}></div>
           {product.stock} in stock
         </span>
@@ -91,14 +91,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
             }}
           />
         ) : null}
-        
+
         {/* Fallback placeholder */}
         <div className={`w-full h-full flex items-center justify-center ${imageUrl ? 'hidden' : ''}`}>
           <div className="text-gray-400 group-hover:text-gray-500 transition-colors duration-300">
             <Package className="w-16 h-16" />
           </div>
         </div>
-        
+
         {/* Overlay on hover */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
       </div>
@@ -139,7 +139,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               per unit
             </span>
           </div>
-          
+
           {/* Add to Cart Button */}
           <button className="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out bg-complement hover:bg-complement-600 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-lg hover:shadow-xl">
             Add

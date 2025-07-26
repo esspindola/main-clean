@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -19,11 +19,11 @@ const LoginPage: React.FC = () => {
     setError(''); // Clear error when user types
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+
     try {
       await login(formData.email, formData.password);
       navigate('/');

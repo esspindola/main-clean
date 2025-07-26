@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Check if user is authenticated on mount
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = async() => {
       if (token) {
         try {
           const response = await authAPI.getCurrentUser();
@@ -75,11 +75,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, [token]);
 
-  const login = async (email: string, password: string) => {
+  const login = async(email: string, password: string) => {
     try {
       const response = await authAPI.login({ email, password });
       const { token: newToken, user: userData } = response;
-      
+
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
@@ -89,11 +89,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (userData: any) => {
+  const register = async(userData: any) => {
     try {
       const response = await authAPI.register(userData);
       const { token: newToken, user: newUser } = response;
-      
+
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(newUser);
@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    
+
     // Call logout API (optional, for server-side session cleanup)
     authAPI.logout().catch(console.error);
   };
@@ -134,4 +134,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
