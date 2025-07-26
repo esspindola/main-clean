@@ -44,11 +44,11 @@ const NewProductPage: React.FC = () => {
 
   const existingCategories = [
     'Furniture',
-    'Textiles', 
+    'Textiles',
     'Lighting',
     'Electronics',
     'Decoration',
-    'Office'
+    'Office',
   ];
 
   const variantTypes = [
@@ -56,7 +56,7 @@ const NewProductPage: React.FC = () => {
     'Size',
     'Material',
     'Style',
-    'Finish'
+    'Finish',
   ];
 
   const [variants, setVariants] = useState<VariantData>({
@@ -66,10 +66,10 @@ const NewProductPage: React.FC = () => {
         { id: '1', value: 'Red', selected: false },
         { id: '2', value: 'Blue', selected: false },
         { id: '3', value: 'Green', selected: false },
-        { id: '4', value: 'Black', selected: false }
+        { id: '4', value: 'Black', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Size: {
       isActive: false,
@@ -77,10 +77,10 @@ const NewProductPage: React.FC = () => {
         { id: '1', value: 'Small', selected: false },
         { id: '2', value: 'Medium', selected: false },
         { id: '3', value: 'Large', selected: false },
-        { id: '4', value: 'Extra Large', selected: false }
+        { id: '4', value: 'Extra Large', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Material: {
       isActive: false,
@@ -88,10 +88,10 @@ const NewProductPage: React.FC = () => {
         { id: '1', value: 'Wood', selected: false },
         { id: '2', value: 'Metal', selected: false },
         { id: '3', value: 'Plastic', selected: false },
-        { id: '4', value: 'Glass', selected: false }
+        { id: '4', value: 'Glass', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Style: {
       isActive: false,
@@ -99,10 +99,10 @@ const NewProductPage: React.FC = () => {
         { id: '1', value: 'Modern', selected: false },
         { id: '2', value: 'Classic', selected: false },
         { id: '3', value: 'Minimalist', selected: false },
-        { id: '4', value: 'Industrial', selected: false }
+        { id: '4', value: 'Industrial', selected: false },
       ],
       newValue: '',
-      showPanel: false
+      showPanel: false,
     },
     Finish: {
       isActive: false,
@@ -110,11 +110,11 @@ const NewProductPage: React.FC = () => {
         { id: '1', value: 'Matte', selected: false },
         { id: '2', value: 'Glossy', selected: false },
         { id: '3', value: 'Satin', selected: false },
-        { id: '4', value: 'Textured', selected: false }
+        { id: '4', value: 'Textured', selected: false },
       ],
       newValue: '',
-      showPanel: false
-    }
+      showPanel: false,
+    },
   });
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -125,15 +125,15 @@ const NewProductPage: React.FC = () => {
   const handleFileSelect = (files: FileList | null) => {
     if (files) {
       const fileArray = Array.from(files);
-      const validFiles = fileArray.filter(file => 
-        file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024 // 5MB limit
+      const validFiles = fileArray.filter(file =>
+        file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024, // 5MB limit
       );
-      
+
       if (validFiles.length !== fileArray.length) {
         setError('Some files were rejected. Only images under 5MB are allowed.');
         setTimeout(() => setError(null), 5000);
       }
-      
+
       setSelectedFiles(prev => [...prev, ...validFiles]);
     }
   };
@@ -141,9 +141,9 @@ const NewProductPage: React.FC = () => {
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type === 'dragleave') {
       setDragActive(false);
     }
   };
@@ -152,7 +152,7 @@ const NewProductPage: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelect(e.dataTransfer.files);
     }
@@ -163,10 +163,10 @@ const NewProductPage: React.FC = () => {
   };
 
   const handleCategoryToggle = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
+    setSelectedCategories(prev =>
+      prev.includes(category)
         ? prev.filter(c => c !== category)
-        : [...prev, category]
+        : [...prev, category],
     );
   };
 
@@ -176,8 +176,8 @@ const NewProductPage: React.FC = () => {
       [variantType]: {
         ...prev[variantType],
         isActive: !prev[variantType].isActive,
-        showPanel: !prev[variantType].isActive ? true : false
-      }
+        showPanel: !prev[variantType].isActive ? true : false,
+      },
     }));
   };
 
@@ -187,9 +187,9 @@ const NewProductPage: React.FC = () => {
       [variantType]: {
         ...prev[variantType],
         values: prev[variantType].values.map(value =>
-          value.id === valueId ? { ...value, selected: !value.selected } : value
-        )
-      }
+          value.id === valueId ? { ...value, selected: !value.selected } : value,
+        ),
+      },
     }));
   };
 
@@ -202,8 +202,8 @@ const NewProductPage: React.FC = () => {
         [variantType]: {
           ...prev[variantType],
           values: [...prev[variantType].values, { id: newId, value: newValue, selected: true }],
-          newValue: ''
-        }
+          newValue: '',
+        },
       }));
     }
   };
@@ -213,8 +213,8 @@ const NewProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        newValue: value
-      }
+        newValue: value,
+      },
     }));
   };
 
@@ -223,8 +223,8 @@ const NewProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        showPanel: false
-      }
+        showPanel: false,
+      },
     }));
   };
 
@@ -236,8 +236,8 @@ const NewProductPage: React.FC = () => {
         showPanel: false,
         isActive: false,
         values: prev[variantType].values.map(value => ({ ...value, selected: false })),
-        newValue: ''
-      }
+        newValue: '',
+      },
     }));
   };
 
@@ -253,8 +253,8 @@ const NewProductPage: React.FC = () => {
       ...prev,
       [variantType]: {
         ...prev[variantType],
-        isActive: !prev[variantType].isActive
-      }
+        isActive: !prev[variantType].isActive,
+      },
     }));
   };
 
@@ -262,9 +262,9 @@ const NewProductPage: React.FC = () => {
     setShowMoreVariantsPanel(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async() => {
     console.log('handleSave called');
-    
+
     if (!isAuthenticated) {
       console.log('User not authenticated');
       setError('You must log in to create products');
@@ -308,15 +308,15 @@ const NewProductPage: React.FC = () => {
       const response = await fetch('http://localhost:4444/api/products', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
-        body: formDataToSend
+        body: formDataToSend,
       });
 
       console.log('Response status:', response.status);
       const result = await response.json();
       console.log('Response result:', result);
-      
+
       if (result.success) {
         console.log('Product created successfully:', result.product);
         navigate('/inventory');
@@ -339,7 +339,7 @@ const NewProductPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 onClick={() => navigate('/inventory')}
                 className="p-2 hover:bg-gray-50 rounded-full transition-colors md:hidden"
               >
@@ -347,14 +347,14 @@ const NewProductPage: React.FC = () => {
               </button>
               <h1 className="text-xl font-semibold text-text-primary md:hidden">New Product</h1>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               {error && (
                 <div className="text-red-500 text-sm">
                   {error}
                 </div>
               )}
-              <button 
+              <button
                 onClick={handleSave}
                 disabled={loading}
                 className={`bg-primary hover:bg-primary-600 text-black font-medium px-6 py-2 rounded-lg transition-colors flex items-center space-x-2 ${
@@ -377,13 +377,13 @@ const NewProductPage: React.FC = () => {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
+
         {/* Desktop Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
+
           {/* Left Column */}
           <div className="space-y-6">
-            
+
             {/* Product Type */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <div className="flex items-center justify-between">
@@ -409,32 +409,32 @@ const NewProductPage: React.FC = () => {
 
             {/* Basic Information */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text-primary mb-2">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
                       Product Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="Product name"
-                      className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
-                      required
-                    />
-                  </div>
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  placeholder="Product name"
+                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary"
+                  required
+                />
+              </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-text-primary mb-2">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
                       Description
-                    </label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Product description"
-                      rows={3}
-                      className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary resize-none"
-                    />
-                  </div>
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  placeholder="Product description"
+                  rows={3}
+                  className="w-full p-3 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent bg-bg-surface text-text-primary resize-none"
+                />
+              </div>
             </div>
 
             {/* Image Upload */}
@@ -442,7 +442,7 @@ const NewProductPage: React.FC = () => {
               <label className="block text-sm font-medium text-text-primary mb-4">
                 Product Images
               </label>
-              <div 
+              <div
                 className={`border-2 border-dashed border-divider rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer ${
                   dragActive ? 'border-complement' : ''
                 }`}
@@ -502,7 +502,7 @@ const NewProductPage: React.FC = () => {
             {/* Categorization */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <h3 className="text-lg font-medium text-text-primary mb-4">Categorization</h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <input
@@ -544,11 +544,11 @@ const NewProductPage: React.FC = () => {
 
           {/* Right Column */}
           <div className="space-y-6">
-            
+
             {/* Units Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <h3 className="text-lg font-medium text-text-primary mb-4">Units</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
@@ -607,7 +607,7 @@ const NewProductPage: React.FC = () => {
             {/* Inventory Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <h3 className="text-lg font-medium text-text-primary mb-4">Inventory</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">
@@ -653,7 +653,7 @@ const NewProductPage: React.FC = () => {
             {/* Variants Section */}
             <div className="bg-bg-surface rounded-lg shadow-sm border border-divider p-6">
               <h3 className="text-lg font-medium text-text-primary mb-4">Variants</h3>
-              
+
               <div className="space-y-4">
                 {variantTypes.map((variant) => (
                   <div key={variant} className="space-y-2">
@@ -744,8 +744,8 @@ const NewProductPage: React.FC = () => {
                     )}
                   </div>
                 ))}
-                
-                <button 
+
+                <button
                   onClick={() => setShowMoreVariantsPanel(true)}
                   className="w-full p-3 border border-dashed border-divider rounded-lg text-text-secondary hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2 mt-4"
                 >

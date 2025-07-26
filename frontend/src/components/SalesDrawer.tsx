@@ -32,7 +32,7 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
     onNavigateToPayment(total);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-bg-surface border-l border-divider transform transition-transform duration-300 ease-in-out z-30 ${
@@ -43,7 +43,7 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
         <h2 className="text-lg font-semibold text-text-primary animate-slide-in-left">
           Shopping Cart
         </h2>
-        <button 
+        <button
           onClick={onClose}
           className="p-2 hover:bg-gray-50 rounded-full transition-all duration-300 hover:scale-110 icon-bounce"
         >
@@ -56,23 +56,23 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
         {cartItems.length > 0 ? (
           <div className="space-y-4 animate-stagger">
             {cartItems.map((item) => (
-              <div 
-                key={item.id} 
+              <div
+                key={item.id}
                 className="bg-white p-4 rounded-lg border border-divider shadow-sm hover-lift"
               >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-medium text-text-primary text-glow">{item.name}</h3>
-                  <button 
+                  <button
                     onClick={() => removeCartItem(item.id)}
                     className="text-error hover:text-error-600 transition-colors duration-300 icon-bounce"
                   >
                     <Trash2 size={16} />
                   </button>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <button 
+                    <button
                       onClick={() => updateCartItemQuantity(item.id, -1)}
                       disabled={item.quantity <= 1}
                       className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-110 flex items-center justify-center"
@@ -80,7 +80,7 @@ const SalesDrawer: React.FC<SalesDrawerProps> = ({ isOpen, onClose, onNavigateTo
                       <Minus size={14} />
                     </button>
                     <span className="w-8 text-center font-medium text-text-primary">{item.quantity}</span>
-                    <button 
+                    <button
                       onClick={() => updateCartItemQuantity(item.id, 1)}
                       disabled={item.quantity >= item.stock}
                       className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-110 flex items-center justify-center"

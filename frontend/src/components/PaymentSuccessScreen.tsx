@@ -14,12 +14,12 @@ interface PaymentSuccessScreenProps {
   }>;
 }
 
-const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({ 
-  isOpen, 
-  onNewOrder, 
-  paymentMethod, 
-  total, 
-  items 
+const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
+  isOpen,
+  onNewOrder,
+  paymentMethod,
+  total,
+  items,
 }) => {
   const [email, setEmail] = useState('');
   const [showCheckmark, setShowCheckmark] = useState(false);
@@ -41,7 +41,7 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
   const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
   const currentDate = new Date().toLocaleDateString('en-US');
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div className="fixed inset-0 bg-bg-main z-50 flex flex-col animate-scale-in">
@@ -56,7 +56,7 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 50}%`,
                 animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
+                animationDuration: `${2 + Math.random() * 2}s`,
               }}
             />
           ))}
@@ -72,10 +72,10 @@ const PaymentSuccessScreen: React.FC<PaymentSuccessScreenProps> = ({
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto p-4 lg:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+
             {/* Left Side - Success Banner */}
             <div className="flex flex-col items-center justify-center space-y-6 lg:pr-8 animate-stagger">
-              
+
               {/* Animated Checkmark */}
               <div className={`relative transition-all duration-500 ${
                 showCheckmark ? 'scale-100 opacity-100' : 'scale-50 opacity-0'

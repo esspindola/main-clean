@@ -20,40 +20,40 @@ function App() {
     <AuthProvider>
       <PluginProvider>
         <BrowserRouter>
-        <Routes>
-          {/* Auth Routes - No sidebar */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          
-          {/* Main App Routes - With sidebar */}
-          <Route path="/*" element={
-            <ProtectedRoute>
-              <div className="min-h-screen bg-bg-main">
-                {/* Side Menu - only visible on desktop */}
-                <SideMenu />
-                
-                {/* Main content with left padding on desktop to account for sidebar */}
-                <main className="pt-16 md:pt-0 md:pl-64">
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/inventory" element={<InventoryPage />} />
-                    <Route path="/smart-inventory" element={<SmartInventoryPage />} />
-                    <Route path="/new-product" element={<NewProductPage />} />
-                    <Route path="/edit-product/:id" element={<EditProductPage />} />
-                    <Route path="/ocr-result" element={<OCRResultPage />} />
-                    <Route path="/pos-integration" element={<div className="p-8"><h1 className="text-2xl font-bold">POS Integration</h1><p className="mt-4">POS system integration module is active and ready to use.</p></div>} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/plugin-store" element={<PluginStorePage />} />
-                    {/* Redirect invalid routes to Home */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
-                </main>
-              </div>
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </BrowserRouter>
+          <Routes>
+            {/* Auth Routes - No sidebar */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
+            {/* Main App Routes - With sidebar */}
+            <Route path="/*" element={
+              <ProtectedRoute>
+                <div className="min-h-screen bg-bg-main">
+                  {/* Side Menu - only visible on desktop */}
+                  <SideMenu />
+
+                  {/* Main content with left padding on desktop to account for sidebar */}
+                  <main className="pt-16 md:pt-0 md:pl-64">
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/inventory" element={<InventoryPage />} />
+                      <Route path="/smart-inventory" element={<SmartInventoryPage />} />
+                      <Route path="/new-product" element={<NewProductPage />} />
+                      <Route path="/edit-product/:id" element={<EditProductPage />} />
+                      <Route path="/ocr-result" element={<OCRResultPage />} />
+                      <Route path="/pos-integration" element={<div className="p-8"><h1 className="text-2xl font-bold">POS Integration</h1><p className="mt-4">POS system integration module is active and ready to use.</p></div>} />
+                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                      <Route path="/plugin-store" element={<PluginStorePage />} />
+                      {/* Redirect invalid routes to Home */}
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </main>
+                </div>
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </BrowserRouter>
       </PluginProvider>
     </AuthProvider>
   );

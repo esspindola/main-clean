@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import {
   productsAPI,
   ocrAPI,
   OCRResponse,
   OCRLineItem,
   OCRMetadata,
-} from "../services/api";
+} from '../services/api';
 
 const OCRResultPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,11 +15,11 @@ const OCRResultPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<OCRResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editedResult, setEditedResult] = useState<OCRResponse | null>(null);
   const [isAddingToInventory, setIsAddingToInventory] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("Office Supplies");
+  const [selectedCategory, setSelectedCategory] = useState('Office Supplies');
   const [processingOptions, setProcessingOptions] = useState({
     enhance_ocr: true,
     rotation_correction: true,
@@ -31,40 +31,40 @@ const OCRResultPage: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
       setResult(null);
-      setError("");
+      setError('');
     }
   };
 
   const handleProcessAnother = () => {
     setFile(null);
     setResult(null);
-    setError("");
+    setError('');
     setIsEditing(false);
     setEditedResult(null);
     // Clear file input
     const fileInput = document.getElementById(
-      "file-upload"
+      'file-upload',
     ) as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = "";
+      fileInput.value = '';
     }
   };
 
   // Load system status on mount
   useEffect(() => {
-    const loadSystemStatus = async () => {
+    const loadSystemStatus = async() => {
       try {
         const status = await ocrAPI.getDebugInfo();
         setSystemStatus(status);
       } catch (err: any) {
-        console.warn("Could not load system status:", err);
+        console.warn('Could not load system status:', err);
         // Don't show CORS errors to user, just log them
         if (
-          err.message?.includes("CORS") ||
-          err.message?.includes("NetworkError")
+          err.message?.includes('CORS') ||
+          err.message?.includes('NetworkError')
         ) {
           console.warn(
-            "CORS issue detected - OCR backend may not be running or CORS not configured"
+            'CORS issue detected - OCR backend may not be running or CORS not configured',
           );
         }
       }
@@ -72,24 +72,24 @@ const OCRResultPage: React.FC = () => {
     loadSystemStatus();
   }, []);
 
-  const handleConfirmData = async () => {
+  const handleConfirmData = async() => {
     if (!result || !token) {
-      setError("No data to confirm or not authenticated");
+      setError('No data to confirm or not authenticated');
       return;
     }
 
     setIsAddingToInventory(true);
-    setError("");
+    setError('');
 
     try {
       // Add each detected item to inventory
       const productsToAdd = result.line_items.map((item: OCRLineItem) => ({
         name: item.description.substring(0, 50), // Truncate long descriptions
         description: item.description,
-        price: parseFloat(item.unit_price.replace(/[^\d.-]/g, "")) || 0,
-        stock: parseInt(item.quantity.replace(/[^\d]/g, "")) || 1,
+        price: parseFloat(item.unit_price.replace(/[^\d.-]/g, '')) || 0,
+        stock: parseInt(item.quantity.replace(/[^\d]/g, '')) || 1,
         category: selectedCategory,
-        status: "active",
+        status: 'active',
       }));
 
       const addedProducts = [];
@@ -99,10 +99,10 @@ const OCRResultPage: React.FC = () => {
           const response = await productsAPI.create(productData);
           addedProducts.push(response.product);
         } catch (error: any) {
-          console.error("Error adding product:", productData.name, error);
+          console.error('Error adding product:', productData.name, error);
           failedProducts.push({
             name: productData.name,
-            error: error.message || "Unknown error",
+            error: error.message || 'Unknown error',
           });
           // Continue with other products even if one fails
         }
@@ -118,13 +118,13 @@ const OCRResultPage: React.FC = () => {
           });
         }
         alert(message);
-        navigate("/inventory");
+        navigate('/inventory');
       } else {
-        setError("Failed to add any products to inventory");
+        setError('Failed to add any products to inventory');
       }
     } catch (error) {
-      console.error("Error adding products to inventory:", error);
-      setError("Failed to add products to inventory. Please try again.");
+      console.error('Error adding products to inventory:', error);
+      setError('Failed to add products to inventory. Please try again.');
     } finally {
       setIsAddingToInventory(false);
     }
@@ -146,14 +146,14 @@ const OCRResultPage: React.FC = () => {
   };
 
   const handleItemChange = (index: number, field: string, value: any) => {
-    if (!editedResult) return;
+    if (!editedResult) {return;}
     const newItems = [...editedResult.line_items];
     newItems[index] = { ...newItems[index], [field]: value };
 
-    if (field === "quantity" || field === "unit_price") {
-      const qty = parseInt(newItems[index].quantity.replace(/[^\d]/g, "")) || 0;
+    if (field === 'quantity' || field === 'unit_price') {
+      const qty = parseInt(newItems[index].quantity.replace(/[^\d]/g, '')) || 0;
       const price =
-        parseFloat(newItems[index].unit_price.replace(/[^\d.-]/g, "")) || 0;
+        parseFloat(newItems[index].unit_price.replace(/[^\d.-]/g, '')) || 0;
       newItems[index].total_price = `$${(qty * price).toFixed(2)}`;
     }
 
@@ -163,23 +163,23 @@ const OCRResultPage: React.FC = () => {
     });
   };
 
-  const handleUpload = async () => {
-    if (!file) return;
+  const handleUpload = async() => {
+    if (!file) {return;}
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
-      console.log("🚀 Iniciando procesamiento del archivo:", file.name);
+      console.log('🚀 Iniciando procesamiento del archivo:', file.name);
 
       // Process the document with OCR directly
       const ocrResult = await ocrAPI.processDocument(file, processingOptions);
 
-      console.log("📋 Resultado recibido:", ocrResult);
+      console.log('📋 Resultado recibido:', ocrResult);
 
       // El backend siempre devuelve un resultado válido, simplemente lo usamos
       setResult({
         success: true,
-        message: "Documento procesado exitosamente",
+        message: 'Documento procesado exitosamente',
         metadata: ocrResult.metadata || {},
         line_items: ocrResult.line_items || [],
         detections: ocrResult.detections || [],
@@ -198,16 +198,16 @@ const OCRResultPage: React.FC = () => {
         summary: ocrResult.summary || {
           total_products: ocrResult.line_items?.length || 0,
           total_cantidad: 0,
-          gran_total: "$0.00",
-          promedio_precio: "$0.00",
-          processing_time: "< 1s",
-          confidence: "High",
+          gran_total: '$0.00',
+          promedio_precio: '$0.00',
+          processing_time: '< 1s',
+          confidence: 'High',
         },
       });
     } catch (err: any) {
-      console.error("❌ Error en procesamiento OCR:", err);
+      console.error('❌ Error en procesamiento OCR:', err);
       setError(
-        `Error procesando documento: ${err.message}. Por favor intenta de nuevo.`
+        `Error procesando documento: ${err.message}. Por favor intenta de nuevo.`,
       );
     } finally {
       setLoading(false);
@@ -250,7 +250,7 @@ const OCRResultPage: React.FC = () => {
                     <p className="text-base md:text-lg font-medium">
                       {file
                         ? `Selected: ${file.name}`
-                        : "Click to select an invoice"}
+                        : 'Click to select an invoice'}
                     </p>
                     <p className="text-xs md:text-sm text-text-secondary mt-2">
                       PDF, PNG, JPG, JPEG, TIFF, BMP (max 50MB)
@@ -260,18 +260,18 @@ const OCRResultPage: React.FC = () => {
                         <div
                           className={`inline-flex items-center px-2 py-1 rounded ${
                             systemStatus.model_status?.yolo_loaded
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-yellow-100 text-yellow-700'
                           }`}
                         >
-                          {systemStatus.model_status?.yolo_loaded ? "✅" : "⚠️"}
-                          AI Model{" "}
+                          {systemStatus.model_status?.yolo_loaded ? '✅' : '⚠️'}
+                          AI Model{' '}
                           {systemStatus.model_status?.yolo_loaded
-                            ? "Ready"
-                            : "Loading..."}
+                            ? 'Ready'
+                            : 'Loading...'}
                           {systemStatus.model_status?.classes_count && (
                             <span className="ml-2 text-xs">
-                              ({systemStatus.model_status.classes_count}{" "}
+                              ({systemStatus.model_status.classes_count}{' '}
                               classes)
                             </span>
                           )}
@@ -338,7 +338,7 @@ const OCRResultPage: React.FC = () => {
                     />
                     <span className="ml-2 text-xs">
                       {(processingOptions.confidence_threshold * 100).toFixed(
-                        0
+                        0,
                       )}
                       %
                     </span>
@@ -427,7 +427,7 @@ const OCRResultPage: React.FC = () => {
                       Company:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.company_name || "No detectado"}
+                      {result?.metadata?.company_name || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -435,7 +435,7 @@ const OCRResultPage: React.FC = () => {
                       RUC:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.ruc || "No detectado"}
+                      {result?.metadata?.ruc || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -443,7 +443,7 @@ const OCRResultPage: React.FC = () => {
                       Date:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.date || "No detectado"}
+                      {result?.metadata?.date || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -451,7 +451,7 @@ const OCRResultPage: React.FC = () => {
                       Invoice #:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.invoice_number || "No detectado"}
+                      {result?.metadata?.invoice_number || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -459,7 +459,7 @@ const OCRResultPage: React.FC = () => {
                       Payment Method:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.payment_method || "No detectado"}
+                      {result?.metadata?.payment_method || 'No detectado'}
                     </span>
                   </div>
                 </div>
@@ -475,7 +475,7 @@ const OCRResultPage: React.FC = () => {
                       Subtotal:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.subtotal || "No detectado"}
+                      {result?.metadata?.subtotal || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -483,7 +483,7 @@ const OCRResultPage: React.FC = () => {
                       IVA:
                     </span>
                     <span className="text-text-primary text-sm md:text-base">
-                      {result?.metadata?.iva || "No detectado"}
+                      {result?.metadata?.iva || 'No detectado'}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-divider pt-2">
@@ -491,7 +491,7 @@ const OCRResultPage: React.FC = () => {
                       Total:
                     </span>
                     <span className="text-lg md:text-xl font-bold text-green-600">
-                      {result?.metadata?.total || "No detectado"}
+                      {result?.metadata?.total || 'No detectado'}
                     </span>
                   </div>
                 </div>
@@ -543,7 +543,7 @@ const OCRResultPage: React.FC = () => {
                                   handleItemChange(
                                     index,
                                     'description',
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="w-full px-2 md:px-3 py-1 md:py-2 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent text-xs md:text-sm"
@@ -565,7 +565,7 @@ const OCRResultPage: React.FC = () => {
                                   handleItemChange(
                                     index,
                                     'quantity',
-                                    parseInt(e.target.value) || 0
+                                    parseInt(e.target.value) || 0,
                                   )
                                 }
                                 className="w-16 md:w-20 px-2 md:px-3 py-1 md:py-2 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent text-right text-xs md:text-sm"
@@ -583,7 +583,7 @@ const OCRResultPage: React.FC = () => {
                                   handleItemChange(
                                     index,
                                     'unit_price',
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 className="w-20 md:w-24 px-2 md:px-3 py-1 md:py-2 border border-divider rounded-lg focus:ring-2 focus:ring-complement focus:border-transparent text-right text-xs md:text-sm"

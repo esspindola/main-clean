@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usePlugins } from '../contexts/PluginContext';
-import { 
-  Settings, 
-  User, 
-  Shield, 
-  Database, 
-  Palette, 
-  Bell, 
-  Globe, 
+import {
+  Settings,
+  User,
+  Shield,
+  Database,
+  Palette,
+  Bell,
+  Globe,
   Save,
   ArrowLeft,
   Eye,
   EyeOff,
   Check,
-  X
+  X,
 } from 'lucide-react';
 
 interface SettingsSection {
   id: string;
   title: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   description: string;
 }
 
@@ -37,28 +37,28 @@ const SettingsPage: React.FC = () => {
     companyName: 'ZatoBox',
     language: 'es',
     timezone: 'America/Mexico_City',
-    currency: 'MXN'
+    currency: 'MXN',
   });
 
   const [securitySettings, setSecuritySettings] = useState({
     twoFactorAuth: false,
     sessionTimeout: 30,
     passwordExpiry: 90,
-    loginAttempts: 5
+    loginAttempts: 5,
   });
 
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     lowStockAlerts: true,
     salesReports: true,
-    systemUpdates: false
+    systemUpdates: false,
   });
 
   const [appearanceSettings, setAppearanceSettings] = useState({
     theme: 'light',
     sidebarCollapsed: false,
     animations: true,
-    compactMode: false
+    compactMode: false,
   });
 
   const sections: SettingsSection[] = [
@@ -66,57 +66,57 @@ const SettingsPage: React.FC = () => {
       id: 'general',
       title: 'General',
       icon: Settings,
-      description: 'Configuración básica del sistema'
+      description: 'Configuración básica del sistema',
     },
     {
       id: 'profile',
       title: 'Perfil',
       icon: User,
-      description: 'Información personal y credenciales'
+      description: 'Información personal y credenciales',
     },
     {
       id: 'security',
       title: 'Seguridad',
       icon: Shield,
-      description: 'Configuración de seguridad y privacidad'
+      description: 'Configuración de seguridad y privacidad',
     },
     {
       id: 'notifications',
       title: 'Notificaciones',
       icon: Bell,
-      description: 'Preferencias de notificaciones'
+      description: 'Preferencias de notificaciones',
     },
     {
       id: 'appearance',
       title: 'Apariencia',
       icon: Palette,
-      description: 'Tema y personalización visual'
+      description: 'Tema y personalización visual',
     },
     {
       id: 'plugins',
       title: 'Plugins',
       icon: Database,
-      description: 'Gestión de módulos y extensiones'
+      description: 'Gestión de módulos y extensiones',
     },
     {
       id: 'system',
       title: 'Sistema',
       icon: Globe,
-      description: 'Configuración avanzada del sistema'
-    }
+      description: 'Configuración avanzada del sistema',
+    },
   ];
 
-  const handleSave = async () => {
+  const handleSave = async() => {
     setIsSaving(true);
     setSaveStatus('idle');
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch (error) {
+    } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } finally {
@@ -440,7 +440,7 @@ const SettingsPage: React.FC = () => {
           {[
             { id: 'smart-inventory', name: 'Smart Inventory', description: 'Gestión inteligente de inventario con IA' },
             { id: 'ocr-module', name: 'OCR Documents', description: 'Procesamiento de documentos con OCR' },
-            { id: 'pos-integration', name: 'POS Integration', description: 'Integración con sistemas POS' }
+            { id: 'pos-integration', name: 'POS Integration', description: 'Integración con sistemas POS' },
           ].map((plugin) => (
             <div key={plugin.id} className="flex items-center justify-between p-4 border border-divider rounded-lg">
               <div>
@@ -512,22 +512,22 @@ const SettingsPage: React.FC = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'general':
-        return renderGeneralSettings();
-      case 'profile':
-        return renderProfileSettings();
-      case 'security':
-        return renderSecuritySettings();
-      case 'notifications':
-        return renderNotificationSettings();
-      case 'appearance':
-        return renderAppearanceSettings();
-      case 'plugins':
-        return renderPluginSettings();
-      case 'system':
-        return renderSystemSettings();
-      default:
-        return renderGeneralSettings();
+    case 'general':
+      return renderGeneralSettings();
+    case 'profile':
+      return renderProfileSettings();
+    case 'security':
+      return renderSecuritySettings();
+    case 'notifications':
+      return renderNotificationSettings();
+    case 'appearance':
+      return renderAppearanceSettings();
+    case 'plugins':
+      return renderPluginSettings();
+    case 'system':
+      return renderSystemSettings();
+    default:
+      return renderGeneralSettings();
     }
   };
 
@@ -592,7 +592,7 @@ const SettingsPage: React.FC = () => {
                         : 'text-text-secondary hover:text-text-primary hover:bg-gray-50'
                     }`}
                   >
-                    <Icon size={20} />
+                    <Icon width={20} height={20} />
                     <div>
                       <div className="font-medium">{section.title}</div>
                       <div className="text-sm opacity-75">{section.description}</div>
@@ -615,4 +615,4 @@ const SettingsPage: React.FC = () => {
   );
 };
 
-export default SettingsPage; 
+export default SettingsPage;

@@ -10,16 +10,16 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleInternetIdentityLogin = async () => {
+  const handleInternetIdentityLogin = async() => {
     setIsLoading(true);
     setError('');
-    
+
     try {
       const { user, token } = await icpAuthService.login();
-      
+
       // Set the ICP user in auth context
       setICPUser(user, token);
-      
+
       // Navigate to home page
       navigate('/');
     } catch (error: any) {
@@ -119,9 +119,9 @@ const LoginPage: React.FC = () => {
               <div className="text-center text-sm text-text-secondary">
                 <p>
                   New to Internet Identity?{' '}
-                  <a 
-                    href="http://ucwa4-rx777-77774-qaada-cai.localhost:4943" 
-                    target="_blank" 
+                  <a
+                    href="http://ucwa4-rx777-77774-qaada-cai.localhost:4943"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-complement hover:text-complement-600 font-medium transition-colors"
                   >
@@ -243,9 +243,9 @@ const LoginPage: React.FC = () => {
 
             {/* Create Identity Link */}
             <div className="text-center">
-              <a 
-                href="http://ucwa4-rx777-77774-qaada-cai.localhost:4943" 
-                target="_blank" 
+              <a
+                href="http://ucwa4-rx777-77774-qaada-cai.localhost:4943"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-complement hover:text-complement-600 font-medium transition-colors text-sm"
               >

@@ -21,7 +21,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
     walletAddress: '',
     cashAmount: total.toString(),
     needsChange: false,
-    changeFor: ''
+    changeFor: '',
   });
 
   // States for change calculation
@@ -48,31 +48,31 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
 
   const isFormValid = () => {
     switch (selectedMethod) {
-      case 'card':
-        return formData.cardNumber && formData.expiryDate && formData.cvc && formData.cardName;
-      case 'wallet':
-        return true; // Wallet payments are handled externally
-      case 'crypto':
-        return formData.walletAddress;
-      case 'cash':
-        return cashReceived >= total; // Must receive at least the total
-      default:
-        return false;
+    case 'card':
+      return formData.cardNumber && formData.expiryDate && formData.cvc && formData.cardName;
+    case 'wallet':
+      return true; // Wallet payments are handled externally
+    case 'crypto':
+      return formData.walletAddress;
+    case 'cash':
+      return cashReceived >= total; // Must receive at least the total
+    default:
+      return false;
     }
   };
 
   const getPaymentMethodName = (method: PaymentMethod | null) => {
     switch (method) {
-      case 'card':
-        return 'Credit/Debit Card';
-      case 'wallet':
-        return 'Apple Pay / Google Pay';
-      case 'crypto':
-        return 'Coinbase Pay / Crypto';
-      case 'cash':
-        return 'Cash on Delivery';
-      default:
-        return 'Payment method';
+    case 'card':
+      return 'Credit/Debit Card';
+    case 'wallet':
+      return 'Apple Pay / Google Pay';
+    case 'crypto':
+      return 'Coinbase Pay / Crypto';
+    case 'cash':
+      return 'Cash on Delivery';
+    default:
+      return 'Payment method';
     }
   };
 
@@ -87,17 +87,17 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2
+      minimumFractionDigits: 2,
     }).format(amount);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div className="fixed inset-0 bg-bg-main z-50 flex flex-col animate-scale-in">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-divider bg-bg-surface">
-        <button 
+        <button
           onClick={onBack}
           className="p-2 hover:bg-gray-50 rounded-full transition-all duration-300 hover:scale-110 icon-bounce"
         >
@@ -120,7 +120,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
         {/* Payment Methods */}
         <div className="space-y-4 mb-6 animate-stagger">
           {/* Credit/Debit Card */}
-          <div 
+          <div
             className={`border rounded-lg p-4 cursor-pointer transition-all duration-300 hover-lift ${
               selectedMethod === 'card' ? 'border-complement bg-complement-50 shadow-lg' : 'border-divider hover:border-gray-300 bg-bg-surface'
             }`}
@@ -141,7 +141,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
           </div>
 
           {/* Apple Pay / Google Pay */}
-          <div 
+          <div
             className={`border rounded-lg p-4 cursor-pointer transition-all duration-300 hover-lift ${
               selectedMethod === 'wallet' ? 'border-complement bg-complement-50 shadow-lg' : 'border-divider hover:border-gray-300 bg-bg-surface'
             }`}
@@ -162,7 +162,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
           </div>
 
           {/* Crypto */}
-          <div 
+          <div
             className={`border rounded-lg p-4 cursor-pointer transition-all duration-300 hover-lift ${
               selectedMethod === 'crypto' ? 'border-complement bg-complement-50 shadow-lg' : 'border-divider hover:border-gray-300 bg-bg-surface'
             }`}
@@ -183,7 +183,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
           </div>
 
           {/* Cash on Delivery */}
-          <div 
+          <div
             className={`border rounded-lg p-4 cursor-pointer transition-all duration-300 hover-lift ${
               selectedMethod === 'cash' ? 'border-complement bg-complement-50 shadow-lg' : 'border-divider hover:border-gray-300 bg-bg-surface'
             }`}
@@ -210,7 +210,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
             {selectedMethod === 'card' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-text-primary mb-4">Card Information</h3>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">Card Number</label>
                   <input
@@ -264,7 +264,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
             {selectedMethod === 'crypto' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-text-primary mb-4">Crypto Payment</h3>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">Cryptocurrency</label>
                   <select
@@ -295,7 +295,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
             {selectedMethod === 'cash' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-text-primary mb-4">Cash Payment</h3>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">Amount Received</label>
                   <input
@@ -368,7 +368,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onBack, onPayment
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {selectedMethod === 'cash' 
+          {selectedMethod === 'cash'
             ? `Confirm Payment - ${formatCurrency(total)}`
             : 'Confirm Payment'
           }

@@ -16,7 +16,7 @@ const RegisterPage: React.FC = () => {
     password: '',
     confirmPassword: '',
     phone: '',
-    acceptTerms: false
+    acceptTerms: false,
   });
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -24,15 +24,15 @@ const RegisterPage: React.FC = () => {
     setError(''); // Clear error when user types
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     if (!formData.acceptTerms) {
       setError('You must accept the Terms and Conditions');
       return;
@@ -46,7 +46,7 @@ const RegisterPage: React.FC = () => {
         fullName: formData.fullName,
         email: formData.email,
         password: formData.password,
-        phone: formData.phone
+        phone: formData.phone,
       });
       navigate('/');
     } catch (error: any) {

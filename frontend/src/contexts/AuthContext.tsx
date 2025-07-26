@@ -44,6 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Check if user is authenticated on mount
   useEffect(() => {
+<<<<<<< HEAD
     const checkAuth = async () => {
       const storedToken = localStorage.getItem('token');
       const storedAuthType = localStorage.getItem('authType') as 'traditional' | 'icp' | null;
@@ -53,6 +54,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (storedToken && storedAuthType) {
         setToken(storedToken);
         setAuthType(storedAuthType);
+=======
+    const checkAuth = async() => {
+      if (token) {
+>>>>>>> main
         try {
           if (storedAuthType === 'traditional') {
             const response = await authAPI.getCurrentUser();
@@ -119,11 +124,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     (window as any).clearAuth = clearAllAuthData;
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async(email: string, password: string) => {
     try {
       const response = await authAPI.login({ email, password });
       const { token: newToken, user: userData } = response;
-      
+
       localStorage.setItem('token', newToken);
       localStorage.setItem('authType', 'traditional');
       setToken(newToken);
@@ -135,11 +140,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (userData: any) => {
+  const register = async(userData: any) => {
     try {
       const response = await authAPI.register(userData);
       const { token: newToken, user: newUser } = response;
-      
+
       localStorage.setItem('token', newToken);
       localStorage.setItem('authType', 'traditional');
       setToken(newToken);
@@ -151,12 +156,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+<<<<<<< HEAD
   const setICPUser = (user: ICPUser, token: string) => {
     localStorage.setItem('token', token);
     localStorage.setItem('authType', 'icp');
     setToken(token);
     setICPUserState(user);
     setAuthType('icp');
+=======
+  const logout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+
+    // Call logout API (optional, for server-side session cleanup)
+    authAPI.logout().catch(console.error);
+>>>>>>> main
   };
 
   const logout = () => {
@@ -206,4 +221,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
