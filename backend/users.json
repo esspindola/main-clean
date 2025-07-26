@@ -106,5 +106,23 @@
     "role": "user",
     "phone": "",
     "address": ""
+  },
+  {
+    "id": 13,
+    "email": "yesenia@gmail.com",
+    "password": "Yesenia2025!",
+    "fullName": "yesenia",
+    "role": "user",
+    "phone": "",
+    "address": ""
+  },
+  {
+    "id": 14,
+    "email": "aryesigon@gmail.com",
+    "password": "Yesenia2025!",
+    "fullName": "Yesenia",
+    "role": "user",
+    "phone": "1138785705",
+    "address": ""
   }
 ]

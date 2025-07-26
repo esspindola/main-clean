@@ -19,7 +19,7 @@ function App() {
   return (
     <AuthProvider>
       <PluginProvider>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true }}>
         <Routes>
           {/* Auth Routes - No sidebar */}
           <Route path="/login" element={<LoginPage />} />
