@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   User,
-  Mail,
-  Phone,
-  MapPin,
   Shield,
   Eye,
   EyeOff,
   Globe,
-  Clock,
-  DollarSign,
   Bell,
   CreditCard,
   Download,
   HelpCircle,
   MessageSquare,
   Activity,
-  LogOut,
-  Trash2,
   Save,
   Camera,
   Smartphone,
   Monitor,
-  Check,
   X,
-  Plus,
-  Edit3,
 } from 'lucide-react';
 
 interface Session {
@@ -163,13 +153,65 @@ const ProfilePage: React.FC = () => {
     },
   ]);
 
+  // Estado para el formulario de nueva tarjeta
   const [newCard, setNewCard] = useState({
     number: '',
     expiryMonth: '',
     expiryYear: '',
     cvc: '',
     holderName: '',
+    type: 'visa' as 'visa' | 'mastercard' | 'amex',
   });
+
+
+  const handleNewCardChange = (field: string, value: string) => {
+    setNewCard(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Limpia el formulario de nueva tarjeta
+  const resetNewCard = () => {
+    setNewCard({
+      number: '',
+      expiryMonth: '',
+      expiryYear: '',
+      cvc: '',
+      holderName: '',
+      type: 'visa',
+    });
+  };
+
+  // Guardar nueva tarjeta o editar existente
+  const handleSaveCard = () => {
+    if (editingCard) {
+      setPaymentCards(prev =>
+        prev.map(card =>
+          card.id === editingCard.id
+            ? { ...editingCard, ...newCard, lastFour: newCard.number.slice(-4) }
+            : card,
+        ),
+      );
+    } else {
+      // Validación simple (puedes mejorarla)
+      if (!newCard.number || !newCard.expiryMonth || !newCard.expiryYear || !newCard.cvc || !newCard.holderName) {
+        alert('Por favor completa todos los campos de la tarjeta.');
+        return;
+      }
+      const lastFour = newCard.number.slice(-4);
+      const cardToAdd: PaymentCard = {
+        id: Date.now().toString(),
+        type: newCard.type,
+        lastFour,
+        expiryMonth: newCard.expiryMonth,
+        expiryYear: newCard.expiryYear,
+        holderName: newCard.holderName,
+        isDefault: false,
+      };
+      setPaymentCards(prev => [...prev, cardToAdd]);
+    }
+    resetNewCard();
+    setShowAddCardForm(false);
+    setEditingCard(null);
+  };
 
   const sections = [
     { id: 'profile', name: 'Profile', icon: User },
@@ -229,9 +271,11 @@ const ProfilePage: React.FC = () => {
     setEditingCard(null);
   };
 
+  // Abre el formulario para agregar una nueva tarjeta
   const handleAddCard = () => {
     setShowAddCardForm(true);
     setEditingCard(null);
+    resetNewCard();
   };
 
   const handleSetDefaultCard = (cardId: string) => {
@@ -250,27 +294,6 @@ const ProfilePage: React.FC = () => {
     setShowAddCardForm(true);
   };
 
-  const handleSaveCard = () => {
-    if (editingCard) {
-      setPaymentCards(prev => prev.map(card =>
-        card.id === editingCard.id ? editingCard : card,
-      ));
-    } else {
-      // Add new card logic
-      const newCard: PaymentCard = {
-        id: Date.now().toString(),
-        type: 'visa',
-        lastFour: '1234',
-        expiryMonth: '12',
-        expiryYear: '2025',
-        holderName: 'John Doe',
-        isDefault: false,
-      };
-      setPaymentCards(prev => [...prev, newCard]);
-    }
-    setShowAddCardForm(false);
-    setEditingCard(null);
-  };
 
   const getCardIcon = (type: string) => {
     switch (type) {
@@ -608,7 +631,7 @@ const ProfilePage: React.FC = () => {
       <div>
         <h3 className="text-lg font-medium text-text-primary mb-4">Notification Types</h3>
         <div className="space-y-4">
-          {Object.entries(profileData.notifications).map(([key, value]) => (
+          {Object.keys(profileData.notifications).map((key) => (
             <div key={key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-divider">
               <div>
                 <div className="font-medium text-text-primary">
@@ -921,13 +944,168 @@ const ProfilePage: React.FC = () => {
                 onClick={handleClosePaymentModal}
                 className="p-2 hover:bg-gray-50 rounded-full transition-colors"
               >
-                <X size={20} className="text-text-secondary" />
+                <X size={20} />
               </button>
             </div>
-
             {/* Modal Content */}
             <div className="p-6">
-              <p className="text-text-secondary">Payment modal content goes here.</p>
+              {showAddCardForm ? (
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    handleSaveCard();
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Card Number</label>
+                    <input
+                      type="text"
+                      value={newCard.number}
+                      onChange={e => handleNewCardChange('number', e.target.value)}
+                      className="w-full p-2 border border-divider rounded"
+                      maxLength={19}
+                      required
+                    />
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium mb-1">Expiry Month</label>
+                      <input
+                        type="text"
+                        value={newCard.expiryMonth}
+                        onChange={e => handleNewCardChange('expiryMonth', e.target.value)}
+                        className="w-full p-2 border border-divider rounded"
+                        maxLength={2}
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium mb-1">Expiry Year</label>
+                      <input
+                        type="text"
+                        value={newCard.expiryYear}
+                        onChange={e => handleNewCardChange('expiryYear', e.target.value)}
+                        className="w-full p-2 border border-divider rounded"
+                        maxLength={4}
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium mb-1">CVC</label>
+                      <input
+                        type="text"
+                        value={newCard.cvc}
+                        onChange={e => handleNewCardChange('cvc', e.target.value)}
+                        className="w-full p-2 border border-divider rounded"
+                        maxLength={4}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Cardholder Name</label>
+                    <input
+                      type="text"
+                      value={newCard.holderName}
+                      onChange={e => handleNewCardChange('holderName', e.target.value)}
+                      className="w-full p-2 border border-divider rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Type</label>
+                    <select
+                      value={newCard.type}
+                      onChange={e => handleNewCardChange('type', e.target.value)}
+                      className="w-full p-2 border border-divider rounded"
+                    >
+                      <option value="visa">Visa</option>
+                      <option value="mastercard">Mastercard</option>
+                      <option value="amex">Amex</option>
+                    </select>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      type="submit"
+                      className="bg-primary text-black px-4 py-2 rounded hover:bg-primary-600"
+                    >
+                      Save Card
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAddCardForm(false);
+                        setEditingCard(null);
+                        resetNewCard();
+                      }}
+                      className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="mb-4 flex justify-between items-center">
+                    <h4 className="font-medium">Your Cards</h4>
+                    <button
+                      onClick={handleAddCard}
+                      className="bg-complement text-white px-3 py-1 rounded hover:bg-complement-600"
+                    >
+                      Add Card
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    {paymentCards.map(card => (
+                      <div key={card.id} className="flex items-center justify-between p-3 border border-divider rounded">
+                        <div>
+                          <span className="mr-2">{getCardIcon(card.type)}</span>
+                          <span>•••• {card.lastFour}</span>
+                          <span className="ml-2 text-xs text-text-secondary">
+                            {card.type.toUpperCase()} • {card.expiryMonth}/{card.expiryYear}
+                          </span>
+                          {card.isDefault && (
+                            <span className="ml-2 px-2 py-1 text-xs bg-success-100 text-success-800 rounded">Default</span>
+                          )}
+                        </div>
+                        <div className="flex space-x-2">
+                          {!card.isDefault && (
+                            <button
+                              onClick={() => handleSetDefaultCard(card.id)}
+                              className="text-complement hover:underline text-xs"
+                            >
+                              Set Default
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              handleEditCard(card);
+                              setNewCard({
+                                number: '',
+                                expiryMonth: card.expiryMonth,
+                                expiryYear: card.expiryYear,
+                                cvc: '',
+                                holderName: card.holderName,
+                                type: card.type,
+                              });
+                            }}
+                            className="text-primary hover:underline text-xs"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCard(card.id)}
+                            className="text-error hover:underline text-xs"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface Plugin {
-  id: string;
-  name: string;
-  status: 'active' | 'inactive' | 'coming-soon';
-}
 
 interface PluginContextType {
   activePlugins: string[];

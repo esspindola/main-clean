@@ -4,7 +4,7 @@ import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { usePlugins } from '../contexts/PluginContext';
 
-interface Plugin {
+interface IPlugin {
   id: string;
   name: string;
   description: string;
@@ -24,8 +24,8 @@ const PluginStorePage: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const { isPluginActive, togglePlugin } = usePlugins();
-  const [plugins, setPlugins] = useState<Plugin[]>([]);
-  const [filteredPlugins, setFilteredPlugins] = useState<Plugin[]>([]);
+  const [plugins, setPlugins] = useState<IPlugin[]>([]);
+  const [filteredPlugins, setFilteredPlugins] = useState<IPlugin[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ const PluginStorePage: React.FC = () => {
   ];
 
   // Mock data for plugins
-  const mockPlugins: Plugin[] = [
+  const mockPlugins: IPlugin[] = [
     {
       id: 'ocr-module',
       name: 'OCR Document Scanner',
@@ -564,6 +564,21 @@ const PluginStorePage: React.FC = () => {
             </div>
           </div>
         )}
+        {/* Example usage buttons for navigate and showPluginNotification */}
+        <div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
+          <button
+            onClick={() => navigate('/')}
+            className="bg-blue-100 text-blue-800 py-2 px-4 rounded-lg font-medium hover:bg-blue-200 transition-colors"
+          >
+          Go Home (navigate)
+          </button>
+          <button
+            onClick={() => showPluginNotification('This is a test notification!', 'info')}
+            className="bg-green-100 text-green-800 py-2 px-4 rounded-lg font-medium hover:bg-green-200 transition-colors"
+          >
+          Show Notification
+          </button>
+        </div>
       </div>
     </div>
   );

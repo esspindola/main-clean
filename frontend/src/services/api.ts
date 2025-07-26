@@ -1,3 +1,6 @@
+// @ts-expect-error: Ensure DOM lib is included for fetch types
+import type { RequestInit } from 'node-fetch';
+
 // Configuración de la API
 const API_BASE_URL: string = import.meta.env.VITE_API_URL || 'http://localhost:4444/api';
 const OCR_API_BASE_URL: string = import.meta.env.VITE_OCR_API_URL || 'http://127.0.0.1:8001/api/v1';

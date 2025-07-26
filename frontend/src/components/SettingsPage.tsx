@@ -20,7 +20,7 @@ import {
 interface SettingsSection {
   id: string;
   title: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   description: string;
 }
 
@@ -116,7 +116,7 @@ const SettingsPage: React.FC = () => {
 
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch (error) {
+    } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } finally {
@@ -592,7 +592,7 @@ const SettingsPage: React.FC = () => {
                         : 'text-text-secondary hover:text-text-primary hover:bg-gray-50'
                     }`}
                   >
-                    <Icon size={20} />
+                    <Icon width={20} height={20} />
                     <div>
                       <div className="font-medium">{section.title}</div>
                       <div className="text-sm opacity-75">{section.description}</div>
