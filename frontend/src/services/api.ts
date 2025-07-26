@@ -345,12 +345,20 @@ export const ocrAPI = {
     
     // Configuración más robusta con logs detallados
     console.log('🚀 Iniciando procesamiento OCR...');
+<<<<<<< HEAD
     console.log('📍 URL destino:', `http://localhost:8001/api/v1/invoice/process`);
+=======
+    console.log('📍 URL destino:', `${API_CONFIG.OCR_BASE_URL}/invoice/process`);
+>>>>>>> origin/luis-develop
     console.log('📄 Archivo:', file.name, 'Tamaño:', file.size, 'bytes');
     
     const startTime = Date.now();
     
+<<<<<<< HEAD
     return fetch(`http://localhost:8001/api/v1/invoice/process`, {
+=======
+    return fetch(`${API_CONFIG.OCR_BASE_URL}/invoice/process`, {
+>>>>>>> origin/luis-develop
       method: 'POST',
       body: formData,
       mode: 'cors',
