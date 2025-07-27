@@ -1,24 +1,3 @@
-# 🚀 ZatoBox v2.0 - Intelligent Point of Sale System
-
-A complete decentralised point of sale system with intelligent inventory, OCR, advanced product management, and professional configuration currently being build on Internet Computer Protocol(ICP).
-
-## 🚀 Quick Start
-- [🌐 ICP Integration Setup](#-internet-computer-protocol-icp-integration) - Web3 blockchain integration
-- [🧪 Testing Guide](#-testing) - Run tests and verify functionality
-
-## ✨ Main Features
-
-- 🛍️ **Product Management**: Complete CRUD with images and categorization
-- 📊 **Intelligent Inventory**: Stock control and movements with AI
-- 🔍 **Advanced OCR**: Automatic document and invoice scanning
-- 💳 **Payment System**: Integrated multiple payment methods
-- 📈 **Sales Reports**: Detailed analysis and export
-- 🌐 **Web3 Authentication**: Decentralized Internet Identity (ICP) integration
-- 🔐 **Passwordless Security**: Blockchain-based digital identity authentication
-- ⚙️ **Complete Configuration**: Professional configuration panel
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-
 <!-- PROJECT SHIELDS -->
 [![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![MIT License][license-shield]][license-url] [![LinkedIn][linkedin-shield]][linkedin-url]
 
@@ -85,18 +64,23 @@ A complete decentralised point of sale system with intelligent inventory, OCR, a
   </ol>
 </details>
 
-## ✨ Main Features
+### 🚀 Quick Start
+- [🌐 ICP Integration Setup](#-internet-computer-protocol-icp-integration) - Web3 blockchain integration
+- [🧪 Testing Guide](#-testing) - Run tests and verify functionality
 
-- 🛍️ **Product Management**: Full CRUD with images and categorization
-- 📊 **Smart Inventory**: Stock control and movements with AI
-- 🔍 **Advanced OCR**: Automatic document and invoice scanning
-- 💳 **Payment System**: Multiple integrated payment methods
-- 📈 **Sales Reports**: Detailed analysis and export
-- 🔐 **Secure Authentication**: JWT with user roles and 2FA
-- ⚙️ **Full Configuration**: Professional configuration panel
-- 📱 **Modern Interface**: React + TypeScript + Tailwind CSS
-- ⚡ **Robust Backend**: Node.js + Express + ICP Canisters
-- 🔌 **Plugin System**: Extensible and configurable modules
+### ✨ Main Features
+
+- **🛍️ Product Management:** Full CRUD with images and categorization  
+- **📊 Smart Inventory:** Stock control and movements powered by AI  
+- **🔍 Advanced OCR:** Automatic scanning of documents and invoices  
+- **💳 Payment System:** Multiple integrated payment methods (crypto & fiat)  
+- **📈 Sales Reports:** Detailed analytics with export options  
+- **🔐 Authentication & Security:** Passwordless blockchain-based identity (ICP) with JWT roles and optional 2FA  
+- **🌐 Web3 Integration:** Decentralized Internet Identity via ICP canisters  
+- **📱 Modern Frontend:** React + TypeScript + Tailwind CSS  
+- **⚡ Robust Backend:** Node.js + Express + ICP Canisters  
+- **🔌 Plugin System:** Extensible, configurable modules for customization  
+- **⚙️ Professional Configuration:** Complete control panel for admins
 
 ## 🔮 Future Web3(ICP) Integration Plans
 
