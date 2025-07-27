@@ -1,5 +1,6 @@
 <!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![MIT License][license-shield]][license-url] [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![Issues][issues-shield]][issues-url] [![MIT License][license-shield]][license-url] [![LinkedIn][linkedin-shield]](https://www.linkedin.com/in/ikhunsa/) [![Discord][discord-shield]](https://discord.com/invite/2zUVsv9aMF)
+
 
 <!-- PROJECT LOGO -->
 <br />
@@ -1336,6 +1337,7 @@ python app-light-fixed.py
 *Developed with ❤️ to make commerce smarter and more efficient.*
 
 <!-- MARKDOWN LINKS & IMAGES -->
+[discord-shield]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?style=for-the-badge&logo=discord&logoColor=white
 [invisible-shield]: https://img.shields.io/badge/invisible-shield-gray?style=for-the-badge
 [invisible-url]: https://github.com/ZatoBox/main/graphs/contributors
 [contributors-shield]: https://img.shields.io/github/contributors/ZatoBox/main.svg?style=for-the-badge
