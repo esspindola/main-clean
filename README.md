@@ -14,7 +14,7 @@
   <p align="center">
     A complete point of sale system with smart inventory, OCR, advanced product management, and professional configuration.
     <br />
-    <a href="https://github.com/ZatoBox/main"><strong>Explore Documentation »</strong></a>
+    <a href="https://github.com/ZatoBox/Documents"><strong>Explore Documentation »</strong></a>
     <br />
     <br />
     <a href="https://youtu.be/gA_XNPI7Bbs?si=7t28gQsBMOhAyA_X">View Demo</a>
