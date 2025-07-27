@@ -16,7 +16,7 @@
     <a href="https://github.com/ZatoBox/main"><strong>Explore Documentation »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ZatoBox/main">View Demo</a>
+    <a href="https://youtu.be/gA_XNPI7Bbs?si=7t28gQsBMOhAyA_X">View Demo</a>
     &middot;
     <a href="https://github.com/ZatoBox/main/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
