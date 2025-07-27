@@ -11,7 +11,7 @@ interface AuthContextType {
   isLoading: boolean;
   authType: 'traditional' | 'icp' | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: any) => Promise<void>;
+  register: (userData: Partial<APIUser>) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<APIUser>) => void;
   setICPUser: (user: ICPUser, token: string) => void;
@@ -42,22 +42,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = !!token && !!user && authType === 'traditional';
   const isICPAuthenticated = !!token && !!icpUser && authType === 'icp';
 
+  // Clear ICP authentication state
+  const clearICPAuth = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('authType');
+    setToken(null);
+    setICPUserState(null);
+    setAuthType(null);
+  };
+
   // Check if user is authenticated on mount
   useEffect(() => {
-<<<<<<< HEAD
-    const checkAuth = async () => {
+    const checkAuth = async() => {
       const storedToken = localStorage.getItem('token');
       const storedAuthType = localStorage.getItem('authType') as 'traditional' | 'icp' | null;
-      
-      console.log('Auth check - storedToken:', !!storedToken, 'storedAuthType:', storedAuthType);
-      
+
+      // console.log('Auth check - storedToken:', !!storedToken, 'storedAuthType:', storedAuthType);
+
       if (storedToken && storedAuthType) {
         setToken(storedToken);
         setAuthType(storedAuthType);
-=======
-    const checkAuth = async() => {
-      if (token) {
->>>>>>> main
+
         try {
           if (storedAuthType === 'traditional') {
             const response = await authAPI.getCurrentUser();
@@ -77,8 +82,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               clearICPAuth();
             }
           }
-        } catch (error) {
-          console.error('Auth check failed:', error);
+        } catch {
+          // console.error('Auth check failed');
           // Clear authentication state on error
           if (storedAuthType === 'traditional') {
             clearTraditionalAuth();
@@ -101,17 +106,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthType(null);
   };
 
-  const clearICPAuth = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('authType');
-    setToken(null);
-    setICPUserState(null);
-    setAuthType(null);
-  };
-
   // Debug function to clear all auth data
   const clearAllAuthData = () => {
-    console.log('Clearing all authentication data...');
+    // console.log('Clearing all authentication data...');
     localStorage.clear();
     setToken(null);
     setUser(null);
@@ -121,7 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Add to window for debugging (remove in production)
   if (typeof window !== 'undefined') {
-    (window as any).clearAuth = clearAllAuthData;
+    (window as unknown as { clearAuth?: () => void }).clearAuth = clearAllAuthData;
   }
 
   const login = async(email: string, password: string) => {
@@ -135,12 +132,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData);
       setAuthType('traditional');
     } catch (error) {
-      console.error('Login failed:', error);
+      // console.error('Login failed:', error);
       throw error;
     }
   };
 
-  const register = async(userData: any) => {
+  const register = async(userData: Partial<APIUser>) => {
     try {
       const response = await authAPI.register(userData);
       const { token: newToken, user: newUser } = response;
@@ -151,44 +148,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(newUser);
       setAuthType('traditional');
     } catch (error) {
-      console.error('Registration failed:', error);
+      // console.error('Registration failed:', error);
       throw error;
     }
   };
 
-<<<<<<< HEAD
   const setICPUser = (user: ICPUser, token: string) => {
     localStorage.setItem('token', token);
     localStorage.setItem('authType', 'icp');
     setToken(token);
     setICPUserState(user);
     setAuthType('icp');
-=======
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-
-    // Call logout API (optional, for server-side session cleanup)
-    authAPI.logout().catch(console.error);
->>>>>>> main
   };
 
   const logout = () => {
     if (authType === 'traditional') {
+    // Call logout API (optional, for server-side session cleanup)
+    // eslint-disable-next-line no-console
+      authAPI.logout().catch(() => {});
       clearTraditionalAuth();
-      // Call logout API (optional, for server-side session cleanup)
-      authAPI.logout().catch(console.error);
     } else if (authType === 'icp') {
       icpLogout();
     }
   };
 
-  const icpLogout = async () => {
+  const icpLogout = async() => {
     try {
       await icpAuthService.logout();
-    } catch (error) {
-      console.error('ICP logout failed:', error);
+    } catch {
+    // eslint-disable-next-line no-console
+    // console.error('ICP logout failed');
     } finally {
       clearICPAuth();
     }
