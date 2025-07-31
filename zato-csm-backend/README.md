@@ -18,7 +18,7 @@
 pip install fastapi uvicorn python-multipart PyJWT psycopg2-binary pymysql
 
 # 3. Configurar PYTHONPATH
-$env:PYTHONPATH = "C:\caminho\para\DoraHacks\backend"
+$env:PYTHONPATH = "C:\caminho\para\zato-csm-backend"
 
 # 4. Executar
 python -m uvicorn main:app --reload
@@ -196,10 +196,10 @@ Verifique as configurações em `config/database.py`:
 Se encontrar erros de import, configure o PYTHONPATH:
 ```
 # Windows PowerShell
-$env:PYTHONPATH = "C:\caminho\para\DoraHacks\backend"
+$env:PYTHONPATH = "C:\caminho\para\zato-csm-backend"
 
 # Windows CMD
-set PYTHONPATH=C:\caminho\para\DoraHacks\backend
+set PYTHONPATH=C:\caminho\para\ zato-csm-backend
 ```
 
 ## 💡 Exemplos de Uso
