@@ -21,8 +21,10 @@ def get_current_user(request: Request, db=Depends(get_db_connection)):
     payload = verify_token(token)
     user_id = payload.get("user_id")
 
+    # Extract connection from generator
+    db_conn = next(db)
     # Using UserRepository to seek information
-    user_repo = UserRepository(db)
+    user_repo = UserRepository(db_conn)
     user = user_repo.find_by_user_id(user_id)
 
     if not user:

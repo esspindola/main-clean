@@ -1,11 +1,6 @@
 from fastapi import HTTPException
-from typing import List, Optional
 
-import pymysql
-import psycopg2.extras
 from repositories.base_repository import BaseRepository
-
-from datetime import datetime
 
 from utils.timezone_utils import get_current_time_with_timezone
 
