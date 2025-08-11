@@ -12,7 +12,7 @@
 ### Instalação
 ```bash
 # 1. Ativar ambiente virtual
-
+.venv\Scripts\activate
 
 # 2. Instalar dependências
 pip install fastapi uvicorn python-multipart PyJWT psycopg2-binary pymysql
