@@ -24,7 +24,7 @@ python-dotenv==1.0.0
 tqdm==4.66.1
 
 # --- Image processing básico ---
-opencv-python-headless==4.11.0.86
+opencv-python-headless==4.8.1.78
 
 # --- Text processing ---
 python-bidi==0.4.0

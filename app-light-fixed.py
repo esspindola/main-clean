@@ -16,9 +16,12 @@ import io
 import logging
 from pdf2image import convert_from_bytes
 
+<<<<<<< HEAD
+=======
 # Configurar la ruta de Tesseract
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
+>>>>>>> origin/luis-develop
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174', 'http://127.0.0.1:5175'], 
      allow_headers=['Content-Type', 'Authorization'], 

@@ -236,22 +236,12 @@ Write-Status "Iniciando Servidor OCR (puerto 5000)..." $Yellow
 try {
     $ocrJob = Start-Job -ScriptBlock {
         Set-Location $using:PWD
-        $venvPython = Join-Path $using:PWD ".venv\Scripts\python.exe"
         $env:PATH += ";C:\Program Files\Tesseract-OCR"
-        $logFile = Join-Path $using:PWD "ocr_output.log"
-        $errorFile = Join-Path $using:PWD "ocr_error.log"
-        try {
-            & $venvPython app-light-fixed.py *> $logFile 2> $errorFile
-        } catch {
-            $errorMessage = $_.Exception.Message
-            "Error: $errorMessage" | Out-File -FilePath $errorFile -Append -Encoding UTF8
-            throw $_
-        }
+        & $using:pythonCommand app-light-fixed.py
     }
     Write-Status "Servidor OCR iniciado correctamente" $Green "SUCCESS"
 } catch {
     Write-Status "Error al iniciar Servidor OCR: $($_.Exception.Message)" $Red "ERROR"
-    Write-Status "Revisa los archivos ocr_output.log y ocr_error.log para más detalles." $Yellow "WARNING"
     exit 1
 }
 
@@ -349,4 +339,4 @@ if (-not $Silent) {
         
         Write-Status "Servicios detenidos" $Green "SUCCESS"
     }
-}
+} 
