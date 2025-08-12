@@ -275,7 +275,7 @@ class ProcessInvoice(Resource):
                     import os
                     sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
                     
-                    from robust_multi_engine_ocr import RobustMultiEngineOCR
+                    from OCR.robust_multi_engine_ocr import RobustMultiEngineOCR
                     
                     robust_system = RobustMultiEngineOCR(
                         yolo_model=current_app.model_manager.yolo_model if hasattr(current_app, 'model_manager') else None,

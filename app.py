@@ -763,7 +763,7 @@ def process_image_structured(file, options=None):
         
         # Importar sistema robusto multi-motor
         try:
-            from robust_multi_engine_ocr import RobustMultiEngineOCR
+            from OCR.robust_multi_engine_ocr import RobustMultiEngineOCR
             robust_system = RobustMultiEngineOCR(yolo_model=model, model_classes=model_classes)
             print("✅ Sistema robusto multi-motor inicializado correctamente")
         except Exception as e:
@@ -1777,7 +1777,7 @@ def process_image_structured(file, options=None):
         
         # Importar sistema robusto multi-motor
         try:
-            from robust_multi_engine_ocr import RobustMultiEngineOCR
+            from OCR.robust_multi_engine_ocr import RobustMultiEngineOCR
             robust_system = RobustMultiEngineOCR(yolo_model=model, model_classes=model_classes)
             print("✅ Sistema robusto multi-motor inicializado correctamente")
         except Exception as e:
