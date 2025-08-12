@@ -58,7 +58,7 @@ class ProductService:
         if not product_id or product_id <=0:
             raise HTTPException(status_code=400, detail="Invalid product ID")
 
-        product = self.product_repo.find_by_user_id(product_id)
+        product = self.product_repo.find_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
         return product
