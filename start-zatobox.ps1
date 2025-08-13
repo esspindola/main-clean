@@ -195,10 +195,8 @@ function Start-OCR {
 
     Write-Status "Iniciando Servidor OCR (puerto 5000)..." $Yellow
     try {
-        Start-Job -ScriptBlock {
-            Set-Location $using:ocrPath
-            & cmd /c "$using:activateScript && python $using:ocrScript"
-        } | Out-Null
+        Set-Location $ocrPath
+        & cmd /c "$activateScript && python $ocrScript"
         Write-Status "Servidor OCR iniciado correctamente" $Green "SUCCESS"
     } catch {
         Write-Status "Error al iniciar Servidor OCR: $($_.Exception.Message)" $Red "ERROR"
