@@ -22,14 +22,14 @@ def login(email: str = Form(...),
     return result
 
 @router.post('/register')
-def register(firstName: str=Form(...),
-             lastName: str=Form(...),
+def register(full_name: str=Form(...),
              email: str = Form(...),
              password: str = Form(...),
              phone: str = Form(None),
+             address: str = Form(None),
              auth_service = Depends(_get_auth_service)
              ):
-    result = auth_service.register(firstName, lastName, email, password, phone)
+    result = auth_service.register(full_name, email, password, phone, address)
     return result
 
 @router.post('/logout')
@@ -42,7 +42,7 @@ def get_current_user(user = Depends((get_current_user))):
 
 @router.get('/users')
 def list_users(current_user = Depends(get_current_user), auth_service=Depends(_get_auth_service)):
-    if not current_user.get('is_admin'):
+    if not current_user.get('admin'):
         raise HTTPException(status_code= 403,detail="Acess denied")
     return auth_service.get_list_users()
 
@@ -58,6 +58,6 @@ def get_profile(user_id: int,
 @router.put('/profile/{user_id}')
 def update_profile(user_id: int, updates: dict=Body(...),
                    current_user = Depends(get_current_user), auth_service=Depends(_get_auth_service)):
-    if not current_user.get('is_admin'):
+    if not current_user.get('admin'):
         raise HTTPException(status_code=403, detail='Acess denied')
     return auth_service.update_profile(user_id, updates)

@@ -2,8 +2,9 @@ from repositories.user_repositories import UserRepository
 from fastapi import HTTPException
 from typing import Optional
 from datetime import datetime, timedelta
-import jwt
+from jwt import encode as jwt_encode, decode as jwt_decode, ExpiredSignatureError, InvalidTokenError
 from config.settings import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from utils.password_utils import hash_password, verify_password
 
 
 class AuthService:
@@ -15,7 +16,7 @@ class AuthService:
         to_encode = data.copy()
         expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt_encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
     def login(self, email: str, password: str):
@@ -24,39 +25,71 @@ class AuthService:
             raise HTTPException(status_code=400, detail="Email and password are required")
 
         # Finding by user
-        user = self.user_repo.find_by_credentials(email, password)
+        user = self.user_repo.find_by_email(email)
 
         # Business rule
         if not user:
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
+        # Verify password
+        try:
+            if not verify_password(password, user["password"]):
+                raise HTTPException(status_code=401, detail="Invalid credentials")
+        except Exception as e:
+            print(f"Password verification error: {e}")
+            raise HTTPException(status_code=500, detail="Authentication error")
+
+        # Remove password from user data before returning
+        user_data = dict(user)
+        user_data.pop('password', None)
+
         # Generates token
-        token = self.create_access_token({"user_id": user["id"]})
+        try:
+            token = self.create_access_token({"user_id": user["id"]})
+        except Exception as e:
+            print(f"Token creation error: {e}")
+            raise HTTPException(status_code=500, detail="Token generation error")
 
-        return {"user": user, "token": token}
+        return {"user": user_data, "token": token}
 
-    def register(self, firstName: str, lastName: str, email: str, password: str, phone: str = None):
+    def register(self, full_name: str, email: str, password: str, phone: str = None, address: str = None):
         """
         Where will register user
         :param email: string
         :param password: string
         :param fullName: string
         :param phone: string
+        :param address: string
         :return:
 
         Also, will make validations of email existent
         """
         # Validation input data
-        if not email or not password or not firstName or not lastName:
+        if not email or not password or not full_name:
             raise HTTPException(status_code=400, detail="Email, password and fullname are required")
         # Check if user already exists
         user = self.user_repo.find_by_email(email)
         if user:
             raise HTTPException(status_code=409, detail="Email already exists")
-        # Create user
-        user_id = self.user_repo.create_user(firstName, lastName,email, password, phone)
 
-        return self.login(email, password)
+        # Crypt password
+        hashed_password = hash_password(password)
+
+        # Create user
+        try:
+            user_id = self.user_repo.create_user(full_name, email, hashed_password, phone, address)
+            print(f"User created with ID: {user_id}")
+        except Exception as e:
+            print(f"User creation error: {e}")
+            raise HTTPException(status_code=500, detail="User creation failed")
+
+        # Login with original password
+        try:
+            return self.login(email, password)
+        except Exception as e:
+            print(f"Auto-login after register failed: {e}")
+            # Return success even if auto-login fails
+            return {"success": True, "message": "User created successfully. Please login manually."}
 
     def logout(self, token:str):
         self.blacklisted_token.add(token)
@@ -69,7 +102,7 @@ class AuthService:
         :return:
         """
         try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            payload = jwt_decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_id = payload.get("user_id")
             if not user_id:
                 raise HTTPException(status_code=401, detail="Invalid Token")
@@ -78,9 +111,9 @@ class AuthService:
                 raise HTTPException(status_code=401, detail="User not found")
 
             return user
-        except jwt.ExpiredSignatureError:
+        except ExpiredSignatureError:
             raise HTTPException(status_code=401, detail="Token has expired")
-        except jwt.InvalidTokenError:
+        except InvalidTokenError:
             raise HTTPException(status_code=401, detail="Invalid Token")
 
     def is_token_blacklisted(self, token:str) -> bool:

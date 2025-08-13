@@ -2,7 +2,7 @@ from repositories.base_repository import BaseRepository
 from utils.timezone_utils import get_current_time_with_timezone
 
 class SalesRepository(BaseRepository):
-    def create_sale(self, items: str=None, total: float, payment_method: str=None,
+    def create_sale(self, items: str, total: float, payment_method: str,
                     user_id: int, status: str='completed', user_timezone: str = "UTC"
                     ):
         created_at = get_current_time_with_timezone(user_timezone)
@@ -35,3 +35,4 @@ class SalesRepository(BaseRepository):
         with self._get_cursor() as cursor:
             cursor.execute("SELECT * FROM sales")
             return cursor.fetchall()
+
