@@ -16,21 +16,25 @@ def _get_auth_service(db=Depends(get_db_connection)) -> AuthService:
 
 
 @router.post("/login")
-def login(payload: dict = Body(...), auth_service=Depends(_get_auth_service)):
-    email = payload.get("email")
-    password = payload.get("password")
+def login(
+    email: str = Form(...),
+    password: str = Form(...),
+    auth_service=Depends(_get_auth_service),
+):
     result = auth_service.login(email, password)
     return result
 
 
 @router.post("/register")
-def register(payload: dict = Body(...), auth_service=Depends(_get_auth_service)):
-    firstName = payload.get("firstName")
-    lastName = payload.get("lastName")
-    email = payload.get("email")
-    password = payload.get("password")
-    phone = payload.get("phone")
-    result = auth_service.register(firstName, lastName, email, password, phone)
+def register(
+    full_name: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    phone: str = Form(None),
+    address: str = Form(None),
+    auth_service=Depends(_get_auth_service),
+):
+    result = auth_service.register(full_name, email, password, phone, address)
     return result
 
 
@@ -48,7 +52,7 @@ def get_current_user(user=Depends((get_current_user))):
 def list_users(
     current_user=Depends(get_current_user), auth_service=Depends(_get_auth_service)
 ):
-    if not current_user.get("is_admin"):
+    if not current_user.get("admin"):
         raise HTTPException(status_code=403, detail="Acess denied")
     return auth_service.get_list_users()
 
@@ -72,6 +76,6 @@ def update_profile(
     current_user=Depends(get_current_user),
     auth_service=Depends(_get_auth_service),
 ):
-    if not current_user.get("is_admin"):
+    if not current_user.get("admin"):
         raise HTTPException(status_code=403, detail="Acess denied")
     return auth_service.update_profile(user_id, updates)
