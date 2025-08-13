@@ -79,7 +79,7 @@
 - **🔐 Authentication & Security:** Passwordless blockchain-based identity (ICP) with JWT roles and optional 2FA  
 - **🌐 Web3 Integration:** Decentralized Internet Identity via ICP canisters  
 - **📱 Modern Frontend:** React + TypeScript + Tailwind CSS  
-- **⚡ Robust Backend:** Node.js + Express + ICP Canisters  
+- **⚡ Robust Backend:** Python + FastAPI
 - **🔌 Plugin System:** Extensible, configurable modules for customization  
 - **⚙️ Professional Configuration:** Complete control panel for admins
 
@@ -118,13 +118,10 @@
 
 [![React][React.js]][React-url]
 [![TypeScript][TypeScript]][TypeScript-url]
-[![Node.js][Node.js]][Node-url]
-[![Express][Express.js]][Express-url]
 [![Python][Python]][Python-url]
 [![Flask][Flask]][Flask-url]
 [![Tailwind CSS][Tailwind]][Tailwind-url]
 [![SQLite][SQLite]][SQLite-url]
-[![JavaScript][JavaScript]][JavaScript-url]
 [![HTML5][HTML5]][HTML5-url]
 [![CSS3][CSS3]][CSS3-url]
 [![Vite][Vite]][Vite-url]
@@ -147,8 +144,8 @@
  **Rust** - ICP canister development
 - **Internet Computer (ICP)** - Decentralized blockchain platform
 - **Internet Identity** - Web3 authentication service
-- **Node.js** - JavaScript runtime
-- **Express.js** - Minimalist web framework
+- **Python** - Python 3.12
+- **FastAPI** - High-performance web framework
 - **Multer** - File upload handling
 - **CORS** - Cross-origin resource sharing
 - **Jest** - Testing framework
@@ -163,8 +160,8 @@
 ## 🚀 Installation and Configuration
 
 ### Prerequisites
-- **Node.js** v18 or higher
-- **npm** v8 or higher
+- **Python** 3.12 or higher
+- **pip** to install Python dependencies
 - **Git** to clone the repository
 
 ### Quick Installation
@@ -177,7 +174,7 @@ cd zatobox
 
 2. **Install dependencies**
 ```bash
-npm install
+pip install -r requirements-light.txt
 ```
 
 3. **Run the project**
@@ -191,7 +188,7 @@ npm install
 #### Option B: Manual Commands
 ```bash
 # Terminal 1 - Backend
-npm run dev:backend
+python app-light-fixed.py
 
 # Terminal 2 - Frontend
 npm run dev:frontend
@@ -393,6 +390,11 @@ FrontPOSw-main/
 │   ├── test-server.js        # Development server
 │   ├── users.json            # User data
 │   └── package.json
+├── app-light-fixed.py        # OCR Server (Python/Flask)
+├── requirements-light.txt    # Python dependencies
+├── install-zatobox.ps1       # Installation script
+├── verificar-instalacion.ps1 # Verification script
+├── start-zatobox.ps1         # Startup script
 ├── shared/                   # Shared resources
 │   └── images/               # Original images
 ├── docs/                     # Documentation
