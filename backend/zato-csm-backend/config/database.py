@@ -15,7 +15,7 @@ MYSQL_CONFIG = {
 POSTGRES_CONFIG = {
     'host': 'localhost',
     'user': 'postgres',
-    'password': 'banco@246',
+    'password': 'mateo2510',
     'database': 'zatobox_csm_db',
     'port': 5432
 }

@@ -17,7 +17,7 @@ class UserRepository(BaseRepository):
 
     def find_by_credentials(self, email: str, password: str):
         with self._get_cursor() as cursor:
-            cursor.execute("SELECT id, email, fullName, role FROM users WHERE email=%s AND password=%s", (email, password))
+            cursor.execute("SELECT id, email, full_name, role FROM users WHERE email=%s AND password=%s", (email, password))
             return cursor.fetchone()
 
     def find_by_user_id(self, user_id: int):

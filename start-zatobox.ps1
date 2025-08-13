@@ -157,30 +157,6 @@ function Start-Frontend {
     }
 }
 
-# Función para iniciar el backend
-function Start-Backend {
-    $backendPath = Join-Path $PSScriptRoot "backend/zato-csm-backend"
-    $backendVenvPath = Join-Path $backendPath "venv"
-    $activateScript = Join-Path $backendVenvPath "Scripts\activate"
-
-    if (-not (Test-Path $activateScript)) {
-        Write-Status "Script de activación del backend no encontrado en: $activateScript" $Red "ERROR"
-        exit 1
-    }
-
-    Write-Status "Iniciando Backend (puerto 4444)..." $Yellow
-    try {
-        $backendJob = Start-Job -ScriptBlock {
-            Set-Location $using:backendPath
-            & cmd /c "$using:activateScript && uvicorn main:app --host 0.0.0.0 --port 4444"
-        }
-        Write-Status "Backend iniciado correctamente" $Green "SUCCESS"
-    } catch {
-        Write-Status "Error al iniciar Backend: $($_.Exception.Message)" $Red "ERROR"
-        exit 1
-    }
-}
-
 # Función para iniciar el OCR
 function Start-OCR {
     $ocrPath = Join-Path $PSScriptRoot "OCR"
@@ -195,10 +171,8 @@ function Start-OCR {
 
     Write-Status "Iniciando Servidor OCR (puerto 5000)..." $Yellow
     try {
-        Start-Job -ScriptBlock {
-            Set-Location $using:ocrPath
-            & cmd /c "$using:activateScript && python $using:ocrScript"
-        } | Out-Null
+        Set-Location $ocrPath
+        & cmd /c "$activateScript && python $ocrScript"
         Write-Status "Servidor OCR iniciado correctamente" $Green "SUCCESS"
     } catch {
         Write-Status "Error al iniciar Servidor OCR: $($_.Exception.Message)" $Red "ERROR"
@@ -227,22 +201,46 @@ function Start-AllServices {
     Start-Sleep -Seconds 5
 
     # Iniciar Backend
-    $backendPath = Join-Path $PSScriptRoot "backend/zato-csm-backend"
-    $backendVenvPath = Join-Path $backendPath "venv"
-    $activateBackend = Join-Path $backendVenvPath "Scripts\activate"
+    $backendRootPath = Join-Path $PSScriptRoot "backend"
+    $backendPath = Join-Path $backendRootPath "zato-csm-backend"
+    $backendVenvPath = Join-Path $backendPath ".venv"
+    $pythonExecutable = Join-Path $backendVenvPath "Scripts\python.exe"
+    $backendMain = Join-Path $backendPath "main.py"
 
-    if (-not (Test-Path $activateBackend)) {
-        Write-Status "Script de activación del backend no encontrado en: $activateBackend" $Red "ERROR"
+    if (-not (Test-Path $backendRootPath)) {
+        Write-Status "Ruta backend inexistente: $backendRootPath" $Red "ERROR"
+        exit 1
+    }
+
+    if (-not (Test-Path $backendPath)) {
+        Write-Status "Ruta zato-csm-backend inexistente: $backendPath" $Red "ERROR"
+        exit 1
+    }
+
+    if (-not (Test-Path $pythonExecutable)) {
+        Write-Status "Python del entorno virtual no encontrado en: $pythonExecutable" $Red "ERROR"
+        exit 1
+    }
+
+    if (-not (Test-Path $backendMain)) {
+        Write-Status "Archivo main.py no encontrado en: $backendMain" $Red "ERROR"
         exit 1
     }
 
     Write-Status "Iniciando Backend (puerto 4444)..." $Yellow
     try {
-        Start-Job -ScriptBlock {
+        $backendJob = Start-Job -ScriptBlock {
             Set-Location $using:backendPath
-            & cmd /c "$using:activateBackend && uvicorn main:app --host 0.0.0.0 --port 4444"
-        } | Out-Null
-        Write-Status "Backend iniciado correctamente" $Green "SUCCESS"
+            & $using:pythonExecutable -m uvicorn main:app --host 0.0.0.0 --port 4444
+        }
+        Start-Sleep -Seconds 5 # Espera para asegurarse de que el backend se inicie correctamente
+        if ($backendJob.State -ne "Running") {
+            Write-Status "Error: El backend no se está ejecutando después de iniciar el job." $Red "ERROR"
+            Receive-Job -Job $backendJob -Keep
+            Remove-Job -Job $backendJob
+            exit 1
+        }
+        Write-Status "Backend iniciado correctamente en segundo plano" $Green "SUCCESS"
     } catch {
         Write-Status "Error al iniciar Backend: $($_.Exception.Message)" $Red "ERROR"
         exit 1
