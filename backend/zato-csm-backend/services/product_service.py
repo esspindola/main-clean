@@ -5,16 +5,20 @@ from repositories.product_repositories import ProductRepository
 
 import os
 
+
 class ProductService:
     def __init__(self, product_repo: ProductRepository):
         self.product_repo = product_repo
 
-    def create_product(self, name: str,
-                        description: str,
-                        price: float,
-                        stock: int,
-                        category: str,
-                        images: List=None):
+    def create_product(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        stock: int,
+        category: str,
+        images: List = None,
+    ):
         # Validações
         if not name or not description or not category:
             raise HTTPException(status_code=400, detail="All fields are required")
@@ -27,10 +31,12 @@ class ProductService:
         images_paths = self._process_images(images) if images else []
 
         # Criar produto
-        product = self.product_repo.create_product(name, description, price, stock, category, ",".join(images_paths))
+        product = self.product_repo.create_product(
+            name, description, price, stock, category, ",".join(images_paths)
+        )
         return product
 
-    def _process_images(self, images:List):
+    def _process_images(self, images: List):
         image_paths = []
         upload_dir = "uploads/products/"
         os.makedirs(upload_dir, exist_ok=True)
@@ -55,25 +61,25 @@ class ProductService:
         return self.product_repo.find_by_name(name)
 
     def get_product(self, product_id):
-        if not product_id or product_id <=0:
+        if not product_id or product_id <= 0:
             raise HTTPException(status_code=400, detail="Invalid product ID")
 
-        product = self.product_repo.find_by_user_id(product_id)
+        product = self.product_repo.find_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
         return product
 
-    def update_product(self, product_id: int,updates: dict):
+    def update_product(self, product_id: int, updates: dict):
         # Validation allowed fields
-        allowed_fields = ['name', 'description', 'price', 'stock', 'category', 'images']
+        allowed_fields = ["name", "description", "price", "stock", "category", "images"]
 
         for field in updates.keys():
             if field not in allowed_fields:
                 raise HTTPException(status_code=400, detail=f"Invalid field: {field}")
 
-        if 'price' in updates and updates['price'] <= 0:
+        if "price" in updates and updates["price"] <= 0:
             raise HTTPException(status_code=400, detail="Price must be positive")
-        if 'stock' in updates and updates['stock'] < 0:
+        if "stock" in updates and updates["stock"] < 0:
             raise HTTPException(status_code=400, detail="Stock cannot be negative")
 
         return self.product_repo.update_product(product_id, updates)
