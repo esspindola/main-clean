@@ -10,8 +10,7 @@ router = APIRouter(prefix="/api/sales", tags=["sales"])
 
 
 def _get_sale_service(db=Depends(get_db_connection)) -> SalesService:
-    db_conn = next(db)  # extract connection
-    sales_repo = SalesRepository(db_conn)  # postgres is default db
+    sales_repo = SalesRepository(db)
     return SalesService(sales_repo)
 
 

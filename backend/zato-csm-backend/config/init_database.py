@@ -1,7 +1,7 @@
-from config.database import get_db_connection
+from config.database import connect_postgres
 
 
-def create_tables_sql(db_type: str = "postgres"):
+def create_tables_sql():
     return """
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -51,28 +51,37 @@ def create_tables_sql(db_type: str = "postgres"):
 
 
 def init_database():
-    db_gen = get_db_connection()
-    db = next(db_gen)
-
+    conn = None
+    cursor = None
     try:
-        cursor = db.cursor()
+        conn = connect_postgres()
+        cursor = conn.cursor()
 
-        # Executar cada statement separadamente
-        sql_statements = create_tables_sql().split(";")
-        # inject_data = default_data().split(';')
+        # Execute each statement separately
+        for statement in create_tables_sql().split(";"):
+            stmt = statement.strip()
+            if stmt:
+                cursor.execute(stmt)
 
-        for statement in sql_statements:
-            if statement.strip():
-                cursor.execute(statement.strip())
-
-        db.commit()
-        print("✅ Database initialized successfully!")
+        conn.commit()
+        print("Database initialized successfully!")
 
     except Exception as e:
-        print(f"❌ Error initializing database: {e}")
-        db.rollback()
+        print(f"Error initializing database: {e}")
+        if conn:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
         raise
     finally:
         if cursor:
-            cursor.close()
-        db.close()
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass

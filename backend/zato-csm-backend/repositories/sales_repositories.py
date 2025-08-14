@@ -14,24 +14,14 @@ class SalesRepository(BaseRepository):
     ):
         created_at = get_current_time_with_timezone(user_timezone)
 
-        if self.db_type == "mysql":
-            with self._get_cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO sales (items, total, payment_method, user_id, status, created_at) "
-                    "VALUES (%s, %s, %s, %s, %s, %s)",
-                    (items, total, payment_method, user_id, status, created_at),
-                )
-                self.db.commit()
-                return cursor.lastrowid
-        else:
-            with self._get_cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO sales (items, total, payment_method, user_id, status, created_at) "
-                    "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
-                    (items, total, payment_method, user_id, status, created_at),
-                )
-                self.db.commit()
-                return cursor.fetchone()["id"]
+        with self._get_cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO sales (items, total, payment_method, user_id, status, created_at) "
+                "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
+                (items, total, payment_method, user_id, status, created_at),
+            )
+            self.db.commit()
+            return cursor.fetchone()["id"]
 
     def find_by_id(self, sale_id: int):
         with self._get_cursor() as cursor:
