@@ -5,14 +5,13 @@ from config.database import get_db_connection
 from repositories.user_repositories import UserRepository
 from services.auth_service import AuthService
 from utils.dependencies import get_current_token, get_current_user
-from config.database import get_postgres_db
+
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 def _get_auth_service(db=Depends(get_db_connection)) -> AuthService:
-    db_conn = next(db)  # extract connection
-    auth_repo = UserRepository(db_conn)  # postgres is default db
+    auth_repo = UserRepository(db)
     return AuthService(auth_repo)
 
 

@@ -3,6 +3,7 @@ from typing import List
 from datetime import datetime
 from repositories.product_repositories import ProductRepository
 
+
 class InventoryService:
     def __init__(self, product_repo: ProductRepository):
         self.product_repo = product_repo
@@ -18,7 +19,7 @@ class InventoryService:
                 "productName": p["name"],
                 "quantity": p["stock"],
                 "minStock": p.get("min_stock", 0),
-                "lastUpdated": p.get("lastUpdated", datetime.now().isoformat() + "Z")
+                "lastUpdated": p.get("last_updated", datetime.now().isoformat() + "Z"),
             }
             for p in products
         ]
@@ -28,32 +29,32 @@ class InventoryService:
             raise HTTPException(status_code=400, detail="Quantity cannot be negative")
 
         updated_product = self.product_repo.update_product(
-            product_id,
-            {"stock": quantity},
-            user_timezone
+            product_id, {"stock": quantity}, user_timezone
         )
 
         if not updated_product:
             raise HTTPException(status_code=404, detail="Product not found")
 
         return {
-            "id":updated_product["id"],
-            "productId":updated_product["id"],
-            "quantity":updated_product["stock"],
-            "lastUpdated": updated_product.get("lastUpdated", datetime.now().isoformat() + "Z")
+            "id": updated_product["id"],
+            "productId": updated_product["id"],
+            "quantity": updated_product["stock"],
+            "lastUpdated": updated_product.get(
+                "last_updated", datetime.now().isoformat() + "Z"
+            ),
         }
 
     def check_low_stock(self, min_threshold: int = 0):
         """Function to check low stock products"""
         products = self.product_repo.find_all()
 
-        return[
+        return [
             {
                 "id": p["id"],
-                "productName":p["name"],
+                "productName": p["name"],
                 "currentStock": p["stock"],
                 "minStock": min_threshold,
-                "needRestock": True
+                "needRestock": True,
             }
             for p in products
             if p["stock"] <= min_threshold
@@ -71,5 +72,5 @@ class InventoryService:
             "totalProducts": total_products,
             "totalStock": total_stock,
             "lowStockProducts": low_stock_count,
-            "lastUpdated": datetime.now().isoformat() + "Z"
+            "lastUpdated": datetime.now().isoformat() + "Z",
         }

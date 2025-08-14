@@ -1,4 +1,3 @@
-import pymysql
 import psycopg2.extras
 
 from repositories.base_repository import BaseRepository
@@ -42,40 +41,22 @@ class UserRepository(BaseRepository):
         created_at = get_current_time_with_timezone(user_timezone)
         last_updated = get_current_time_with_timezone(user_timezone)
 
-        if self.db_type == "mysql":
-            with self._get_cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO users (full_name, email, password, phone, address, role, created_at, last_updated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                    (
-                        full_name,
-                        email,
-                        password,
-                        phone,
-                        address,
-                        role,
-                        created_at,
-                        last_updated,
-                    ),
-                )
-                self.db.commit()
-                return cursor.lastrowid
-        else:
-            with self._get_cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO users (full_name, email, password, phone, address, role, created_at, last_updated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                    (
-                        full_name,
-                        email,
-                        password,
-                        phone,
-                        address,
-                        role,
-                        created_at,
-                        last_updated,
-                    ),
-                )
-                self.db.commit()
-                return cursor.fetchone()["id"]
+        with self._get_cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO users (full_name, email, password, phone, address, role, created_at, last_updated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                (
+                    full_name,
+                    email,
+                    password,
+                    phone,
+                    address,
+                    role,
+                    created_at,
+                    last_updated,
+                ),
+            )
+            self.db.commit()
+            return cursor.fetchone()["id"]
 
     def update_profile(self, user_id: int, updates: dict, user_timezone: str = "UTC"):
         # Validation fields
