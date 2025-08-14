@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Form, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, HTTPException, Body
+from pydantic import BaseModel
 from config.database import get_db_connection
 
 from repositories.user_repositories import UserRepository
@@ -15,26 +16,34 @@ def _get_auth_service(db=Depends(get_db_connection)) -> AuthService:
     return AuthService(auth_repo)
 
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
 @router.post("/login")
-def login(
-    email: str = Form(...),
-    password: str = Form(...),
-    auth_service=Depends(_get_auth_service),
-):
-    result = auth_service.login(email, password)
+def login(payload: LoginRequest, auth_service=Depends(_get_auth_service)):
+    result = auth_service.login(payload.email, payload.password)
     return result
 
 
+class RegisterRequest(BaseModel):
+    fullName: str
+    email: str
+    password: str
+    phone: str | None = None
+    address: str | None = None
+
+
 @router.post("/register")
-def register(
-    full_name: str = Form(...),
-    email: str = Form(...),
-    password: str = Form(...),
-    phone: str = Form(None),
-    address: str = Form(None),
-    auth_service=Depends(_get_auth_service),
-):
-    result = auth_service.register(full_name, email, password, phone, address)
+def register(payload: RegisterRequest, auth_service=Depends(_get_auth_service)):
+    result = auth_service.register(
+        payload.fullName,
+        payload.email,
+        payload.password,
+        payload.phone,
+        payload.address,
+    )
     return result
 
 
